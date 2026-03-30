@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SPMC — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="arm_security_extensions.html" rel="next" title="Arm Security Extensions"/>
+<link href="virtualization.html" rel="prev" title="Virtualization"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SPMC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#spmc-responsibilities">SPMC Responsibilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#secure-partitions">Secure Partitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#secure-partition-formats">Secure Partition formats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#op-tee-specific-elf-format">OP-TEE specific ELF format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spmc-agnostic-flat-binary-format">SPMC agnostic flat binary format</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#spmc-program-flow">SPMC Program Flow</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#starting-sps">Starting SPs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sp-message-handling">SP message handling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#running-and-exiting-sps">Running and exiting SPs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rxtx-buffer-managment">RxTx buffer managment</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ff-a-compliance">FF-A compliance</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#legend">Legend</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#partition-boot-protocol">Partition boot protocol</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#supported-partition-manifest-fields">Supported partition manifest fields</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#supported-ff-a-interfaces">Supported FF-A interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#spmc-config-options">SPMC config options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sp-loading-mechanism">SP loading mechanism</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+<li class="breadcrumb-item active">SPMC</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/architecture/spmc.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="spmc">
+<h1>SPMC<a class="headerlink" href="#spmc" title="Permalink to this heading"></a></h1>
+<p>This document describes the SPMC (S-EL1) implementation for OP-TEE.
+More information on the SPMC can be found in the FF-A specification can be
+found in the
+<a class="reference external" href="https://developer.arm.com/documentation/den0077/latest">FF-A spec</a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+<section id="spmc-responsibilities">
+<h2>SPMC Responsibilities<a class="headerlink" href="#spmc-responsibilities" title="Permalink to this heading"></a></h2>
+<p>The SPMC is a critical component in the FF-A flow. Some of its major
+responsibilities are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Initialisation and run-time management of the SPs:</dt><dd><p>The SPMC component is responsible for initialisation of the
+Secure Partitions (loading the image, setting up the stack, heap, …).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Routing messages between endpoints:</dt><dd><p>The SPMC is responsible for passing FF-A messages from normal world
+to SPs and back. It also responsible for passing FF-A messages between
+SPs.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Memory management:</dt><dd><p>The SPMC is responsible for the memory management of the SPs. Memory
+can be shared between SPs and between a SP to the normal world.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>This document describes OP-TEE as a S-EL1 SPMC.</p>
+</section>
+<section id="secure-partitions">
+<h2>Secure Partitions<a class="headerlink" href="#secure-partitions" title="Permalink to this heading"></a></h2>
+<p>Secure Partitions (SPs) are the endpoints used in the FF-A protocol. When
+OP-TEE is used as a SPMC SPs run primarily inside S-EL0.</p>
+<p>OP-TEE will use FF-A for it transport layer when the OP-TEE <code class="docutils literal notranslate"><span class="pre">CFG_CORE_FFA=y</span></code>
+configuration flag is enabled.
+The SPMC will expose the OP-TEE core, privileged mode, as an secure endpoint
+itself. This is used to handle all GlobalPlaform programming mode operations.
+All GlobalPlatform messages are encapsulated inside FF-A messages.
+The OP-TEE endpoint will unpack the messages and afterwards handle them as
+standard OP-TEE calls. This is needed as TF-A (S-EL3) does only allow
+FF-A messages to be passed to the secure world when the SPMD is enabled.</p>
+<p>SPs run from the initial boot of the system until power down and don’t have any
+built-in session management compared to GPD TEE TAs. The only means of
+communicating with the outside world is through messages defined in the FF-A
+specification. The context of a SP is saved between executions.</p>
+<p>The
+<a class="reference external" href="https://www.trustedfirmware.org/projects/trusted-services/">Trusted Service</a>
+repository includes the libsp libary which export all needed functions to build
+a S-EL0 SP. It also includes many examples of how to create and implement a SP.</p>
+</section>
+<section id="secure-partition-formats">
+<h2>Secure Partition formats<a class="headerlink" href="#secure-partition-formats" title="Permalink to this heading"></a></h2>
+<section id="op-tee-specific-elf-format">
+<h3>OP-TEE specific ELF format<a class="headerlink" href="#op-tee-specific-elf-format" title="Permalink to this heading"></a></h3>
+<p>OP-TEE uses an ELF format for its <a class="reference internal" href="trusted_applications.html#trusted-applications"><span class="std std-ref">Trusted Applications</span></a>. It has an OP-TEE
+specific section which contains a header structure for describing the Trusted
+Application. A very similar format can be used for Secure Partitions. The same
+ELF format allows OP-TEE to use the built-in ELF loader (<code class="docutils literal notranslate"><span class="pre">ldelf</span></code>) with all its
+features like handling relocations or ASLR. In this case a different section is
+used for the header structure to distinguish between Trusted Applications and
+Secure Partitions.</p>
+</section>
+<section id="spmc-agnostic-flat-binary-format">
+<h3>SPMC agnostic flat binary format<a class="headerlink" href="#spmc-agnostic-flat-binary-format" title="Permalink to this heading"></a></h3>
+<p>This simple binary format aims for maximum portability between SPMC
+implementations by removing the dependency on an ELF loader and implementation
+specific metadata in the SP image. The SPMC can simply copy the binary into the
+memory and start running it. The relocations, the stack setup and any further
+initialization steps should be handled by the startup code of the secure
+partition. The access rights for different sections of the binary can be
+configured either by adding load relative memory regions to the SP manifest or
+by using the <code class="docutils literal notranslate"><span class="pre">FFA_MEM_PERM_SET</span></code> interface in the startup code.</p>
+</section>
+</section>
+<section id="spmc-program-flow">
+<h2>SPMC Program Flow<a class="headerlink" href="#spmc-program-flow" title="Permalink to this heading"></a></h2>
+<p>SP images are either embedded into the OP-TEE image or loaded from the FIP by
+BL2. This makes it possible to start SPs during boot, before the rich OS is
+available in the normal world.</p>
+<section id="starting-sps">
+<h3>Starting SPs<a class="headerlink" href="#starting-sps" title="Permalink to this heading"></a></h3>
+<p>SPs are loaded and started as the last step in OP-TEE’s initialisation process.
+This is done by adding <code class="docutils literal notranslate"><span class="pre">sp_init_all()</span></code> to the <code class="docutils literal notranslate"><span class="pre">boot_final</span></code> initcall level.</p>
+<p class="plantuml">
+<a href="../_images/plantuml-04c84333b6751f5c43eec28f69a43be41b18f177.png"><img alt="autoactivate on
+thread_optee_smc_a64.s -&gt; boot_final
+boot_final -&gt; secure_partition.c:                       sp_init_all()
+loop for each SP
+secure_partition.c -&gt; secure_partition.c:               sp_init_uuid()
+return
+end
+return
+return
+autoactivate off
+thread_optee_smc_a64.s -&gt; thread_optee_smc_a64.s:       thread_ffa_msg_wait()
+thread_optee_smc_a64.s -&gt; thread_optee_smc_a64.s:       ffa_msg_loop()
+autoactivate off
+thread_optee_smc_a64.s -&gt; SPMD:                         SMC" src="../_images/plantuml-04c84333b6751f5c43eec28f69a43be41b18f177.png" style="width: 800.0px"/></a>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">sp_init_all()</span></code></dt>
+<dd class="field-odd"><p>Initialise all SPs which have been added by the
+<code class="docutils literal notranslate"><span class="pre">SP_PATHS</span></code> compiler option and run them</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">thread_ffa_msg_wait()</span></code></dt>
+<dd class="field-even"><p>All SPs are loaded and started. A
+<code class="docutils literal notranslate"><span class="pre">FFA_MSG_WAIT</span></code> message is sent to the Normal
+World.</p>
+</dd>
+</dl>
+<p>Each ELF format SP is loaded into the system using <code class="docutils literal notranslate"><span class="pre">ldelf</span></code> and started. This
+is based around the same process as loading the early TAs.
+For each binary format SP a simpler method is used to copy the binary into a
+suitable memory area.
+All SPs are run after they are loaded and run until a <code class="docutils literal notranslate"><span class="pre">FFA_MSG_WAIT</span></code> is sent
+by the SP.</p>
+<p class="plantuml">
+<img alt="autoactivate on
+secure_partition.c -&gt; secure_partition.c:       sp_init_uuid()
+secure_partition.c -&gt; secure_partition.c:       sp_open_session()
+secure_partition.c -&gt; secure_partition.c:       find_sp()
+return
+secure_partition.c -&gt; secure_partition.c:       sp_create_session()
+return
+alt OP-TEE specific ELF format
+        secure_partition.c -&gt; secure_partition.c:ldelf_load_ldelf()
+        return
+        secure_partition.c -&gt; secure_partition.c:ldlelf_init_with_ldelf()
+        return
+else SPMC agnostic flat binary format
+        secure_partition.c -&gt; secure_partition.c:load_binary_sp()
+        return
+end
+secure_partition.c -&gt; secure_partition.c:       sp_init_set_registers()
+return
+return
+secure_partition.c -&gt; secure_partition.c:       enter_sp()
+return
+secure_partition.c -&gt; secure_partition.c:       sp_msg_handler()
+return
+return" src="../_images/plantuml-d01d2cc305fcb0edc3d206dc0585519b7d522377.png"/>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">init_with_ldelf()</span></code></dt>
+<dd class="field-odd"><p>Load the OP-TEE specific ELF format SP</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">load_binary_sp()</span></code></dt>
+<dd class="field-even"><p>Load the SPMC agnostic flat binary format SP</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">sp_init_info()</span></code></dt>
+<dd class="field-odd"><p>Initialise the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ffa_init_info</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ffa_init_info</span></code> is passed to the SP
+during it first run.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">sp_init_set_registers()</span></code></dt>
+<dd class="field-even"><p>Initialise the registers of the SP</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">sp_msg_handler()</span></code></dt>
+<dd class="field-odd"><p>Handle the SPs FF-A message</p>
+</dd>
+</dl>
+<p>Once all SPs are loaded and started we return to the SPMD and the Normal World
+is booted.</p>
+</section>
+<section id="sp-message-handling">
+<h3>SP message handling<a class="headerlink" href="#sp-message-handling" title="Permalink to this heading"></a></h3>
+<p>The SPMC is split into 2 main message handlers:</p>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">thread_spmc_msg_recv()</span></code> thread_spmc.c</dt>
+<dd class="field-odd"><p>Used to handle message coming
+from the Normal World.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">sp_msg_handler()</span></code> spmc_sp_handler.c</dt>
+<dd class="field-even"><p>Used to handle message where
+the source or the destination
+is a SP.</p>
+</dd>
+</dl>
+<p>When a <code class="docutils literal notranslate"><span class="pre">FFA_MSG_SEND_DIRECT_REQ</span></code> message is received by the SPMC from the
+Normal World, a new thread is started.
+The FF-A message is passed to the thread and it will call the
+<code class="docutils literal notranslate"><span class="pre">sp_msg_handler()</span></code> function.</p>
+<p>Whenever the SPMC (<code class="docutils literal notranslate"><span class="pre">sp_msg_handler()</span></code>) receives a message not intended for
+one of the SPs, it will exit the thread and return to the Normal World
+passing the FF-A message.</p>
+<p>Currently only a <code class="docutils literal notranslate"><span class="pre">FFA_MSG_SEND_DIRECT_REQ</span></code> can be passed from the Normal
+World to a SP.</p>
+<p class="plantuml">
+<a href="../_images/plantuml-f65806c5b9038e1e039811c431e421e87d6f5ab2.png"><img alt='skinparam backgroundcolor transparent
+participant "None-secure world" as None_secure_world
+
+box "S-EL3"
+participant SPMD
+end box
+
+box "S-EL1"
+participant thread_spmc
+participant spmc_sp_handler
+end box
+
+
+box "S-EL0"
+participant SP
+end box
+
+autoactivate on
+None_secure_world -&gt; SPMD: FFA_MSG_SEND_DIRECT_REQ \n &lt;font color=red&gt;SMC
+SPMD -&gt; thread_spmc: thread_spmc_msg_recv() \n &lt;font color=red&gt;ERET
+
+thread_spmc -&gt; spmc_sp_handler : spmc_sp_start_thread()
+== thread ==
+spmc_sp_handler -&gt; spmc_sp_handler : sp_msg_handler()
+
+loop FF-A dst != NSW
+        spmc_sp_handler -&gt; spmc_sp_handler: ffa_handle_sp_direct_req()
+        spmc_sp_handler -&gt; spmc_sp_handler: enter_sp()
+        spmc_sp_handler -&gt; spmc_sp_handler: sp_enter_invoke_cmd()
+        autoactivate off
+        spmc_sp_handler -&gt; SP: __thread_enter_user_mode() \n &lt;font color=red&gt;ERET
+        activate SP
+
+        SP -&gt; spmc_sp_handler : (FF-A message) sp_handle_svc() \n &lt;font color=red&gt;SVC
+        deactivate SP
+        activate spmc_sp_handler
+        spmc_sp_handler -&gt; spmc_sp_handler: Store SP context
+        spmc_sp_handler -&gt; spmc_sp_handler: return to sp_enter_invoke_cmd()
+        deactivate spmc_sp_handler
+        spmc_sp_handler -&gt; spmc_sp_handler: Retrieve FF-A message from SP context
+        return
+        return
+        return
+end
+        return
+== End of thread ==
+        return
+return \n &lt;font color=red&gt;SMC
+return FFA_MSG_SEND_DIRECT_RESP \n &lt;font color=red&gt;ERET' src="../_images/plantuml-f65806c5b9038e1e039811c431e421e87d6f5ab2.png" style="width: 800.0px"/></a>
+</p>
+<p>Every message received by the SPMC from the Normal World is handled in the
+<code class="docutils literal notranslate"><span class="pre">thread_spmc_msg_recv()</span></code> function.</p>
+<p>When entering a SP we need to be running in a OP-TEE thread. This is needed to
+be able to push the TS session (We push the TS session to get access to the SP
+memory).
+Currently the only possibility to enter a SP from the Normal world is via a
+<code class="docutils literal notranslate"><span class="pre">FFA_MSG_SEND_DIRECT_REQ</span></code>. Whenever we receive a <code class="docutils literal notranslate"><span class="pre">FFA_MSG_SEND_DIRECT_REQ</span></code>
+message which doesn’t have OP-TEE as the endpoint-id, we start a thread and
+forward the FF-A message to the <code class="docutils literal notranslate"><span class="pre">sp_msg_handler()</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">sp_msg_handler()</span></code> is responsible for all messages coming or going
+to/from a SP. It runs in a while loop and will handle every message until it
+comes across a messages which is not intended for the secure world.
+After a message is handled by the SPMC or when it needs to be forwarded to a SP,
+<code class="docutils literal notranslate"><span class="pre">sp_enter()</span></code> is called.
+<code class="docutils literal notranslate"><span class="pre">sp_enter()</span></code> will copy the FF-A arguments and resume the SP.</p>
+<p>When the SPMC needs to have access to the SPs memory, it will call
+<code class="docutils literal notranslate"><span class="pre">ts_push_current_session()</span></code> to gain access and <code class="docutils literal notranslate"><span class="pre">ts_pop_current_session()</span></code>
+to release the access.</p>
+</section>
+<section id="running-and-exiting-sps">
+<h3>Running and exiting SPs<a class="headerlink" href="#running-and-exiting-sps" title="Permalink to this heading"></a></h3>
+<p>The SPMC resumes/starts the SP by calling the <code class="docutils literal notranslate"><span class="pre">sp_enter()</span></code>. This will set up
+the SP context and jump into S-EL0.
+Whenever the SP performs a system call it will end up in <code class="docutils literal notranslate"><span class="pre">sp_handle_svc()</span></code>.
+<code class="docutils literal notranslate"><span class="pre">sp_handle_svc()</span></code> stores the current context of the SP and makes sure that we
+don’t return to S-EL0 but instead returns to S-EL1 back to <code class="docutils literal notranslate"><span class="pre">sp_enter()</span></code>.
+<code class="docutils literal notranslate"><span class="pre">sp_enter()</span></code> will pass the FF-A registers (x0-x7) to
+<code class="docutils literal notranslate"><span class="pre">spmc_sp_msg_handler()</span></code>. This will process the FF-A message.</p>
+</section>
+<section id="rxtx-buffer-managment">
+<h3>RxTx buffer managment<a class="headerlink" href="#rxtx-buffer-managment" title="Permalink to this heading"></a></h3>
+<p>RxTx buffers are used by the SPMC to exchange information between an endpoint
+and the SPMC. The rxtx_buf struct is used by the SPMC for abstracting buffer
+management.
+Every SP has a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rxtx_buf</span></code> wich will be passed to every function that
+needs access to the rxtx buffer.
+A separate <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rxtx_buf</span></code> is defined for the Normal World, which gives
+access to the Normal World buffers.</p>
+</section>
+</section>
+<section id="ff-a-compliance">
+<h2>FF-A compliance<a class="headerlink" href="#ff-a-compliance" title="Permalink to this heading"></a></h2>
+<section id="legend">
+<h3>Legend<a class="headerlink" href="#legend" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg> Fully supported</p></li>
+<li><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg> Partially implemented</p></li>
+<li><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg> Not supported</p></li>
+<li><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg> Does not apply for the FF-A instance or version</p></li>
+</ul>
+</section>
+<section id="partition-boot-protocol">
+<h3>Partition boot protocol<a class="headerlink" href="#partition-boot-protocol" title="Permalink to this heading"></a></h3>
+<p>Only FF-A v1.0 partition boot protocol is supported by the SPMC.</p>
+</section>
+<section id="supported-partition-manifest-fields">
+<h3>Supported partition manifest fields<a class="headerlink" href="#supported-partition-manifest-fields" title="Permalink to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 49%"/>
+<col style="width: 17%"/>
+<col style="width: 17%"/>
+<col style="width: 17%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>FF-A v1.0</p></th>
+<th class="head"><p>FF-A v1.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>FF-A version</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>UUID</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Partition ID</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Auxiliary IDs</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Name (description)</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of execution contexts</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Run-time EL</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Execution state</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Load address</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Entry point offset</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Translation granule</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Boot order</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>RX/TX information</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Messaging method</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Primary scheduler implemented</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Run-time model</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Tuples</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><p><strong>Memory regions</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Base address</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Load address relative offset</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Page count</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Attributes</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Name</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Stream &amp; SMMU IDs</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Stream ID access permissions</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><p><strong>Device regions</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Physical base address</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Page count</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Attributes</p></td>
+<td><p>Yes</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Interrupts</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>SMMU IDs</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Stream IDs</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>Exclusive access and ownership</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>Name</p></td>
+<td><p>No</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+</tbody>
+</table>
+<section id="limitations">
+<h4>Limitations<a class="headerlink" href="#limitations" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>The values of mandatory but not supported fields are ignored by the SP loader.
+This means all values are accepted but the SPMC might behave differently than
+expected.</p></li>
+<li><p>Memory region attributes doesn’t support shareability and cacheability flags.</p></li>
+</ul>
+</section>
+</section>
+<section id="supported-ff-a-interfaces">
+<h3>Supported FF-A interfaces<a class="headerlink" href="#supported-ff-a-interfaces" title="Permalink to this heading"></a></h3>
+<p>The table below describes the implementation level of each FF-A interface on
+different FF-A instances. The two instances are between OP-TEE SPMC and the SPMC
+and between OP-TEE SPMC and its S-EL0 secure partitions. The FF-A specification
+uses ‘Secure Phyisical’ and ‘Secure Virtual’ terms for these instances.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 37%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" rowspan="2"><p>Interface</p></th>
+<th class="head" colspan="2"><p>OP-TEE &lt;-&gt; SPMD</p></th>
+<th class="head" colspan="2"><p>OP-TEE &lt;-&gt; S-EL0 SPs</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>FF-A v1.0</p></th>
+<th class="head"><p>FF-A v1.1</p></th>
+<th class="head"><p>FF-A v1.0</p></th>
+<th class="head"><p>FF-A v1.1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>FFA_ERROR</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_SUCCESS</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_INTERRUPT</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_VERSION</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_FEATURES</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_RX_ACQUIRE</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_RX_RELEASE</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_RXTX_MAP</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_RXTX_UNMAP</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_PARTITION_INFO_GET</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_ID_GET</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_SPM_ID_GET</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_MSG_WAIT</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_YIELD</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_RUN</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_NORMAL_WORLD_RESUME</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_MSG_SEND</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_MSG_SEND2</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_MSG_SEND_DIRECT_REQ</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_MSG_SEND_DIRECT_RESP</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_MSG_POLL</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_MEM_DONATE</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_MEM_LEND</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_MEM_SHARE</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_MEM_RETRIEVE_REQ</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_MEM_RETRIEVE_RESP</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_MEM_RELINQUISH</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM0 8a8 8 0 1116 0A8 8 0 010 8zm11.78-1.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_MEM_RECLAIM</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_MEM_PERM_GET</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_MEM_PERM_SET</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-horizontal-rule" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M0 7.75A.75.75 0 01.75 7h14.5a.75.75 0 010 1.5H.75A.75.75 0 010 7.75z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_MEM_FRAG_RX</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_MEM_FRAG_TX</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-check-circle-fill" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm3.78-9.72a.75.75 0 00-1.06-1.06L6.75 9.19 5.28 7.72a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l4.5-4.5z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-odd"><td><p>FFA_MEM_OP_PAUSE</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+<tr class="row-even"><td><p>FFA_MEM_OP_RESUME</p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+<td><p><svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z" fill-rule="evenodd"></path></svg></p></td>
+</tr>
+</tbody>
+</table>
+<section id="id1">
+<h4>Limitations<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>FF-A v1.1 error code <code class="docutils literal notranslate"><span class="pre">NO_DATA</span></code> is not supported.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FFA_SUCCESS</span></code> is not supported as a response to an
+<code class="docutils literal notranslate"><span class="pre">FFA_MSG_SEND_DIRECT_REQ</span></code> message.</p></li>
+<li><p>Non-secure interrupts are not forwarded to the normal world via
+<code class="docutils literal notranslate"><span class="pre">FFA_INTERRUPT</span></code>.</p></li>
+<li><p>Interrupts cannot be forwarded to S-EL0 secure partitions.</p></li>
+<li><p>Only <code class="docutils literal notranslate"><span class="pre">FFA_RXTX_MAP</span></code> feature query is supported by the <code class="docutils literal notranslate"><span class="pre">FFA_FEATURES</span></code>
+interface. <code class="docutils literal notranslate"><span class="pre">FFA_MEM_DONATE</span></code>, <code class="docutils literal notranslate"><span class="pre">FFA_MEM_LEND</span></code>, <code class="docutils literal notranslate"><span class="pre">FFA_MEM_SHARE</span></code> and
+<code class="docutils literal notranslate"><span class="pre">FFA_MEM_RETRIEVE_REQ</span></code> feature query is not implemented.</p></li>
+<li><p>FF-A v1.1 <code class="docutils literal notranslate"><span class="pre">Flags</span></code> field in <code class="docutils literal notranslate"><span class="pre">FFA_MSG_SEND_DIRECT_REQ</span></code> and
+<code class="docutils literal notranslate"><span class="pre">FFA_MSG_SEND_DIRECT_RESP</span></code> calls is not supported.</p></li>
+<li><p>Transferring memory transaction descriptors in a buffer distinct from the TX
+buffer is not supported by the secure virtual instance.</p></li>
+<li><p>Transferring fragmented memory transaction descriptors is not supported by the
+secure virtual instance.</p></li>
+<li><p>The only supported ‘Memory region attributes descriptor’ value is normal
+memory, write-back cacheability and inner shareable. All other values are
+denied on the secure physical instance. The secure virtual instance’s
+implementation ignores the value of this descriptor but uses the same
+attributes for the region.</p></li>
+<li><p>The NS flag support in not implemented for ‘Memory region attributes
+descriptor’.</p></li>
+<li><p>Only read-write non-executable value can be used in the ‘Memory access
+permissions descriptor’ at the secure phyisical instance.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Flags</span></code> field of <code class="docutils literal notranslate"><span class="pre">FFA_MEM_RELINQUISH</span></code> is ignored.</p></li>
+<li><p>The secure phyisical instanced doesn’t implemented the receiving of
+<code class="docutils literal notranslate"><span class="pre">FFA_MEM_RELINQUISH</span></code>.</p></li>
+<li><p>Time slicing of memory management operations is not supported.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
+<section id="spmc-config-options">
+<h3>SPMC config options<a class="headerlink" href="#spmc-config-options" title="Permalink to this heading"></a></h3>
+<p>To configure OP-TEE as a S-EL1 SPMC with Secure Partition support, the following
+flags should be set for optee_os:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_CORE_SEL1_SPMC=y</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_SECURE_PARTITION=y</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_DT=y</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_MAP_EXT_DT_SECURE=y</span></code></p></li>
+</ul>
+<p>Furthermore TF-A should be configured as the SPMD, expecting a S-EL1 SPMC:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SPD=spmd</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SPMD_SPM_AT_SEL2=0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARM_SPMC_MANIFEST_DTS=&lt;path</span> <span class="pre">to</span> <span class="pre">SPMC</span> <span class="pre">manifest</span> <span class="pre">dts&gt;</span></code></p></li>
+</ul>
+</section>
+<section id="sp-loading-mechanism">
+<h3>SP loading mechanism<a class="headerlink" href="#sp-loading-mechanism" title="Permalink to this heading"></a></h3>
+<p>OP-TEE SPMC supports two methods for finding and loading the SP executable
+images. Currently only ELF executables are supported. In the build repo the
+loading method can be selected with the SP_PACKAGING_METHOD option.</p>
+<section id="embedded-sp">
+<h4>Embedded SP<a class="headerlink" href="#embedded-sp" title="Permalink to this heading"></a></h4>
+<p>In this case the early TA mechanism of optee_os is reused: the SP ELF files are
+embedded into the main OP-TEE binary. Each ELF should start with a specific
+section (.sp_head) containing a struct which describes the SP (UUID, stack size,
+etc.). The images can be added to optee_os using the <code class="docutils literal notranslate"><span class="pre">SP_PATHS</span></code> config option,
+the build repo will set this up automatically when
+<code class="docutils literal notranslate"><span class="pre">SP_PACKAGING_METHOD=embedded</span></code> is selected. The images passed in <code class="docutils literal notranslate"><span class="pre">SP_PATHS</span></code>
+are processed by <code class="docutils literal notranslate"><span class="pre">ts_bin_to_c.py</span></code> in optee_os and linked into the main binary.
+At runtime the <code class="docutils literal notranslate"><span class="pre">for_each_secure_partition()</span></code> macro can iterate through these
+images, so a particular SP can be found by UUID and then loaded.</p>
+<p>The SP manifest file <a class="reference internal" href="#id2">[1]</a> used by the SPMC to setup SPs is also handled by
+<code class="docutils literal notranslate"><span class="pre">ts_bin_to_c.py</span></code>, it will be concatenated to the end of the SP ELF.</p>
+</section>
+<section id="fip-sp">
+<h4>FIP SP<a class="headerlink" href="#fip-sp" title="Permalink to this heading"></a></h4>
+<p>In this case the SP ELF files and the corresponding SP manifest DTs are
+encapsulated into SP packages and packed into the FIP. The goal of providing
+this alternative flow is to make updating SPs easier (independent of the main
+OP-TEE binary) and to get aligned with Hafnium (S-EL2 SPMC). For more
+information about the FIP, please refer to the TF-A documentation <a class="reference internal" href="#id3">[2]</a>. The SP
+packaging process and the package format is provided by TF-A, detailed
+description is available at <a class="reference internal" href="#id4">[3]</a>. In the build repo this method can be
+selected by <code class="docutils literal notranslate"><span class="pre">SP_PACKAGING_METHOD=fip</span></code>, it covers all the necessary setup
+automatically. In case of using another buildsystem, the following steps should
+be implemented:</p>
+<ul class="simple">
+<li><p>TF-A config <code class="docutils literal notranslate"><span class="pre">SP_LAYOUT_FILE</span></code>: provide a JSON file which describes the SPs
+(path to SP executable and corresponding DT, example <a class="reference internal" href="#id5">[4]</a>). The TF-A
+buildsystem will create the SP packages (using sptool) based on this and pack
+them into the FIP.</p></li>
+<li><p>TF-A config <code class="docutils literal notranslate"><span class="pre">ARM_BL2_SP_LIST_DTS</span></code>: provide a DT snippet which describes the
+SPs’ UUIDs and load addresses (example: <a class="reference internal" href="#id6">[5]</a>). This will be injected into
+the SP list in <code class="docutils literal notranslate"><span class="pre">TB_FW_CONFIG</span></code> DT of TF-A, and BL2 will load the SP packages
+based on this. Note that BL2 doesn’t automatically load all images from the
+FIP: it’s necessary to explicitly define them in <code class="docutils literal notranslate"><span class="pre">TB_FW_CONFIG</span></code> (using this
+injected snippet or manually editing the DT).</p></li>
+<li><p>TF-A config <code class="docutils literal notranslate"><span class="pre">ARM_SPMC_MANIFEST_DTS</span></code>: provide the SPMC manifest (example:
+<a class="reference internal" href="#id7">[6]</a>). This DT is passed to the SPMC as a boot argument (in the TF-A naming
+convention this is the <code class="docutils literal notranslate"><span class="pre">TOS_FW_CONFIG</span></code>). It should contain the list of SP
+packages and their load addresses in the <code class="docutils literal notranslate"><span class="pre">compatible</span> <span class="pre">=</span> <span class="pre">"arm,sp_pkg"</span></code> node.</p></li>
+</ul>
+<p>At boot optee_os will parse the SP package load addresses from the SPMC manifest
+and find the SP packages already loaded by BL2. Iterating through the SP
+packages, based on the SP package header in each package it will map the SP
+executable image and the corresponding manifest DT and collect these to the
+<code class="docutils literal notranslate"><span class="pre">fip_sp_list</span></code> list. Later when initialising the SPs, the <code class="docutils literal notranslate"><span class="pre">for_each_fip_sp</span></code>
+macro is used to iterate this list and load the executables, just like for the
+embedded SP case.</p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/[1]"></a><p id="id2">[1] <a class="reference external" href="https://trustedfirmware-a.readthedocs.io/en/v2.6/components/ffa-manifest-binding.html">https://trustedfirmware-a.readthedocs.io/en/v2.6/components/ffa-manifest-binding.html</a></p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/[2]"></a><p id="id3">[2] <a class="reference external" href="https://trustedfirmware-a.readthedocs.io/en/v2.6/design/firmware-design.html#firmware-image-package-fip">https://trustedfirmware-a.readthedocs.io/en/v2.6/design/firmware-design.html#firmware-image-package-fip</a></p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/[3]"></a><p id="id4">[3] <a class="reference external" href="https://trustedfirmware-a.readthedocs.io/en/v2.6/components/secure-partition-manager.html#secure-partition-packages">https://trustedfirmware-a.readthedocs.io/en/v2.6/components/secure-partition-manager.html#secure-partition-packages</a></p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/[4]"></a><p id="id5">[4] <a class="reference external" href="https://trustedfirmware-a.readthedocs.io/en/v2.6/components/secure-partition-manager.html#describing-secure-partitions">https://trustedfirmware-a.readthedocs.io/en/v2.6/components/secure-partition-manager.html#describing-secure-partitions</a></p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/[5]"></a><p id="id6">[5] <a class="reference external" href="https://github.com/OP-TEE/build/blob/master/fvp/bl2_sp_list.dtsi">https://github.com/OP-TEE/build/blob/master/fvp/bl2_sp_list.dtsi</a></p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/[6]"></a><p id="id7">[6] <a class="reference external" href="https://github.com/OP-TEE/build/blob/master/fvp/spmc_manifest.dts">https://github.com/OP-TEE/build/blob/master/fvp/spmc_manifest.dts</a></p>
+</section>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="virtualization.html" rel="prev" title="Virtualization"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="arm_security_extensions.html" rel="next" title="Arm Security Extensions">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

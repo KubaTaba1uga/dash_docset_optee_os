@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abort dumps / call stack — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="benchmark.html" rel="next" title="Benchmark framework"/>
+<link href="index.html" rel="prev" title="Debugging techniques"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Debugging techniques</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Abort dumps / call stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchmark.html">Benchmark framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ftrace.html">Ftrace (function tracing)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gprof.html">Gprof</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Debugging techniques</a></li>
+<li class="breadcrumb-item active">Abort dumps / call stack</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/debug/abort_dumps.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="abort-dumps-call-stack">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Abort dumps / call stack"></a><span id="abort-dumps"></span><h1>Abort dumps / call stack<a class="headerlink" href="#abort-dumps-call-stack" title="Permalink to this heading"></a></h1>
+<p>When OP-TEE encounters a serious error condition, it prints diagnostic
+information to the secure console. The message contains a call stack if
+<code class="docutils literal notranslate"><span class="pre">CFG_UNWIND=y</span></code> (enabled by default).</p>
+<p>The following errors will trigger a dump:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Data or prefetch abort exception in the TEE core (kernel mode) or in a TA
+(user mode),</p></li>
+<li><p>When a user-mode Trusted Application panics, either by calling
+<code class="docutils literal notranslate"><span class="pre">TEE_Panic()</span></code> directly or due to some error detected by the TEE Core
+Internal API,</p></li>
+<li><p>When the TEE core detects a fatal error and decides to hang the system
+because there is no way to proceed safely (core panic).</p></li>
+</ul>
+</div></blockquote>
+<p>The messages look slightly different depending on:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Whether the error is an exception or a panic,</p></li>
+<li><p>The exception/privilege level when the exception occurred (PL0/EL0 if a
+user mode Trusted Application was running, PL1/EL1 if it was the TEE core),</p></li>
+<li><p>Whether the TEE and TA are 32 or 64 bits,</p></li>
+<li><p>The exact type of exception (data or prefetch abort, translation fault,
+read or write permission fault, alignment errors etc).</p></li>
+</ul>
+</div></blockquote>
+<p>Here is an example of a panic in a 32-bit Trusted Application, running on a
+32-bit TEE core (QEMU):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>E/TC:0<span class="w"> </span>TA<span class="w"> </span>panicked<span class="w"> </span>with<span class="w"> </span>code<span class="w"> </span>0x0
+E/TC:0<span class="w"> </span>Status<span class="w"> </span>of<span class="w"> </span>TA<span class="w"> </span>484d4143-2d53-4841-3120-4a6f636b6542<span class="w"> </span><span class="o">(</span>0xe07ba50<span class="o">)</span><span class="w"> </span><span class="o">(</span>active<span class="o">)</span>
+E/TC:0<span class="w">  </span>arch:<span class="w"> </span>arm<span class="w">  </span>load<span class="w"> </span>address:<span class="w"> </span>0x101000<span class="w">  </span>ctx-idr:<span class="w"> </span><span class="m">1</span>
+E/TC:0<span class="w">  </span>stack:<span class="w"> </span>0x100000<span class="w"> </span><span class="m">4096</span>
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">0</span>:<span class="w"> </span>va<span class="w"> </span>0x100000<span class="w"> </span>pa<span class="w"> </span>0xe31d000<span class="w"> </span>size<span class="w"> </span>0x1000<span class="w"> </span>flags<span class="w"> </span>rw-
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">1</span>:<span class="w"> </span>va<span class="w"> </span>0x101000<span class="w"> </span>pa<span class="w"> </span>0xe300000<span class="w"> </span>size<span class="w"> </span>0xf000<span class="w"> </span>flags<span class="w"> </span>r-x
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">2</span>:<span class="w"> </span>va<span class="w"> </span>0x110000<span class="w"> </span>pa<span class="w"> </span>0xe30f000<span class="w"> </span>size<span class="w"> </span>0x3000<span class="w"> </span>flags<span class="w"> </span>r--
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">3</span>:<span class="w"> </span>va<span class="w"> </span>0x113000<span class="w"> </span>pa<span class="w"> </span>0xe312000<span class="w"> </span>size<span class="w"> </span>0xb000<span class="w"> </span>flags<span class="w"> </span>rw-
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">4</span>:<span class="w"> </span>va<span class="w"> </span><span class="m">0</span><span class="w"> </span>pa<span class="w"> </span><span class="m">0</span><span class="w"> </span>size<span class="w"> </span><span class="m">0</span><span class="w"> </span>flags<span class="w"> </span>---
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">5</span>:<span class="w"> </span>va<span class="w"> </span><span class="m">0</span><span class="w"> </span>pa<span class="w"> </span><span class="m">0</span><span class="w"> </span>size<span class="w"> </span><span class="m">0</span><span class="w"> </span>flags<span class="w"> </span>---
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">6</span>:<span class="w"> </span>va<span class="w"> </span><span class="m">0</span><span class="w"> </span>pa<span class="w"> </span><span class="m">0</span><span class="w"> </span>size<span class="w"> </span><span class="m">0</span><span class="w"> </span>flags<span class="w"> </span>---
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">7</span>:<span class="w"> </span>va<span class="w"> </span><span class="m">0</span><span class="w"> </span>pa<span class="w"> </span><span class="m">0</span><span class="w"> </span>size<span class="w"> </span><span class="m">0</span><span class="w"> </span>flags<span class="w"> </span>---
+E/TC:0<span class="w"> </span>Call<span class="w"> </span>stack:
+E/TC:0<span class="w">  </span>0x001044a8
+E/TC:0<span class="w">  </span>0x0010ba59
+E/TC:0<span class="w">  </span>0x00101093
+E/TC:0<span class="w">  </span>0x001013ed
+E/TC:0<span class="w">  </span>0x00101545
+E/TC:0<span class="w">  </span>0x0010441b
+E/TC:0<span class="w">  </span>0x00104477
+D/TC:0<span class="w"> </span>user_ta_enter:452<span class="w"> </span>tee_user_ta_enter:<span class="w"> </span>TA<span class="w"> </span>panicked<span class="w"> </span>with<span class="w"> </span>code<span class="w"> </span>0x0
+D/TC:0<span class="w"> </span>tee_ta_invoke_command:649<span class="w"> </span>Error:<span class="w"> </span>ffff3024<span class="w"> </span>of<span class="w"> </span><span class="m">3</span>
+D/TC:0<span class="w"> </span>tee_ta_close_session:402<span class="w"> </span>tee_ta_close_session<span class="o">(</span>0xe07be98<span class="o">)</span>
+D/TC:0<span class="w"> </span>tee_ta_close_session:421<span class="w"> </span>Destroy<span class="w"> </span>session
+D/TC:0<span class="w"> </span>tee_ta_close_session:447<span class="w"> </span>Destroy<span class="w"> </span>TA<span class="w"> </span>ctx
+</pre></div>
+</div>
+<p>The above dump was triggered by the TA when entering an irrecoverable error
+ending up in a <code class="docutils literal notranslate"><span class="pre">TEE_Panic(0)</span></code> call.</p>
+<p>OP-TEE provides a helper script called <code class="docutils literal notranslate"><span class="pre">symbolize.py</span></code> to facilitate the
+analysis of such issues. It is located in the OP-TEE OS source tree in
+<code class="docutils literal notranslate"><span class="pre">scripts/symbolize.py</span></code> and is also copied to the TA development kit.
+Whenever you are confronted with an error message reporting a serious error and
+containing a <code class="docutils literal notranslate"><span class="pre">"Call</span> <span class="pre">stack:"</span></code> line, you may use the symbolize script.
+It is meant to be run on the host system (build environment), not on the
+target.</p>
+<p><code class="docutils literal notranslate"><span class="pre">symbolize.py</span></code> reads its input from <code class="docutils literal notranslate"><span class="pre">stdin</span></code> and writes extended debug
+information to <code class="docutils literal notranslate"><span class="pre">stdout</span></code>. The <code class="docutils literal notranslate"><span class="pre">-d</span></code> (directories) option tells the script
+where to look for TA ELF file(s) (<code class="docutils literal notranslate"><span class="pre">&lt;uuid&gt;.stripped.elf</span></code>) or for <code class="docutils literal notranslate"><span class="pre">tee.elf</span></code>
+(the TEE core). Please refer to <code class="docutils literal notranslate"><span class="pre">symbolize.py</span> <span class="pre">--help</span></code> for details.</p>
+<p>Typical output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>dump.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>./optee_os/scripts/symbolize.py<span class="w"> </span>-d<span class="w"> </span>./optee_examples/*/ta
+<span class="c1"># (or run the script, copy and paste the dump, then press Ctrl+D)</span>
+E/TC:0<span class="w"> </span>TA<span class="w"> </span>panicked<span class="w"> </span>with<span class="w"> </span>code<span class="w"> </span>0x0
+E/TC:0<span class="w"> </span>Status<span class="w"> </span>of<span class="w"> </span>TA<span class="w"> </span>484d4143-2d53-4841-3120-4a6f636b6542<span class="w"> </span><span class="o">(</span>0xe07ba50<span class="o">)</span><span class="w"> </span><span class="o">(</span>active<span class="o">)</span>
+E/TC:0<span class="w">  </span>arch:<span class="w"> </span>arm<span class="w">  </span>load<span class="w"> </span>address:<span class="w"> </span>0x101000<span class="w">  </span>ctx-idr:<span class="w"> </span><span class="m">1</span>
+E/TC:0<span class="w">  </span>stack:<span class="w"> </span>0x100000<span class="w"> </span><span class="m">4096</span>
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">0</span>:<span class="w"> </span>va<span class="w"> </span>0x100000<span class="w"> </span>pa<span class="w"> </span>0xe31d000<span class="w"> </span>size<span class="w"> </span>0x1000<span class="w"> </span>flags<span class="w"> </span>rw-
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">1</span>:<span class="w"> </span>va<span class="w"> </span>0x101000<span class="w"> </span>pa<span class="w"> </span>0xe300000<span class="w"> </span>size<span class="w"> </span>0xf000<span class="w"> </span>flags<span class="w"> </span>r-x<span class="w"> </span>.ta_head<span class="w"> </span>.text<span class="w"> </span>.rodata
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">2</span>:<span class="w"> </span>va<span class="w"> </span>0x110000<span class="w"> </span>pa<span class="w"> </span>0xe30f000<span class="w"> </span>size<span class="w"> </span>0x3000<span class="w"> </span>flags<span class="w"> </span>r--<span class="w"> </span>.rodata<span class="w"> </span>.ARM.extab<span class="w"> </span>.ARM.extab.text.utee_panic<span class="w"> </span>.ARM.extab.text.__aeabi_ldivmod<span class="w"> </span>.ARM.extab.text.__aeabi_uldivmod<span class="w"> </span>.ARM.exidx<span class="w"> </span>.got<span class="w"> </span>.dynsym<span class="w"> </span>.rel.got<span class="w"> </span>.dynamic<span class="w"> </span>.dynstr<span class="w"> </span>.hash<span class="w"> </span>.rel.dyn
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">3</span>:<span class="w"> </span>va<span class="w"> </span>0x113000<span class="w"> </span>pa<span class="w"> </span>0xe312000<span class="w"> </span>size<span class="w"> </span>0xb000<span class="w"> </span>flags<span class="w"> </span>rw-<span class="w"> </span>.data<span class="w"> </span>.bss
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">4</span>:<span class="w"> </span>va<span class="w"> </span><span class="m">0</span><span class="w"> </span>pa<span class="w"> </span><span class="m">0</span><span class="w"> </span>size<span class="w"> </span><span class="m">0</span><span class="w"> </span>flags<span class="w"> </span>---
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">5</span>:<span class="w"> </span>va<span class="w"> </span><span class="m">0</span><span class="w"> </span>pa<span class="w"> </span><span class="m">0</span><span class="w"> </span>size<span class="w"> </span><span class="m">0</span><span class="w"> </span>flags<span class="w"> </span>---
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">6</span>:<span class="w"> </span>va<span class="w"> </span><span class="m">0</span><span class="w"> </span>pa<span class="w"> </span><span class="m">0</span><span class="w"> </span>size<span class="w"> </span><span class="m">0</span><span class="w"> </span>flags<span class="w"> </span>---
+E/TC:0<span class="w">  </span>region<span class="w"> </span><span class="m">7</span>:<span class="w"> </span>va<span class="w"> </span><span class="m">0</span><span class="w"> </span>pa<span class="w"> </span><span class="m">0</span><span class="w"> </span>size<span class="w"> </span><span class="m">0</span><span class="w"> </span>flags<span class="w"> </span>---
+E/TC:0<span class="w"> </span>Call<span class="w"> </span>stack:
+E/TC:0<span class="w">  </span>0x001044a8<span class="w"> </span>utee_panic<span class="w"> </span>at<span class="w"> </span>optee_os/lib/libutee/arch/arm/utee_syscalls_a32.S:74
+E/TC:0<span class="w">  </span>0x0010ba59<span class="w"> </span>TEE_Panic<span class="w"> </span>at<span class="w"> </span>optee_os/lib/libutee/tee_api_panic.c:35
+E/TC:0<span class="w">  </span>0x00101093<span class="w"> </span>hmac_sha1<span class="w"> </span>at<span class="w"> </span>optee_examples/hotp/ta/hotp_ta.c:63
+E/TC:0<span class="w">  </span>0x001013ed<span class="w"> </span>get_hotp<span class="w"> </span>at<span class="w"> </span>optee_examples/hotp/ta/hotp_ta.c:171
+E/TC:0<span class="w">  </span>0x00101545<span class="w"> </span>TA_InvokeCommandEntryPoint<span class="w"> </span>at<span class="w"> </span>optee_examples/hotp/ta/hotp_ta.c:225
+E/TC:0<span class="w">  </span>0x0010441b<span class="w"> </span>entry_invoke_command<span class="w"> </span>at<span class="w"> </span>optee_os/lib/libutee/arch/arm/user_ta_entry.c:207
+E/TC:0<span class="w">  </span>0x00104477<span class="w"> </span>__utee_entry<span class="w"> </span>at<span class="w"> </span>optee_os/lib/libutee/arch/arm/user_ta_entry.c:235
+D/TC:0<span class="w"> </span>user_ta_enter:452<span class="w"> </span>tee_user_ta_enter:<span class="w"> </span>TA<span class="w"> </span>panicked<span class="w"> </span>with<span class="w"> </span>code<span class="w"> </span>0x0<span class="w"> </span>???
+D/TC:0<span class="w"> </span>tee_ta_invoke_command:649<span class="w"> </span>Error:<span class="w"> </span>ffff3024<span class="w"> </span>of<span class="w"> </span><span class="m">3</span>
+D/TC:0<span class="w"> </span>tee_ta_close_session:402<span class="w"> </span>tee_ta_close_session<span class="o">(</span>0xe07be98<span class="o">)</span>
+D/TC:0<span class="w"> </span>tee_ta_close_session:421<span class="w"> </span>Destroy<span class="w"> </span>session
+D/TC:0<span class="w"> </span>tee_ta_close_session:447<span class="w"> </span>Destroy<span class="w"> </span>TA<span class="w"> </span>ctx
+</pre></div>
+</div>
+<p>The Python script uses several tools from the GNU Binutils package to perform
+the following tasks:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Translate the call stack addresses into function names, file names and
+line numbers.</p></li>
+<li><p>Convert the abort address to a symbol plus some offset and/or an ELF
+section name plus some offset.</p></li>
+<li><p>Print the names of the ELF sections contained in each memory region of a
+TA.</p></li>
+</ol>
+</div></blockquote>
+<p>Note that to successfully run <code class="docutils literal notranslate"><span class="pre">symbolize.py</span></code> you must also make your toolchain
+visible on the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> (i.e., <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">PATH=&lt;my-toolchain-path&gt;/bin:$PATH</span></code>).</p>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="index.html" rel="prev" title="Debugging techniques"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="benchmark.html" rel="next" title="Benchmark framework">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

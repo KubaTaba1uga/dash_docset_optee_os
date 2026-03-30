@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StandAloneMM — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="../optee_with_rust.html" rel="next" title="OP-TEE with Rust"/>
+<link href="../trusted_applications.html" rel="prev" title="Trusted Applications"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/index.html">Device specific information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">StandAloneMM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#edk2-build-instructions">EDK2 Build instructions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#op-tee-build-instructions">OP-TEE Build instructions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#u-boot-build-instructions">U-Boot Build instructions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item active">StandAloneMM</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/efi_vars/stmm.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="standalonemm">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/StandAloneMM"></a><span id="stmm"></span><h1>StandAloneMM<a class="headerlink" href="#standalonemm" title="Permalink to this heading"></a></h1>
+<p>StandAlomeMM is a PE/COFF binary produced by EDK2. For Arm platforms we
+can compile and use it, in combination with OP-TEE to store EFI variables
+in and RPMB partition of our eMMC.</p>
+<section id="edk2-build-instructions">
+<h2>EDK2 Build instructions<a class="headerlink" href="#edk2-build-instructions" title="Permalink to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/tianocore/edk2.git
+$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/tianocore/edk2-platforms.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>edk2
+$<span class="w"> </span>git<span class="w"> </span>submodule<span class="w"> </span>init<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">WORKSPACE</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PACKAGES_PATH</span><span class="o">=</span><span class="nv">$WORKSPACE</span>/edk2:<span class="nv">$WORKSPACE</span>/edk2-platforms
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">ACTIVE_PLATFORM</span><span class="o">=</span><span class="s2">"Platform/StandaloneMm/PlatformStandaloneMmPkg/PlatformStandaloneMmRpmb.dsc"</span>
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">GCC5_AARCH64_PREFIX</span><span class="o">=</span>aarch64-linux-gnu-
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>edk2/edksetup.sh
+$<span class="w"> </span>make<span class="w"> </span>-C<span class="w"> </span>edk2/BaseTools
+$<span class="w"> </span>build<span class="w"> </span>-p<span class="w"> </span><span class="nv">$ACTIVE_PLATFORM</span><span class="w"> </span>-b<span class="w"> </span>RELEASE<span class="w"> </span>-a<span class="w"> </span>AARCH64<span class="w"> </span>-t<span class="w"> </span>GCC5<span class="w"> </span>-n<span class="w"> </span><span class="sb">`</span>nproc<span class="sb">`</span>
+</pre></div>
+</div>
+</section>
+<section id="op-tee-build-instructions">
+<h2>OP-TEE Build instructions<a class="headerlink" href="#op-tee-build-instructions" title="Permalink to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OP-TEE/optee_os.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>optee_os
+$<span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span>../Build/MmStandaloneRpmb/RELEASE_GCC5/FV/BL32_AP_MM.fd
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm
+$<span class="w"> </span><span class="nv">CROSS_COMPILE32</span><span class="o">=</span>arm-linux-gnueabihf-<span class="w"> </span>make<span class="w"> </span>-j32<span class="w"> </span><span class="nv">CFG_ARM64_core</span><span class="o">=</span>y<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">PLATFORM</span><span class="o">=</span>&lt;myboard&gt;<span class="w"> </span><span class="nv">CFG_STMM_PATH</span><span class="o">=</span>BL32_AP_MM.fd<span class="w"> </span><span class="nv">CFG_RPMB_FS</span><span class="o">=</span>y<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">CFG_RPMB_FS_DEV_ID</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">CFG_CORE_HEAP_SIZE</span><span class="o">=</span><span class="m">524288</span><span class="w"> </span><span class="nv">CFG_RPMB_WRITE_KEY</span><span class="o">=</span>y<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">CFG_CORE_HEAP_SIZE</span><span class="o">=</span><span class="m">524288</span><span class="w"> </span><span class="nv">CFG_CORE_DYN_SHM</span><span class="o">=</span>y<span class="w"> </span><span class="nv">CFG_RPMB_TESTKEY</span><span class="o">=</span>y<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">CFG_REE_FS</span><span class="o">=</span>n<span class="w"> </span><span class="nv">CFG_CORE_ARM64_PA_BITS</span><span class="o">=</span><span class="m">48</span><span class="w">  </span><span class="nv">CFG_TEE_CORE_LOG_LEVEL</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">CFG_TEE_TA_LOG_LEVEL</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">CFG_SCTLR_ALIGNMENT_CHECK</span><span class="o">=</span>n
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Check <a class="reference external" href="https://optee.readthedocs.io/en/latest/architecture/secure_storage.html#important-caveats">caveats</a> regarding <code class="docutils literal notranslate"><span class="pre">CFG_RPMB_WRITE_KEY</span></code> before enabling it</p>
+</div>
+</section>
+<section id="u-boot-build-instructions">
+<h2>U-Boot Build instructions<a class="headerlink" href="#u-boot-build-instructions" title="Permalink to this heading"></a></h2>
+<p>Although the StandAloneMM binary comes from EDK2, using and storing the
+variables is currently available in U-Boot only.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/u-boot/u-boot.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>u-boot
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>aarch64-linux-gnu-
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>&lt;arch&gt;
+$<span class="w"> </span>make<span class="w"> </span>&lt;myboard&gt;_defconfig
+$<span class="w"> </span>make<span class="w"> </span>menuconfig
+</pre></div>
+</div>
+<p>Enable <code class="docutils literal notranslate"><span class="pre">CONFIG_OPTEE</span></code>, <code class="docutils literal notranslate"><span class="pre">CONFIG_CMD_OPTEE_RPMB</span></code> and <code class="docutils literal notranslate"><span class="pre">CONFIG_EFI_MM_COMM_TEE</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>-j<span class="w"> </span><span class="sb">`</span>nproc<span class="sb">`</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>Your OP-TEE platform port must support Dynamic shared memory, since that’s
+the only kind of memory U-Boot supports for now.</p></li>
+</ul>
+</div>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="../trusted_applications.html" rel="prev" title="Trusted Applications"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="../optee_with_rust.html" rel="next" title="OP-TEE with Rust">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

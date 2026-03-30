@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FVP — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="hikey620.html" rel="next" title="HiKey 620"/>
+<link href="devbox.html" rel="prev" title="DeveloperBox"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Device specific information</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="versal.html">AMD-Xilinx Versal ACAP VCK190</a></li>
+<li class="toctree-l3"><a class="reference internal" href="devbox.html">DeveloperBox</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">FVP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#build-instructions">Build instructions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="hikey620.html">HiKey 620</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey960.html">HiKey 960</a></li>
+<li class="toctree-l3"><a class="reference internal" href="juno.html">Juno</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nuvoton.html">NUVOTON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html">QEMU v7</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html#qemu-v8">QEMU v8</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rockpi4.html">ROCK Pi 4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rpi3.html">Raspberry Pi 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stm32mp1.html">STM32MP1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ti.html">Texas Instruments SoCs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zynqmp.html">Zynq MPSoC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="index.html">Device specific information</a></li>
+<li class="breadcrumb-item active">FVP</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/devices/fvp.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/FVP"></a><section id="fvp">
+<span id="id1"></span><h1>FVP<a class="headerlink" href="#fvp" title="Permalink to this heading"></a></h1>
+<p>The instructions here will tell how to build and run OP-TEE using Foundation
+Models.</p>
+<section id="build-instructions">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Build instructions"></a><span id="fvp-build-instructions"></span><h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this heading"></a></h2>
+<p>Start out by following the “<a class="reference internal" href="../gits/build.html#get-and-build-the-solution"><span class="std std-ref">Get and build the solution</span></a>” as described in
+<a class="reference internal" href="../gits/build.html#build"><span class="std std-ref">build</span></a>. However, stop before doing “<a class="reference internal" href="../gits/build.html#build-make"><span class="std std-ref">Step 5 - Build the solution</span></a>”.</p>
+<p>Next you should obtain the <a class="reference external" href="https://developer.arm.com/products/system-design/fixed-virtual-platforms">Armv8-A Foundation Platform (For Linux Hosts
+Only)</a>. To download FVPs you’ll need to log in to Arm Self Service. That binary
+should be untar’ed to the root of the repo forest, i.e., like this:
+<code class="docutils literal notranslate"><span class="pre">&lt;fpv-project&gt;/Foundation_Platformpkg</span></code>. In the end after cloning all source
+code, getting the toolchains and “installing” Foundation_Platformpkg you should
+have a folder structure that looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ls -al
+drwxrwxr-x 15 jbech jbech 4096 Feb  5 09:10 .
+drwxr-xr-x 22 jbech jbech 4096 Jan 15 12:45 ..
+drwxrwxr-x 18 jbech jbech 4096 Feb  5 09:10 arm-trusted-firmware
+drwxrwxr-x  9 jbech jbech 4096 Feb  5 09:10 build
+drwxrwxr-x 15 jbech jbech 4096 Feb  5 09:10 buildroot
+drwxrwxr-x 51 jbech jbech 4096 Feb  5 09:10 edk2
+drwxrwxr-x  5 jbech jbech 4096 Feb  5 09:10 edk2-platforms
+<span class="hll">drwxrwxr-x  6 jbech jbech 4096 Mar 15  2018 Foundation_Platformpkg
+</span>drwxrwxr-x 15 jbech jbech 4096 Feb  5 09:10 grub
+drwxrwxr-x 26 jbech jbech 4096 Feb  5 09:10 linux
+drwxrwxr-x  6 jbech jbech 4096 Feb  5 09:10 optee_client
+drwxrwxr-x 10 jbech jbech 4096 Feb  5 09:10 optee_examples
+drwxrwxr-x 11 jbech jbech 4096 Feb  5 09:10 optee_os
+drwxrwxr-x  8 jbech jbech 4096 Feb  5 09:10 optee_test
+drwxrwxr-x  7 jbech jbech 4096 Feb  5 09:10 .repo
+lrwxrwxrwx  1 jbech jbech   23 Feb  5 09:09 toolchains
+</pre></div>
+</div>
+<p>When this pre-condition met you can simply continue with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>run
+</pre></div>
+</div>
+<p>and then FVP should build the rootfs and then start the simulation and when you
+have a terminal you can log in and run xtest (as described at
+<a class="reference internal" href="../gits/build.html#build-run-xtest"><span class="std std-ref">Step 9 - Run xtest</span></a>).</p>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="devbox.html" rel="prev" title="DeveloperBox"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="hikey620.html" rel="next" title="HiKey 620">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

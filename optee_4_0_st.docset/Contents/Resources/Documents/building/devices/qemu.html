@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QEMU v7 — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="rockpi4.html" rel="next" title="ROCK Pi 4"/>
+<link href="nuvoton.html" rel="prev" title="NUVOTON"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Device specific information</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="versal.html">AMD-Xilinx Versal ACAP VCK190</a></li>
+<li class="toctree-l3"><a class="reference internal" href="devbox.html">DeveloperBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fvp.html">FVP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey620.html">HiKey 620</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey960.html">HiKey 960</a></li>
+<li class="toctree-l3"><a class="reference internal" href="juno.html">Juno</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nuvoton.html">NUVOTON</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">QEMU v7</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#build-instructions">Build instructions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#consoles">Consoles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host-guest-folder-sharing">Host-Guest folder sharing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#networking">Networking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gdb-normal-world">GDB - Normal world</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gdb-secure-world">GDB - Secure world</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#qemu-v8">QEMU v8</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Build instructions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rockpi4.html">ROCK Pi 4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rpi3.html">Raspberry Pi 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stm32mp1.html">STM32MP1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ti.html">Texas Instruments SoCs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zynqmp.html">Zynq MPSoC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="index.html">Device specific information</a></li>
+<li class="breadcrumb-item active">QEMU v7</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/devices/qemu.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<p>On this page you will find device specific information for QEMU v7 (Armv7-A) and
+QEMU v8 (Armv8-A).</p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/QEMU v7"></a><section id="qemu-v7">
+<span id="id1"></span><h1>QEMU v7<a class="headerlink" href="#qemu-v7" title="Permalink to this heading"></a></h1>
+<p>The instructions here will tell how to run OP-TEE using QEMU for Armv7-A.</p>
+<section id="build-instructions">
+<h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this heading"></a></h2>
+<p>As long as you pick the v7 manifest, i.e.,  <code class="docutils literal notranslate"><span class="pre">default.xml</span></code> the
+“<a class="reference internal" href="../gits/build.html#get-and-build-the-solution"><span class="std std-ref">Get and build the solution</span></a>” tells all you need to know to build and boot
+up QEMU v7.</p>
+<p>A usual short shell sequence to fetch, build and run OP-TEE using QEMU
+for Armv7-A is like the one below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>optee
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>optee
+$<span class="w"> </span>repo<span class="w"> </span>init<span class="w"> </span>-u<span class="w"> </span>https://github.com/OP-TEE/manifest.git
+$<span class="w"> </span>repo<span class="w"> </span>sync
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>make<span class="w"> </span>toolchains
+$<span class="w"> </span>make<span class="w"> </span>run
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>If you do not want to check out the latest version of OP-TEE, but rather a
+specific tagged version, you can use <code class="docutils literal notranslate"><span class="pre">repo</span> <span class="pre">init</span> <span class="pre">-u</span>
+<span class="pre">https://github.com/OP-TEE/manifest.git</span> <span class="pre">-b</span> <span class="pre">&lt;branchname&gt;</span></code>. e.g., <code class="docutils literal notranslate"><span class="pre">repo</span> <span class="pre">init</span>
+<span class="pre">-u</span> <span class="pre">https://github.com/OP-TEE/manifest.git</span> <span class="pre">-b</span> <span class="pre">3.16.0</span></code>. You can see valid
+branch names by inspecting the OP-TEE/manifest git repository on
+<a class="reference external" href="https://github.com/OP-TEE/manifest/branches">https://github.com/OP-TEE/manifest/branches</a>.</p>
+<p>To speed up your build, you can make use of the parallel make feature. For
+example, use <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-j32</span> <span class="pre">run</span></code> to have 32 build processes running
+concurrently. Note that this will make it much more difficult to spot
+errors if something fails; therefore fall back to sequential builds to view
+build errors and produce logs for bug reports.</p>
+</div>
+</section>
+<section id="consoles">
+<h2>Consoles<a class="headerlink" href="#consoles" title="Permalink to this heading"></a></h2>
+<p>After running <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">run</span></code> you will end up in the QEMU console and it will also
+spawn two UART consoles. One console containing the UART for secure world and
+one console containing the UART for normal world. You will see that it stops
+waiting for input on the QEMU console. To continue, do:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(qemu) c
+</pre></div>
+</div>
+</section>
+<section id="host-guest-folder-sharing">
+<h2>Host-Guest folder sharing<a class="headerlink" href="#host-guest-folder-sharing" title="Permalink to this heading"></a></h2>
+<p>You can use the VirtFS QEMU feature to avoid changing rootfs CPIO archive every
+time you need to add additional files or modify existing files. To do this, you
+share a folder between the guest and host operating systems. To enable and use
+this feature you have to provide additional arguments when running make,
+example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nv">QEMU_VIRTFS_ENABLE</span><span class="o">=</span>y<span class="w"> </span><span class="nv">QEMU_USERNET_ENABLE</span><span class="o">=</span>y
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can also add <code class="docutils literal notranslate"><span class="pre">QEMU_VIRTFS_HOST_DIR=&lt;share&gt;</span></code> in case you don’t want to
+use the default sharing location (which is the root of &lt;qemu-v7-project&gt;).</p>
+</div>
+<p>When QEMU with OP-TEE is up and running, you can mount the host folder in QEMU
+(normal world UART).</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># mount -t 9p -o trans=virtio host &lt;mount_point&gt;
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;mount_point&gt;</span></code> here is folder in the QEMU where you want to mount the host
+PC’s shared folder. So if you want to mount it at <code class="docutils literal notranslate"><span class="pre">/mnt/host</span></code> you typically do
+this from QEMU NW/UART.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># mkdir -p /mnt/host
+# mount -t 9p -o trans=virtio host /mnt/host
+</pre></div>
+</div>
+</section>
+<section id="networking">
+<h2>Networking<a class="headerlink" href="#networking" title="Permalink to this heading"></a></h2>
+<p>After booting QEMU, <code class="docutils literal notranslate"><span class="pre">eth0</span></code> will automatically receive an IP address from
+QEMU via DHCP using the SLiRP user networking feature. QEMU will act as a
+gateway to the host network <a class="reference external" href="https://wiki.qemu.org/Documentation/Networking#User_Networking_.28SLIRP.29">SLiRP</a>.</p>
+<p>Please note that ICMP won’t work in the guest unless additional configuration is
+made, so the <code class="docutils literal notranslate"><span class="pre">ping</span></code> utility won’t work.</p>
+</section>
+<section id="gdb-normal-world">
+<h2>GDB - Normal world<a class="headerlink" href="#gdb-normal-world" title="Permalink to this heading"></a></h2>
+<p>If you need to debug a client application, using GDB in a remote debugging
+configuration may be useful. Remote debugging means <code class="docutils literal notranslate"><span class="pre">gdb</span></code> runs on your PC,
+where it can access the source code, while the program being debugged runs on
+the remote system (in this case, in the QEMU environment in normal world). Here
+is how to do that. On your PC, build with <code class="docutils literal notranslate"><span class="pre">GDBSERVER=y</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>&lt;qemu-v7-project&gt;/build
+<span class="c1"># You **only** need to rm -rf the first time you build with the new flag.</span>
+<span class="c1"># If you omit doing so, it's likely that you will see "stamp" errors in the</span>
+<span class="c1"># build log.</span>
+$<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>&lt;qemu-v7-project&gt;/out-br
+$<span class="w"> </span>make<span class="w"> </span>-j8<span class="w"> </span>run<span class="w"> </span><span class="nv">GDBSERVER</span><span class="o">=</span>y
+</pre></div>
+</div>
+<p>Boot up as usual</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>qemu<span class="o">)</span><span class="w"> </span>c
+</pre></div>
+</div>
+<p>Inside QEMU (Normal World UART), run your application with gdbserver (for
+example <code class="docutils literal notranslate"><span class="pre">xtest</span> <span class="pre">4002</span></code>):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># gdbserver :12345 xtest 4002
+Process xtest created; pid = 654
+Listening on port 12345
+</pre></div>
+</div>
+<p>Back on your PC, open another terminal, start GDB and connect to the target:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>&lt;qemu-v7-project&gt;/out-br/host/bin/arm-buildroot-linux-gnueabihf-gdb
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span>sysroot<span class="w"> </span>&lt;qemu-v7-project&gt;/out-br/host/arm-buildroot-linux-gnueabihf/sysroot
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>target<span class="w"> </span>remote<span class="w"> </span>:12345
+</pre></div>
+</div>
+<p>Now GDB is connected to the remote application. You may use GDB normally.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) b main
+(gdb) c
+</pre></div>
+</div>
+</section>
+<section id="gdb-secure-world">
+<h2>GDB - Secure world<a class="headerlink" href="#gdb-secure-world" title="Permalink to this heading"></a></h2>
+<section id="tee-core-debugging">
+<h3>TEE core debugging<a class="headerlink" href="#tee-core-debugging" title="Permalink to this heading"></a></h3>
+<p>To debug TEE core running QEMU with GDB, you need to disable TEE ASLR with
+<code class="docutils literal notranslate"><span class="pre">CFG_CORE_ASLR=n</span></code> flag. Furthermore, note that it’s easier to debug if you
+have optimization disabled. Other than that you will have four consoles that
+you are working with.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Qemu console</p></li>
+<li><p>NW UART console</p></li>
+<li><p>SW UART console</p></li>
+<li><p>GDB console</p></li>
+</ul>
+</div></blockquote>
+<p>All of them but the GDB console are consoles you normally will see/use when
+running OP-TEE/xtest using QEMU. The first thing is to start QEMU, i.e.,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>&lt;qemu-v7-project&gt;/build
+<span class="c1"># make run-only also works if you don't want to rebuild things</span>
+$<span class="w"> </span>make<span class="w"> </span>run<span class="w"> </span><span class="nv">CFG_CORE_ASLR</span><span class="o">=</span>n
+</pre></div>
+</div>
+<p>Next launch another console for GDB and do this</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>&lt;qemu-v7-project&gt;/toolchains/aarch32/bin
+$<span class="w"> </span>./arm-linux-gnueabihf-gdb<span class="w"> </span>-q
+</pre></div>
+</div>
+<p>In the GDB console connect to the QEMU GDB server, like this (the output is
+included to show what you normally will see).</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) target remote localhost:1234
+Remote debugging using localhost:1234
+warning: No executable has been specified and target does not support
+determining executable automatically.  Try using the "file" command.
+0x00000000 in ?? ()
+</pre></div>
+</div>
+<p>Still in the GDB console, load the symbols for TEE core</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) symbol-file &lt;qemu-v7-project&gt;/optee_os/out/arm/core/tee.elf
+Reading symbols from &lt;qemu-v7-project&gt;/optee_os/out/arm/core/tee.elf...done.
+</pre></div>
+</div>
+<p>Now you can set a breakpoint for any symbol in OP-TEE, for example</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) b tee_entry_std
+Breakpoint 1 at 0xe103012: file core/arch/arm/tee/entry_std.c, line 526.
+</pre></div>
+</div>
+<p>Last step is to initiate the boot, do that also from the GDB console</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) c
+Continuing.
+</pre></div>
+</div>
+<p>At this point will see UART output in the Normal world console as well as the
+Secure world UART console. If you now for example <a class="reference internal" href="../gits/optee_test.html#optee-test-run-xtest"><span class="std std-ref">Run xtest</span></a>,
+then you will rather soon hit the breakpoint we previously set and you will see
+something like this in the GDB console:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Continuing.
+[Switching to Thread 2]
+
+Thread 2 hit Breakpoint 1, tee_entry_std (smc_args=0xe183f18
+&lt;stack_thread+8216&gt;) at core/arch/arm/tee/entry_std.c:526
+526             struct optee_msg_arg *arg = NULL;       /* fix gcc warning */
+(gdb)
+</pre></div>
+</div>
+<p>From here you can start to poke around with GDB, single step, read memory, read
+registers, print variables and all sorts of things that you normally do with a
+debugger.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Some people find it easier to also see the source code while debugging. You
+can enable the “TUI mode” to see the source code in GDB. To enable that, run
+GDB with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./arm-linux-gnueabihf-gdb<span class="w"> </span>-q<span class="w"> </span>-tui
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/QEMU v8"></a><section id="qemu-v8">
+<span id="id2"></span><h1>QEMU v8<a class="headerlink" href="#qemu-v8" title="Permalink to this heading"></a></h1>
+<p>The instructions here will tell how to run OP-TEE using QEMU for Armv8-A.</p>
+<section id="id3">
+<h2>Build instructions<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<p>As long as you pick the v8 manifest, i.e.,  <code class="docutils literal notranslate"><span class="pre">qemu_v8.xml</span></code> the
+“<a class="reference internal" href="../gits/build.html#get-and-build-the-solution"><span class="std std-ref">Get and build the solution</span></a>” tells all you need to know to build and boot
+up QEMU v8.</p>
+<p>A usual short shell sequence to fetch, build and run OP-TEE using QEMU
+for Armv8-A is like the one below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>optee
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>optee
+$<span class="w"> </span>repo<span class="w"> </span>init<span class="w"> </span>-u<span class="w"> </span>https://github.com/OP-TEE/manifest.git<span class="w"> </span>-m<span class="w"> </span>qemu_v8.xml
+$<span class="w"> </span>repo<span class="w"> </span>sync
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>make<span class="w"> </span>toolchains
+$<span class="w"> </span>make<span class="w"> </span>run
+</pre></div>
+</div>
+<p>All other things (networking, GDB etc) in the v7 section above is also
+applicable on QEMU v8 as long as you replace <code class="docutils literal notranslate"><span class="pre">&lt;qemu-v7-project&gt;</span></code> with
+<code class="docutils literal notranslate"><span class="pre">&lt;qemu-v8-project&gt;</span></code> to get the correct paths relative to your QEMU v8 setup.</p>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="nuvoton.html" rel="prev" title="NUVOTON"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="rockpi4.html" rel="next" title="ROCK Pi 4">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

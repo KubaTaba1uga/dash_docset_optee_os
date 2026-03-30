@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gprof — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../faq/faq.html" rel="next" title="Frequently Asked Questions"/>
+<link href="ftrace.html" rel="prev" title="Ftrace (function tracing)"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Debugging techniques</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="abort_dumps.html">Abort dumps / call stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchmark.html">Benchmark framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ftrace.html">Ftrace (function tracing)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Gprof</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Debugging techniques</a></li>
+<li class="breadcrumb-item active">Gprof</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/debug/gprof.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Gprof"></a><section id="gprof">
+<span id="id1"></span><h1>Gprof<a class="headerlink" href="#gprof" title="Permalink to this heading"></a></h1>
+<p>This describes to do profiling of user Trusted Applications with <code class="docutils literal notranslate"><span class="pre">gprof</span></code>.</p>
+<p>The configuration option <code class="docutils literal notranslate"><span class="pre">CFG_TA_GPROF_SUPPORT=y</span></code> enables OP-TEE to collect
+profiling information from Trusted Applications running in user mode and
+compiled with <code class="docutils literal notranslate"><span class="pre">-pg</span></code>. Once collected, the profiling data are formatted in the
+<code class="docutils literal notranslate"><span class="pre">gmon.out</span></code> format and sent to <code class="docutils literal notranslate"><span class="pre">tee-supplicant</span></code> via RPC, so they can be saved
+to disk and later processed and displayed by the standard <code class="docutils literal notranslate"><span class="pre">gprof</span></code> tool.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>Build OP-TEE OS with <code class="docutils literal notranslate"><span class="pre">CFG_TA_GPROF_SUPPORT=y</span></code>. You may also set
+<code class="docutils literal notranslate"><span class="pre">CFG_ULIBS_MCOUNT=y</span></code> to instrument the user TA libraries contained in
+<code class="docutils literal notranslate"><span class="pre">optee_os</span></code> (such as <code class="docutils literal notranslate"><span class="pre">libutee</span></code> and <code class="docutils literal notranslate"><span class="pre">libutils</span></code>).</p></li>
+<li><p>Build user TAs with <code class="docutils literal notranslate"><span class="pre">-pg</span></code>, for instance enable: <code class="docutils literal notranslate"><span class="pre">CFG_TA_MCOUNT=y</span></code> to
+instrument whole user TA. Note that instrumented TAs have a larger
+<code class="docutils literal notranslate"><span class="pre">.bss</span></code> section. The memory overhead is 1.36 times the <code class="docutils literal notranslate"><span class="pre">.text</span></code> size for
+32-bit TAs, and 1.77 times for 64-bit ones (refer to the TA linker script
+for details: <code class="docutils literal notranslate"><span class="pre">ta/arch/arm/ta.ld.S</span></code>).</p></li>
+<li><p>Run the application normally. When the last session exits,
+<code class="docutils literal notranslate"><span class="pre">tee-supplicant</span></code> will write profiling data to
+<code class="docutils literal notranslate"><span class="pre">/tmp/gmon-&lt;ta_uuid&gt;.out</span></code>. If the file already exists, a number is
+appended, such as: <code class="docutils literal notranslate"><span class="pre">gmon-&lt;ta_uuid&gt;.1.out</span></code>.</p></li>
+<li><p>Run gprof on the TA ELF file and profiling output: <code class="docutils literal notranslate"><span class="pre">gprof</span> <span class="pre">&lt;ta_uuid&gt;.elf</span>
+<span class="pre">gmon-&lt;ta_uuid&gt;.out</span></code></p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading"></a></h2>
+<p>Part of the profiling is implemented in libutee. Another part is done in the TEE
+core by a pseudo-TA (<code class="docutils literal notranslate"><span class="pre">core/arch/arm/sta/gprof.c</span></code>). Two types of data are
+collected:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><dl class="simple">
+<dt>Call graph information</dt><dd><ul class="simple">
+<li><p>When TA source files are compiled with the -pg switch, the compiler
+generates extra code into each function prologue to call the
+instrumentation entry point (<code class="docutils literal notranslate"><span class="pre">__gnu_mcount_nc</span></code> or <code class="docutils literal notranslate"><span class="pre">_mcount</span></code>
+depending on the architecture). Each time an instrumented function is
+called, libutee records a pair of program counters (one is the caller
+and the other one is the callee) as well as the number of times this
+specific arc of the call graph has been invoked.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>PC distribution over time</dt><dd><ul class="simple">
+<li><p>When an instrumented TA starts, libutee calls the pseudo-TA to start
+PC sampling for the current session. Sampling data are written into
+the user-space buffer directly by the TEE core.</p></li>
+<li><p>Whenever the TA execution is interrupted, the TEE core records the
+current program counter value and builds a histogram of program
+locations (i.e., relative amount of time spent for each value of the
+PC). This is later used by the gprof tool to derive the time spent in
+each function. The sampling rate, which is assumed to be roughly
+constant, is computed by keeping track of the time spent executing
+user TA code and dividing the number of interrupts by the total time.</p></li>
+<li><p>The profiling buffer into which call graph and sampling data are
+recorded is allocated in the TA’s <code class="docutils literal notranslate"><span class="pre">.bss</span></code> section. Some space is
+reserved by the linker script, only when the TA is instrumented.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="ftrace.html" rel="prev" title="Ftrace (function tracing)"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="../faq/faq.html" rel="next" title="Frequently Asked Questions">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Secure boot — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="secure_storage.html" rel="next" title="Secure storage"/>
+<link href="porting_guidelines.html" rel="prev" title="Porting guidelines"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Secure boot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#armv8-a-using-the-authentication-framework-in-tf-a">Armv8-A - Using the authentication framework in TF-A</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#armv7-a-systems">Armv7-A systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+<li class="breadcrumb-item active">Secure boot</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/architecture/secure_boot.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Secure boot"></a><section id="secure-boot">
+<span id="id1"></span><h1>Secure boot<a class="headerlink" href="#secure-boot" title="Permalink to this heading"></a></h1>
+<section id="armv8-a-using-the-authentication-framework-in-tf-a">
+<h2>Armv8-A - Using the authentication framework in TF-A<a class="headerlink" href="#armv8-a-using-the-authentication-framework-in-tf-a" title="Permalink to this heading"></a></h2>
+<p>This section gives a brief description on how to enable the verification of
+OP-TEE using the authentication framework in Trusted Firmware A (TF-A), i.e.,
+something that could be used in an Armv8-A environment.</p>
+<p>According to <a class="reference external" href="https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/getting_started/user-guide.rst">user-guide.rst</a>, there is no additional specific build options for
+the verification of OP-TEE. If we have enabled the authentication framework and
+specified the <code class="docutils literal notranslate"><span class="pre">BL32</span></code> build option when building TF-A, the BL32 related
+certificates will be created automatically by the cert_create tool, and then
+these certificates will be verified during booting up.</p>
+<p>To enable the authentication framework, the following steps should be followed
+according to <a class="reference external" href="https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/getting_started/user-guide.rst">user-guide.rst</a>. For more details about the authentication
+framework, please see <a class="reference external" href="https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/design/auth-framework.rst">auth-framework.rst</a> and <a class="reference external" href="https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/design/trusted-board-boot.rst">trusted-board-boot.rst</a>.</p>
+<blockquote>
+<div><ul>
+<li><p>Check out a recent version of the <a class="reference external" href="https://github.com/ARMmbed/mbedtls.git">mbed TLS</a> repository and then switch
+to tag mbedtls-2.2.0</p></li>
+<li><p>Besides the normal build options, add the following build options for TF-A</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">MBEDTLS_DIR</span><span class="o">=</span>&lt;path<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>directory<span class="w"> </span>containing<span class="w"> </span>mbed<span class="w"> </span>TLS<span class="w"> </span>sources&gt;
+<span class="nv">TRUSTED_BOARD_BOOT</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">GENERATE_COT</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">ARM_ROTPK_LOCATION</span><span class="o">=</span>devel_rsa
+<span class="nv">ROT_KEY</span><span class="o">=</span>&lt;TF-A-PATH/plat/arm/board/common/rotpk/arm_rotprivk_rsa.pem&gt;
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+<p>Above steps have been tested on FVP platform, all verification steps are OK and
+xtest runs successfully without regression.</p>
+</section>
+<section id="armv7-a-systems">
+<h2>Armv7-A systems<a class="headerlink" href="#armv7-a-systems" title="Permalink to this heading"></a></h2>
+<p>Unlike for Armv8-A systems where one can use a more standardized way of doing
+secure boot by leverage the authentication framework as described above, most
+device manufacturers have their own way of doing secure boot. Please reach out
+directly to the manufacturer for the device you are working with to be able to
+understand how to do secure boot on their devices.</p>
+<p>Note however that TF-A supports Armv7-A with Trustzone extension and we
+strongly encourage one to look at TF-A and use its BL2 as secure boot loader.</p>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="porting_guidelines.html" rel="prev" title="Porting guidelines"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="secure_storage.html" rel="next" title="Secure storage">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

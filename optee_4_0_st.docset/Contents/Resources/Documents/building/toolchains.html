@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Toolchains — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="trusted_applications.html" rel="next" title="Trusted Applications"/>
+<link href="gits/optee_test.html" rel="prev" title="optee_test"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/index.html">Device specific information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Toolchains</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#download-install">Download/install</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#direct-download">Direct download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-build-git">Using build.git</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#export-path">Export PATH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#llvm-clang">LLVM / Clang</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Using build.git</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Build and run</a></li>
+<li class="breadcrumb-item active">Toolchains</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/building/toolchains.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Toolchains"></a><section id="toolchains">
+<span id="id1"></span><h1>Toolchains<a class="headerlink" href="#toolchains" title="Permalink to this heading"></a></h1>
+<p>OP-TEE uses both 32bit as well as 64bit toolchains and it is even possible to
+mix them in some configurations. In theory you should be able to compile OP-TEE
+with the Arm toolchains that are coming with your Linux distribution. But
+instead of using those directly, we instead download the toolchains directly
+from Arm.</p>
+<section id="download-install">
+<h2>Download/install<a class="headerlink" href="#download-install" title="Permalink to this heading"></a></h2>
+<p>We propose two ways to download the toolchains, both will put the toolchains
+under the same path(s).</p>
+<section id="direct-download">
+<h3>Direct download<a class="headerlink" href="#direct-download" title="Permalink to this heading"></a></h3>
+<p>Go the <a class="reference external" href="https://developer.arm.com/open-source/gnu-toolchain/gnu-a/downloads">Arm GCC download page</a> and download the “<cite>AArch32 target with soft
+float (arm-linux-gnueabi)</cite>” for 32bit builds and the “<cite>AArch64 GNU/Linux target
+(aarch64-linux-gnu)</cite>” for 64bit builds. When the downloads have finished, you
+will untar them to a location that you later on will export to your <code class="docutils literal notranslate"><span class="pre">$PATH</span></code>.
+Here is an example</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$HOME</span>/toolchains
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$HOME</span>/toolchains
+
+<span class="c1"># Download 32bit toolchain</span>
+$<span class="w"> </span>wget<span class="w"> </span>https://developer.arm.com/-/media/Files/downloads/gnu-a/8.2-2019.01/gcc-arm-8.2-2019.01-x86_64-arm-linux-gnueabi.tar.xz
+$<span class="w"> </span>mkdir<span class="w"> </span>aarch32
+$<span class="w"> </span>tar<span class="w"> </span>xf<span class="w"> </span>gcc-arm-8.2-2019.01-x86_64-arm-linux-gnueabi.tar.xz<span class="w"> </span>-C<span class="w"> </span>aarch32<span class="w"> </span>--strip-components<span class="o">=</span><span class="m">1</span>
+
+<span class="c1"># Download 64bit toolchain</span>
+$<span class="w"> </span>wget<span class="w"> </span>https://developer.arm.com/-/media/Files/downloads/gnu-a/8.2-2019.01/gcc-arm-8.2-2019.01-x86_64-aarch64-linux-gnu.tar.xz
+$<span class="w"> </span>mkdir<span class="w"> </span>aarch64
+$<span class="w"> </span>tar<span class="w"> </span>xf<span class="w"> </span>gcc-arm-8.2-2019.01-x86_64-aarch64-linux-gnu.tar.xz<span class="w"> </span>-C<span class="w"> </span>aarch64<span class="w"> </span>--strip-components<span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+</section>
+<section id="using-build-git">
+<h3>Using build.git<a class="headerlink" href="#using-build-git" title="Permalink to this heading"></a></h3>
+<p>As an alternative, you can let <a class="reference internal" href="gits/build.html#build"><span class="std std-ref">build</span></a>.git download them for you, but this
+of course involves getting a git that you might not otherwise use.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$HOME</span>
+$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OP-TEE/build.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>make<span class="w"> </span>-f<span class="w"> </span>toolchain.mk<span class="w"> </span>-j2
+</pre></div>
+</div>
+</section>
+</section>
+<section id="export-path">
+<h2>Export PATH<a class="headerlink" href="#export-path" title="Permalink to this heading"></a></h2>
+<p>If you have downloaded the toolchains as described above, you should have them
+at <code class="docutils literal notranslate"><span class="pre">$HOME/toolchains/{aarch32/aarch64}</span></code>, so now we just need to export the
+paths and then you are ready to starting compiling OP-TEE components.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$HOME</span>/toolchains/aarch32/bin:<span class="nv">$HOME</span>/toolchains/aarch64/bin
+</pre></div>
+</div>
+</section>
+<section id="llvm-clang">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/LLVM / Clang"></a><span id="llvm"></span><h2>LLVM / Clang<a class="headerlink" href="#llvm-clang" title="Permalink to this heading"></a></h2>
+<p>It’s possible to also compile <a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a>.git using llvm/clang. To do that,
+you can download and extract Clang from the GitHub release page. You’ll need an
+x86_64 cross-compiler capable of generating aarch64 and armv7a code <strong>and</strong> the
+compiler-rt libraries for these architectures (libclang_rt.*.a).</p>
+<p>Clang is configured to be able to cross-compile to all the supported
+architectures by default (see &lt;clang path&gt;/bin/llc –version) which is great,
+but compiler-rt is included only for the host architecture. Therefore you need
+to combine several packages into one. Please refer to this <a class="reference external" href="https://github.com/OP-TEE/build/blob/master/get_clang.sh">get_clang.sh</a>
+script for details on creating a llvm/clang toolchain ready to be used.</p>
+<section id="id2">
+<h3>Using build.git<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<p>As an alternative, you can let <a class="reference internal" href="gits/build.html#build"><span class="std std-ref">build</span></a>.git download them for you, but this
+of course involves getting a git that you might not otherwise use.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$HOME</span>
+$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OP-TEE/build.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>make<span class="w"> </span>-f<span class="w"> </span>toolchain.mk<span class="w"> </span>clang-toolchains
+</pre></div>
+</div>
+<p>The above instructions will download and install Clang in <code class="docutils literal notranslate"><span class="pre">$HOME/clang-9.0.1</span></code>.</p>
+<p>You can also get the toolchain using your package manager or alternatively build
+it yourself, but these alternative methods risk being incomplete. For example,
+the Ubuntu clang package does not install the needed ld.lld package. The package
+also does not contain the cross-compiled compiler-rt libraries. Building by
+yourself is hard for the same reason, i.e. no cross-compiled compiler-rt
+libraries are generated.</p>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="gits/optee_test.html" rel="prev" title="optee_test"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="trusted_applications.html" rel="next" title="Trusted Applications">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

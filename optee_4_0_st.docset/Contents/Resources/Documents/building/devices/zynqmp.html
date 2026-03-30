@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zynq MPSoC — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="../aosp/aosp.html" rel="next" title="AOSP"/>
+<link href="ti.html" rel="prev" title="Texas Instruments SoCs"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Device specific information</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="versal.html">AMD-Xilinx Versal ACAP VCK190</a></li>
+<li class="toctree-l3"><a class="reference internal" href="devbox.html">DeveloperBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fvp.html">FVP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey620.html">HiKey 620</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey960.html">HiKey 960</a></li>
+<li class="toctree-l3"><a class="reference internal" href="juno.html">Juno</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nuvoton.html">NUVOTON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html">QEMU v7</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html#qemu-v8">QEMU v8</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rockpi4.html">ROCK Pi 4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rpi3.html">Raspberry Pi 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stm32mp1.html">STM32MP1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ti.html">Texas Instruments SoCs</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Zynq MPSoC</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#supported-boards">Supported boards</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boot-firmware">Boot Firmware</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-instructions">Build instructions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#petalinux-build-instructions">Petalinux build instructions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#booting-the-device">Booting the device</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="index.html">Device specific information</a></li>
+<li class="breadcrumb-item active">Zynq MPSoC</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/devices/zynqmp.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="zynq-mpsoc">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Zynq MPSoC"></a><span id="zynqmp"></span><h1>Zynq MPSoC<a class="headerlink" href="#zynq-mpsoc" title="Permalink to this heading"></a></h1>
+<p>Instructions below show how to run OP-TEE on Zynq MPSoC based boards.</p>
+<section id="supported-boards">
+<h2>Supported boards<a class="headerlink" href="#supported-boards" title="Permalink to this heading"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 29%"/>
+<col style="width: 46%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Board Name</p></th>
+<th class="head"><p>Manufacturer</p></th>
+<th class="head"><p>Hardware Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ZCU102</p></td>
+<td><p>Xilinx/AMD</p></td>
+<td><p><a class="reference external" href="https://www.xilinx.com/products/boards-and-kits/ek-u1-zcu102-g.html">ZCU102 Website</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>ZCU104</p></td>
+<td><p>Xilinx/AMD</p></td>
+<td><p><a class="reference external" href="https://www.xilinx.com/products/boards-and-kits/zcu104.html">ZCU104 Website</a></p></td>
+</tr>
+<tr class="row-even"><td><p>ZCU106</p></td>
+<td><p>Xilinx/AMD</p></td>
+<td><p><a class="reference external" href="https://www.xilinx.com/products/boards-and-kits/zcu106.html">ZCU106 Website</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Ultra96</p></td>
+<td><p>Avnet</p></td>
+<td><p><a class="reference external" href="https://www.96boards.org/product/ultra96/">Ultra96 Website</a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="boot-firmware">
+<h2>Boot Firmware<a class="headerlink" href="#boot-firmware" title="Permalink to this heading"></a></h2>
+<p>Xilinx Zynq MPSoC device requires two firmware images, one to configure the
+device (First Stage Bootloader) and one for runtime platform management (PMU
+Firmware). The scope of OP-TEE build Makefile does not cover buildling these two
+firmware images therefore pre built binaries are required to generate a valid
+boot image. The pre built images can be found in the following <a class="reference external" href="https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842316/Linux+Prebuilt+Images">Xilinx wiki</a>
+page.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For Ultra96 board, the firmware binaries can be found in the Avnet website.</p>
+</div>
+</section>
+<section id="build-instructions">
+<h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this heading"></a></h2>
+<p>Follow the instructions at “<a class="reference internal" href="../gits/build.html#get-and-build-the-solution"><span class="std std-ref">Get and build the solution</span></a>” page.</p>
+<p>Configuration switch <code class="docutils literal notranslate"><span class="pre">PLATFORM</span></code> can be used to specify the target device
+as listed in table below:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%"/>
+<col style="width: 72%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Board Name</p></th>
+<th class="head"><p>Build configuration directive</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ZCU102</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=zynqmp-zcu102</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>ZCU104</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=zynqmp-zcu104</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>ZCU106</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=zynqmp-zcu106</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Ultra96</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=zynqmp-ultra96</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>An example of fetch and build commands is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>repo<span class="w"> </span>init<span class="w"> </span>-u<span class="w"> </span>https://github.com/OP-TEE/manifest.git<span class="w"> </span>-m<span class="w"> </span>zynqmp.xml
+$<span class="w"> </span>repo<span class="w"> </span>sync
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>make<span class="w"> </span>toolchains
+$<span class="w"> </span>make<span class="w"> </span><span class="nv">PLATFORM</span><span class="o">=</span>zynqmp-zcu102<span class="w"> </span>all
+</pre></div>
+</div>
+<p>After completion of the buildling process, two new files will be generated
+within the <code class="docutils literal notranslate"><span class="pre">zynqmp/</span></code> folder, <code class="docutils literal notranslate"><span class="pre">BOOT.bin</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;platform-name&gt;.ub</span></code>. The
+first one is the boot image composed of the FSBL, PMU Firmware, ARM Trusted
+Firmware, OP-TEE and U-Boot. The second one is a FIT image containing the Linux
+kernel, the device-tree blob and the initramfs root file system.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the firmware image is not provided to the build script the boot image
+will not be generated.</p>
+</div>
+</section>
+<section id="petalinux-build-instructions">
+<h2>Petalinux build instructions<a class="headerlink" href="#petalinux-build-instructions" title="Permalink to this heading"></a></h2>
+<p>OP-TEE build can be additionally integrated within Xilinx Petalinux tool for
+Embedded Linux development. As Petalinux is built on top of Yocto, the
+integration is performed through adding some exisiting recipes and few
+customizations. Use the previous build <a class="reference external" href="https://github.com/OP-TEE/build/blob/3.14.0/zynqmp.mk">Makefile</a> based on Petalinux
+2020.2 release as reference.</p>
+</section>
+<section id="booting-the-device">
+<h2>Booting the device<a class="headerlink" href="#booting-the-device" title="Permalink to this heading"></a></h2>
+<section id="sd-card-boot">
+<h3>SD Card boot<a class="headerlink" href="#sd-card-boot" title="Permalink to this heading"></a></h3>
+<p>Place both generated images in a single partition within the SD card. Boot the
+board in SD boot mode and stop the U-Boot autoboot process once the prompt is
+displayed in the serial port.</p>
+<p>Use the bellow commands to load the FIT image to RAM and boot.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ZynqMP&gt; fatload mmc 0 0x30000000 zynqmp-zcu102.ub
+27803872 bytes read in 1827 ms (14.5 MiB/s)
+ZynqMP&gt; bootm 0x30000000
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="ti.html" rel="prev" title="Texas Instruments SoCs"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="../aosp/aosp.html" rel="next" title="AOSP">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Arm Security Extensions — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="platforms/index.html" rel="next" title="Platform documentation"/>
+<link href="spmc.html" rel="prev" title="SPMC"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Arm Security Extensions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#branch-target-identification">Branch Target Identification</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-enable-bti-for-op-tee-core">How to enable BTI for OP-TEE core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-enable-bti-for-ta-s">How to enable BTI for TA’s</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+<li class="breadcrumb-item active">Arm Security Extensions</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/architecture/arm_security_extensions.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Arm Security Extensions"></a><section id="arm-security-extensions">
+<span id="id1"></span><h1>Arm Security Extensions<a class="headerlink" href="#arm-security-extensions" title="Permalink to this heading"></a></h1>
+<section id="branch-target-identification">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Branch Target Identification"></a><span id="bti"></span><h2>Branch Target Identification<a class="headerlink" href="#branch-target-identification" title="Permalink to this heading"></a></h2>
+<p>Branch Target Identification (BTI) is an ARMv8.5 extension that provides
+Control Flow Integrity (CFI) around indirect branches and their targets, thus helping
+to limit the JOP (Jump Oriented Programming) attacks.</p>
+<p>With this extension, ARM8.5-A introduces Branch Target Instructions (BTIs).
+BTIs are also called landing pads. The processor can be configured so that
+indirect branches (BR and BLR) only allows target landing pad instructions.
+If the target of an indirect branch is not a landing pad, a Branch Target Exception
+is generated.</p>
+<section id="how-to-enable-bti-for-op-tee-core">
+<h3>How to enable BTI for OP-TEE core<a class="headerlink" href="#how-to-enable-bti-for-op-tee-core" title="Permalink to this heading"></a></h3>
+<p>To make use of BTI in TEE core on CPU’s that support it, enable the option
+<code class="docutils literal notranslate"><span class="pre">CFG_CORE_BTI</span></code>.</p>
+<p>OP-TEE core makes use of some built-ins in the GCC/clang toolchains. So, in order
+to use the option <code class="docutils literal notranslate"><span class="pre">CFG_CORE_BTI</span></code>, make sure that GCC toolchain has been built with
+<code class="docutils literal notranslate"><span class="pre">--enable-standard-branch-protection</span></code> is used else OP-TEE will fail to build.
+By default libraries such as libgcc.a are built with flags (<code class="docutils literal notranslate"><span class="pre">-mbranch-protection=none</span></code>),
+hence are incompatible with branch protection enabled. The Arm GNU compiler team
+is looking for ways of providing users easy access to BTI-enabled libraries.
+In the short-term, they plan to create documentation to make it easier for users to
+build BTI-enabled libraries themselves. Longer-term, they will begin discussions
+on how to ensure BTI-enabled libraries are available automatically to users.
+Please contact GCC team for more information on same. In the meantime, building a
+BTI-enabled GCC toolchain is possible as decribed in <a class="reference internal" href="../faq/faq.html#faq-gcc-bti"><span class="std std-ref">Q: How can I build GCC with BTI enabled?</span></a>.</p>
+<p>The same problem is also there with clang toolchain. So, when using clang to build
+OP-TEE with <code class="docutils literal notranslate"><span class="pre">CFG_CORE_BTI=y</span></code>, builtins (found in llvm’s “compiler-rt”
+project) must be built with BTI protection enabled. We have some instructions on
+how to build the compiler-rt with BTI enabled. These are available in
+<a class="reference internal" href="../faq/faq.html#faq-llvm-bti"><span class="std std-ref">Q: How can I build LLVM compiler-rt with BTI enabled ?</span></a>.</p>
+</section>
+<section id="how-to-enable-bti-for-ta-s">
+<h3>How to enable BTI for TA’s<a class="headerlink" href="#how-to-enable-bti-for-ta-s" title="Permalink to this heading"></a></h3>
+<p>To make use of BTI support for TA’s and user mode libraries, enable the option
+<code class="docutils literal notranslate"><span class="pre">CFG_TA_BTI</span></code>. This will ensure that all libraries provided by OP-TEE to the TA’s
+as well as the TA’s are built with BTI option.</p>
+<p>When the TA’s are loaded by ldelf, they are checked at run time for the BTI NOTE
+property in ELF before enabling the protection for the TA.</p>
+<p>When building TA’s, you need to ensure that any external library used has been
+built with branch-protection. This can be done by checking the library using readelf
+command with option <code class="docutils literal notranslate"><span class="pre">-n</span></code>. The BTI enabled libraries will have BTI NOTE property in
+<code class="docutils literal notranslate"><span class="pre">.note.gnu.property</span></code> section. If that is not the case, compilation will stop with a
+warning. This is done intentionally to warn the user.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The BTI support is currently not compatible with options <code class="docutils literal notranslate"><span class="pre">CFG_VIRTUALIZATION</span></code> and
+<code class="docutils literal notranslate"><span class="pre">CFG_WITH_PAGER</span></code>.</p>
+</div>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="spmc.html" rel="prev" title="SPMC"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="platforms/index.html" rel="next" title="Platform documentation">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

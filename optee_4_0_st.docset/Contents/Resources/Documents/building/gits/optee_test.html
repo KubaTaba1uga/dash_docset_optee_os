@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>optee_test — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="../toolchains.html" rel="next" title="Toolchains"/>
+<link href="optee_os.html" rel="prev" title="optee_os"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/index.html">Device specific information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">OP-TEE gits</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="build.html">build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build_legacy.html">Build stable releases v1.0.0 to v3.0.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build_legacy_3_1_0-3_8_0.html">Build stable releases 3.1.0 to 3.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest.html">manifest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_benchmark.html">optee_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_client.html">optee_client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_docs.html">optee_docs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_examples/optee_examples.html">optee_examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_os.html">optee_os</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">optee_test</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#git-location">git location</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-instructions">Build instructions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#extended-test-globalplatform-tests">Extended test (GlobalPlatform tests)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#run-xtest">Run xtest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coding-standards">Coding standards</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="index.html">OP-TEE gits</a></li>
+<li class="breadcrumb-item active">optee_test</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/gits/optee_test.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/optee_test"></a><section id="optee-test">
+<span id="id1"></span><h1>optee_test<a class="headerlink" href="#optee-test" title="Permalink to this heading"></a></h1>
+<p>The optee_test.git contains the source code for the TEE sanity test suite in
+Linux using the ARM(R) TrustZone(R) technology. It is typically referred to as
+<cite>xtest</cite>. By default there are several thousands of tests when running the code
+that is in the git only. However, it is also possible to incorporate tests
+coming from GlobalPlatform (see <a class="reference internal" href="#globalplatform-tests"><span class="std std-ref">Extended test (GlobalPlatform tests)</span></a>). We typically refer
+to these to as:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Standard tests</strong>: These are the test that are included in optee_test.
+They are free and open source.</p></li>
+<li><p><strong>Extended tests</strong>: Those are the tests that are written directly by
+GlobalPlatform. They are <strong>not</strong> open source and they are <strong>not</strong> freely
+available (it’s free to members of GlobalPlatform and can otherwise be
+purchased directly from GlobalPlatform).</p></li>
+</ul>
+</div></blockquote>
+<section id="git-location">
+<h2>git location<a class="headerlink" href="#git-location" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/OP-TEE/optee_test">https://github.com/OP-TEE/optee_test</a></p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading"></a></h2>
+<p>The client applications (<code class="docutils literal notranslate"><span class="pre">optee_test/host/*</span></code>) are provided under the
+<a class="reference external" href="http://opensource.org/licenses/GPL-2.0">GPL-2.0</a> license and the user Trusted Applications (<code class="docutils literal notranslate"><span class="pre">optee_test/ta/*</span></code>) are
+provided under the <a class="reference external" href="http://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause</a>.</p>
+</section>
+<section id="build-instructions">
+<h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this heading"></a></h2>
+<p>At the moment you can <strong>only</strong> build the code in this git as part of the entire
+system, i.e. as a part of a full OP-TEE developer setup. So, please refer to
+the instructions at the <a class="reference internal" href="build.html#build"><span class="std std-ref">build</span></a> page to learn how to build a full OP-TEE
+developer setup. Building purely standalone is <strong>not</strong> possible (*) because:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the host code (<code class="docutils literal notranslate"><span class="pre">xtest</span></code>) have dependencies to the <a class="reference internal" href="optee_client.html#optee-client"><span class="std std-ref">optee_client</span></a> (it
+links against <code class="docutils literal notranslate"><span class="pre">libteec</span></code>, <code class="docutils literal notranslate"><span class="pre">openssl</span></code> and uses various headers)</p></li>
+<li><p>the Trusted Applications have dependencies to the TA-devkit built by
+<a class="reference internal" href="optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a>.</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>(*) It is of course possible to build this without a full OP-TEE
+developer setup, but it will require a lot of tweaking with paths, flags
+etc. I.e., one would need to do exactly the same as the full OP-TEE
+developer setup does under the hood.</p>
+</div>
+</section>
+<section id="extended-test-globalplatform-tests">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Extended test (GlobalPlatform tests)"></a><span id="globalplatform-tests"></span><h2>Extended test (GlobalPlatform tests)<a class="headerlink" href="#extended-test-globalplatform-tests" title="Permalink to this heading"></a></h2>
+<p>One can purchase the <a class="reference external" href="https://store.globalplatform.org/product/tee-initial-configuration-test-suite-with-excluded-tests-list-v2-0-0-2/">GlobalPlatform Compliance Test suite</a> which is
+GlobalPlatforms own test suite for testing TEE implementations adhering to the
+GlobalPlatforms interfaces.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Members of GlobalPlatform can download this for free at the
+GlobalPlatform members pages. This something that the OP-TEE project
+<strong>cannot</strong> help with. If you need help with that, please reach out to
+the liason at GlobalPlatform.</p>
+</div>
+<p>xtest can be extended/patched to include the GlobalPlatform Compliance Test
+suite. This can be done by downloading the GlobalPlatform Compliance Test suite
+(a <code class="docutils literal notranslate"><span class="pre">*.7z</span></code> file) and add an additional compiler flag (<code class="docutils literal notranslate"><span class="pre">GP_PACKAGE</span></code>) to
+the <code class="docutils literal notranslate"><span class="pre">make</span></code> invocation line, example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nv">GP_PACKAGE</span><span class="o">=</span>/tmp/TEE_Initial_Configuration-Test_Suite_v2_0_0_2-2017_06_09.7z
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Starting from OP-TEE v3.11.0, OP-TEE was updated to support the
+<code class="docutils literal notranslate"><span class="pre">TEE_Initial_Configuration-Test_Suite_v2_0_0_2-2017_06_09.7z</span></code> version
+from the GlobalPlatform Compliance Test suite. That is the only
+supported version after OP-TEE v3.11.0. If you need to run an earlier
+version of the GlobalPlatform Compliance Test suite then you need to
+follow the instructions in the documentation for OP-TEE v3.9.0 and
+earlier.</p>
+</div>
+</section>
+<section id="run-xtest">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Run xtest"></a><span id="optee-test-run-xtest"></span><h2>Run xtest<a class="headerlink" href="#run-xtest" title="Permalink to this heading"></a></h2>
+<p>It’s important to understand that you run <code class="docutils literal notranslate"><span class="pre">xtest</span></code> on the device itself, i.e.,
+this is nothing that you run on the host machine.</p>
+<section id="xtest-default">
+<h3>xtest - default<a class="headerlink" href="#xtest-default" title="Permalink to this heading"></a></h3>
+<p>The most simple case is to run the default configuration:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest
+</pre></div>
+</div>
+</section>
+<section id="xtest-all">
+<h3>xtest - all<a class="headerlink" href="#xtest-all" title="Permalink to this heading"></a></h3>
+<p>This runs all tests within the standard xtest. Using the <code class="docutils literal notranslate"><span class="pre">-l</span></code> parameter you
+can tweak the amount of tests you will run. <code class="docutils literal notranslate"><span class="pre">15</span></code> is the most and <code class="docutils literal notranslate"><span class="pre">0</span></code> is the
+least.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest<span class="w"> </span>-l<span class="w"> </span><span class="m">15</span>
+</pre></div>
+</div>
+</section>
+<section id="xtest-single">
+<h3>xtest - single<a class="headerlink" href="#xtest-single" title="Permalink to this heading"></a></h3>
+<p>To run a single test case, just specify its numbers, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest<span class="w"> </span><span class="m">1001</span>
+</pre></div>
+</div>
+</section>
+<section id="xtest-family">
+<h3>xtest - family<a class="headerlink" href="#xtest-family" title="Permalink to this heading"></a></h3>
+<p>To run a family (<code class="docutils literal notranslate"><span class="pre">1xxx</span></code>, <code class="docutils literal notranslate"><span class="pre">2xxx</span></code> and so on), just specify its number prefixed
+with an underscore. This for example will run the 1xxx family.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest<span class="w"> </span>_1
+</pre></div>
+</div>
+</section>
+<section id="xtest-benchmark">
+<h3>xtest - benchmark<a class="headerlink" href="#xtest-benchmark" title="Permalink to this heading"></a></h3>
+<p>To run the benchmark tests, run xtest like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest<span class="w"> </span>-t<span class="w"> </span>benchmark
+</pre></div>
+</div>
+<p>Here it is also possible to state a number for a certain benchmark test, for
+example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest<span class="w"> </span>-t<span class="w"> </span>benchmark<span class="w"> </span><span class="m">2001</span>
+</pre></div>
+</div>
+</section>
+<section id="xtest-regression">
+<h3>xtest - regression<a class="headerlink" href="#xtest-regression" title="Permalink to this heading"></a></h3>
+<p>To run the regression tests, run xtest like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest<span class="w"> </span>-t<span class="w"> </span>regression
+</pre></div>
+</div>
+<p>Here it is also possible to state a number for a certain regression test, for
+example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest<span class="w"> </span>-t<span class="w"> </span>regression<span class="w"> </span><span class="m">2004</span>
+</pre></div>
+</div>
+</section>
+<section id="xtest-aes-perf">
+<h3>xtest - aes-perf<a class="headerlink" href="#xtest-aes-perf" title="Permalink to this heading"></a></h3>
+<p>This is benchmark test for AES and you run it like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest<span class="w"> </span>--aes-perf
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There is an individual help for <code class="docutils literal notranslate"><span class="pre">--aes-perf</span></code>, i.e.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">xtest</span> <span class="pre">--aes-perf</span> <span class="pre">-h</span></code></p>
+</div>
+</section>
+<section id="xtest-sha-perf">
+<h3>xtest - sha-perf<a class="headerlink" href="#xtest-sha-perf" title="Permalink to this heading"></a></h3>
+<p>This is benchmark test for SHA-xxx and you run it like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest<span class="w"> </span>--sha-perf
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There is an individual help for <code class="docutils literal notranslate"><span class="pre">--sha-perf</span></code>, i.e.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">xtest</span> <span class="pre">--sha-perf</span> <span class="pre">-h</span></code></p>
+<p>There you can select other SHA algorithms etc.</p>
+</div>
+</section>
+</section>
+<section id="coding-standards">
+<h2>Coding standards<a class="headerlink" href="#coding-standards" title="Permalink to this heading"></a></h2>
+<p>See <a class="reference internal" href="../../general/coding_standards.html#coding-standards"><span class="std std-ref">Coding standards</span></a>.</p>
+<p>The <a class="reference internal" href="optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> repository is required to run the checks. It’s location may
+be passed using the <cite>OPTEE_OS_PATH</cite> environment variable:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">OPTEE_OS_PATH</span><span class="o">=</span>/path/to/optee_os
+</pre></div>
+</div>
+<p>In case <cite>OPTEE_OS_PATH</cite> is unset or empty, the dispatcher script will default to <cite>../optee_os</cite>.</p>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="optee_os.html" rel="prev" title="optee_os"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="../toolchains.html" rel="next" title="Toolchains">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

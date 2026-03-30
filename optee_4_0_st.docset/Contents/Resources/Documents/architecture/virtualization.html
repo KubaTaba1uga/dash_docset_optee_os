@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Virtualization &mdash; OP-TEE documentation  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/mystyle.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SPMC" href="spmc.html" />
+    <link rel="prev" title="Trusted Applications" href="trusted_applications.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OP-TEE documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Virtualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#requirements-for-hypervisor">Requirements for hypervisor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitations">Limitations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#platforms-support">Platforms support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#static-vms-guest-count-and-memory-allocation">Static VMs guest count and memory allocation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sharing-hardware-resources-and-ptas">Sharing hardware resources and PTAs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#no-compatibility-with-normal-mode">No compatibility with “normal” mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-details">Implementation details</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OP-TEE documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+      <li class="breadcrumb-item active">Virtualization</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/virtualization.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="virtualization">
+<h1>Virtualization<a class="headerlink" href="#virtualization" title="Permalink to this heading"></a></h1>
+<p>OP-TEE have experimental virtualization support. This is when one OP-TEE
+instance can run TAs from multiple virtual machines. OP-TEE isolates all
+VM-related states, so one VM can’t affect another in any way.</p>
+<p>With virtualization support enabled, OP-TEE will rely on a hypervisor, because
+only the hypervisor knows which VM is calling OP-TEE. Also, naturally the
+hypervisor should inform OP-TEE about creation and destruction of VMs. Besides,
+in almost all cases, hypervisor enables two-stage MMU translation, so VMs does
+not see real physical address of memory, instead they work with intermediate
+physical addresses (IPAs). On other hand OP-TEE can’t translate IPA to PA, so
+this is a hypervisor’s responsibility to do this kind of translation. So,
+hypervisor should include a component that knows about OP-TEE protocol internals
+and can do this translation. We call this component “TEE mediator” and right now
+only XEN hypervisor have OP-TEE mediator.</p>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
+<p>Virtualization support is enabled with <code class="docutils literal notranslate"><span class="pre">CFG_VIRTUALIZATION</span></code> configuration
+option. When this option is enabled, OP-TEE will <strong>not</strong> work without compatible
+a hypervisor. This is because the hypervisor should send
+<code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_VM_CREATED</span></code> SMC with VM ID before any standard SMC can be received
+from client.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CFG_VIRT_GUEST_COUNT</span></code> controls the maximum number of supported VMs. As OP-TEE
+have limited size of available memory, increasing this count will decrease
+amount of memory available to one VM. Because we want VMs to be independent,
+OP-TEE splits available memory in equal portions to every VM, so one VM can’t
+consume all memory and cause DoS to other VMs.</p>
+</section>
+<section id="requirements-for-hypervisor">
+<h2>Requirements for hypervisor<a class="headerlink" href="#requirements-for-hypervisor" title="Permalink to this heading"></a></h2>
+<p>As said earlier, hypervisor should be aware of OP-TEE and SMCs from virtual
+guests to OP-TEE. This is a list of things, that compatible hypervisor should
+perform:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>When new OP-TEE-capable VM is created, hypervisor should inform OP-TEE
+about it with SMC <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_VM_CREATED</span></code>. <code class="docutils literal notranslate"><span class="pre">a1</span></code> parameter should
+contain VM id. ID 0 is defined as <code class="docutils literal notranslate"><span class="pre">HYP_CLNT_ID</span></code> and is reserved for
+hypervisor itself.</p></li>
+<li><p>When OP-TEE-capable VM is being destroyed, hypervisor should stop all
+VCPUs (this will ensure that OP-TEE have no active threads for that VMs)
+and send SMC <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_VM_DESTROYED</span></code> with the same parameters as for
+<code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_VM_CREATED</span></code>.</p></li>
+<li><p>Any SMC to OP-TEE should have VM ID in <code class="docutils literal notranslate"><span class="pre">a7</span></code> parameter. This is either
+<code class="docutils literal notranslate"><span class="pre">HYP_CLNT_ID</span></code> if call originates from hypervisor or VM ID that was
+passed in <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_VM_CREATED</span></code> call.</p></li>
+<li><p>Hypervisor should perform IPA&lt;-&gt;PA address translation for all SMCs. This
+includes both arguments in <code class="docutils literal notranslate"><span class="pre">a1</span></code>-<code class="docutils literal notranslate"><span class="pre">a6</span></code> registers and in in-memory
+command buffers.</p></li>
+<li><p>Hypervisor should pin memory pages that VM shares with OP-TEE. This
+means, that hypervisor should ensure that pinned page will reside at the
+original PA as long, as it is shared with OP-TEE. Also it should still
+belong to the VM that shared it. For example, the hypervisor should not
+swap out this page, transfer ownership to another VM, unmap it from VM
+address space and so on.</p></li>
+<li><p>Naturally, the hypervisor should correctly handle the OP-TEE protocol, so
+for any VM it should look like it is working with OP-TEE directly.</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this heading"></a></h2>
+<p>Virtualization support is in experimental state and it have some limitations,
+user should be aware of.</p>
+<section id="platforms-support">
+<h3>Platforms support<a class="headerlink" href="#platforms-support" title="Permalink to this heading"></a></h3>
+<p>Only Armv8 architecture is supported. There is no hard restriction, but
+currently Armv7-specific code (like MMU or thread manipulation) just know
+nothing about virtualization. Only one platform has been tested right now and
+that is QEMU-V8 (aka qemu that emulates Arm Versatile Express with Armv8
+architecture). Support for Rcar Gen3 should be added soon.</p>
+</section>
+<section id="static-vms-guest-count-and-memory-allocation">
+<h3>Static VMs guest count and memory allocation<a class="headerlink" href="#static-vms-guest-count-and-memory-allocation" title="Permalink to this heading"></a></h3>
+<p>Currently, a user should configure maximum number of guests. OP-TEE will split
+memory into equal chunks, so every VM will have the same amount of memory. For
+example, if you have 6MB for your TAs, you can set <code class="docutils literal notranslate"><span class="pre">CFG_VIRT_GUEST_COUNT</span></code> to 3
+and every VM would be able to use 2MB maximum, even if there is no other VMs
+running. This is okay for embedded setups when you know exact number and roles
+of VMs, but can be inconvenient for server applications. Also, it is impossible
+to configure amount of memory available for a given VM. Every VM instance will
+have exactly the same amount of memory.</p>
+</section>
+<section id="sharing-hardware-resources-and-ptas">
+<h3>Sharing hardware resources and PTAs<a class="headerlink" href="#sharing-hardware-resources-and-ptas" title="Permalink to this heading"></a></h3>
+<p>Right now only HW that can be used by multiple VMs simultaneously is serial
+console, used for logging. Devices like HW crypto accelerators, secure storage
+devices (e.g. external flash storage, accessed directly from OP-TEE) and others
+are not supported right now. Drivers should be made virtualization-aware before
+they can be used with virtualization extensions.</p>
+<p>Every VM will have own PTA states, which is a good thing in most cases. But if
+one wants PTA to have some global state that is shared between VMs, he need to
+write PTA accordingly.</p>
+</section>
+<section id="no-compatibility-with-normal-mode">
+<h3>No compatibility with “normal” mode<a class="headerlink" href="#no-compatibility-with-normal-mode" title="Permalink to this heading"></a></h3>
+<p>OP-TEE built with <code class="docutils literal notranslate"><span class="pre">CFG_VIRTUALIZATION=y</span></code> will not work without a hypervisor,
+because before executing any standard SMC, <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_VM_CREATED</span></code> must be
+called. This can be inconvenient if one wants to switch between virtualized and
+non-virtualized environment frequently. On other hand, it is not a big deal in a
+production environment. Simple workaround can be made for this: if OP-TEE
+receives standard SMC prior to <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_VM_CREATED</span></code>, it implicitly creates
+VM context and uses it for all subsequent calls.</p>
+</section>
+<section id="implementation-details">
+<h3>Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this heading"></a></h3>
+<p>OP-TEE as a whole can be split into two entities. Let us call them “nexus” and
+TEE. Nexus is a core part of OP-TEE that takes care of low level things: SMC
+handling, memory management, threads creation and so on. TEE is a part that does
+the actual job: handles requests, loads TAs, executes them, and so on. So, it is
+natural to have one nexus instance and multiple instances of TEE, one TEE
+instance per registered VM. This can be done either explicitly or implicitly.</p>
+<p>Explicit way is to move TEE state in some sort of structure and make all code to
+access fields of this structure. Something like <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">task_struct</span></code> and
+<code class="docutils literal notranslate"><span class="pre">current</span></code> in linux kernel. Then it is easy to allocate such structure for
+every VM instance. But this approach basically requires to rewrite all OP-TEE
+code.</p>
+<p>Implicit way is to have banked memory sections for TEE/VM instances. So memory
+layout can look something like that:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+-------------------------------------------------+
+|           Nexus: .nex_bss, .nex_data, ...       |
++-------------------------------------------------+
+|                   TEE states                    |
+|                                                 |
+| VM1 TEE state | VM 2 TEE state | VM 3 TEE state |
+| .bss, .data   | .bss, .data    | .bss, .data,   |
++-------------------------------------------------+
+</pre></div>
+</div>
+<p>This approach requires no changes in TEE code and requires some changes into
+nexus code. So, idea that Nexus state resides in separate sections
+(<code class="docutils literal notranslate"><span class="pre">.nex_data</span></code>, <code class="docutils literal notranslate"><span class="pre">.nex_bss</span></code>, <code class="docutils literal notranslate"><span class="pre">.nex_nozi</span></code>, <code class="docutils literal notranslate"><span class="pre">.nex_heap</span></code> and others) and is
+always mapped.</p>
+<p>TEE state resides in standard sections (like <code class="docutils literal notranslate"><span class="pre">.data</span></code>, <code class="docutils literal notranslate"><span class="pre">.bss</span></code>, <code class="docutils literal notranslate"><span class="pre">.heap</span></code> and
+so on). There is a separate set of this sections for every VM registered and
+Nexus maps them only when it receives call from corresponding VM.</p>
+<p>As Nexus and TEE have separate heaps, <code class="docutils literal notranslate"><span class="pre">bget</span></code> allocator was extended to work
+with multiple “contexts”. <code class="docutils literal notranslate"><span class="pre">malloc()</span></code>, <code class="docutils literal notranslate"><span class="pre">free()</span></code> with friends work with one
+context. <code class="docutils literal notranslate"><span class="pre">nex_malloc()</span></code> (and other <code class="docutils literal notranslate"><span class="pre">nex_</span></code> functions) were added. They use
+different context, so now Nexus can use separate heap, which is always mapped
+into OP-TEE address space. When virtualization support is disabled, all those
+<code class="docutils literal notranslate"><span class="pre">nex_</span></code> functions are defined to point to standard <code class="docutils literal notranslate"><span class="pre">malloc()</span></code> counterparts.</p>
+<p>To change memory mappings in run-time, in MMU code we have added a new entity,
+named “partition”, which is defined by <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mmu_partition</span></code>. It holds
+information about all page-tables, so the whole MMU mapping can be switched by
+one write to <code class="docutils literal notranslate"><span class="pre">TTBR</span></code> register.</p>
+<p>There is the default partition, it holds MMU state when there is no VM context
+active, so no TEE state is mapped. When OP-TEE receives <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_VM_CREATED</span></code>
+call, it copies default partition into new one and then maps sections with TEE
+data. This is done by <code class="docutils literal notranslate"><span class="pre">prepare_memory_map()</span></code> function in <code class="docutils literal notranslate"><span class="pre">virtualization.c</span></code>.</p>
+<p>When OP-TEE receives STD call it checks that the supplied VM ID is valid and
+then activates corresponding MMU partition, so TEE code can access its own data.
+This is basically how virtualization support is working.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="trusted_applications.html" class="btn btn-neutral float-left" title="Trusted Applications" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="spmc.html" class="btn btn-neutral float-right" title="SPMC" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

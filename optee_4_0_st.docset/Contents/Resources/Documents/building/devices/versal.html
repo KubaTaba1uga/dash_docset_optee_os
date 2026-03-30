@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AMD-Xilinx Versal ACAP VCK190 — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="devbox.html" rel="next" title="DeveloperBox"/>
+<link href="index.html" rel="prev" title="Device specific information"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Device specific information</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">AMD-Xilinx Versal ACAP VCK190</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#supported-boards">Supported boards</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setting-up-the-toolchain">Setting up the toolchain</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuring-and-building-for-vck190">Configuring and building for VCK190</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#jtag-boot-to-u-boot-shell">JTAG boot to U-Boot shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sd-card-creation-and-boot">SD card creation and boot</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="devbox.html">DeveloperBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fvp.html">FVP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey620.html">HiKey 620</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey960.html">HiKey 960</a></li>
+<li class="toctree-l3"><a class="reference internal" href="juno.html">Juno</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nuvoton.html">NUVOTON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html">QEMU v7</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html#qemu-v8">QEMU v8</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rockpi4.html">ROCK Pi 4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rpi3.html">Raspberry Pi 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stm32mp1.html">STM32MP1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ti.html">Texas Instruments SoCs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zynqmp.html">Zynq MPSoC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="index.html">Device specific information</a></li>
+<li class="breadcrumb-item active">AMD-Xilinx Versal ACAP VCK190</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/devices/versal.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="amd-xilinx-versal-acap-vck190">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/AMD-Xilinx Versal ACAP VCK190"></a><span id="versal"></span><h1>AMD-Xilinx Versal ACAP VCK190<a class="headerlink" href="#amd-xilinx-versal-acap-vck190" title="Permalink to this heading"></a></h1>
+<p>Instructions below show how to run OP-TEE on the <a class="reference external" href="https://www.xilinx.com/products/boards-and-kits/vck190.html">VCK190</a> development board.
+Details of the Versal ACAP can be found in the Versal Technical Reference Manual
+(<a class="reference external" href="https://docs.xilinx.com/r/en-US/am011-versal-acap-trm">Versal_TRM</a>).</p>
+<section id="supported-boards">
+<h2>Supported boards<a class="headerlink" href="#supported-boards" title="Permalink to this heading"></a></h2>
+<p>This makefile supports the VCK190 but also supports the <a class="reference external" href="https://www.xilinx.com/products/boards-and-kits/vmk180.html">VMK180</a> development
+board as well.</p>
+</section>
+<section id="setting-up-the-toolchain">
+<h2>Setting up the toolchain<a class="headerlink" href="#setting-up-the-toolchain" title="Permalink to this heading"></a></h2>
+<p>This build chain relies on Petalinux 2022.1, therefore the first step will be to
+download and <a class="reference external" href="https://docs.xilinx.com/r/en-US/ug1144-petalinux-tools-reference-guide/Installing-the-PetaLinux-Tool">install</a> it from the AMD-Xilinx website (<a class="reference external" href="https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/embedded-design-tools/2022-1.html">Downloads</a>).</p>
+<p>Then, you will also need to download the board support package (BSP) from the
+AMD-Xilinx website (<a class="reference external" href="https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/embedded-design-tools/2022-1.html">Downloads</a>). It contains prebuilt firmwares and hardware
+definition files required to assemble a bootable image.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You will need a free AMD-Xilinx account to proceed with the two previous
+steps.</p>
+</div>
+</section>
+<section id="configuring-and-building-for-vck190">
+<h2>Configuring and building for VCK190<a class="headerlink" href="#configuring-and-building-for-vck190" title="Permalink to this heading"></a></h2>
+<p>Lets summarize the steps taken so far; these are common to all boards.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>~/optee-project
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/optee-project
+$<span class="w"> </span>repo<span class="w"> </span>init<span class="w"> </span>-u<span class="w"> </span>https://github.com/OP-TEE/manifest.git<span class="w"> </span>-m<span class="w"> </span>versal.xml
+$<span class="w"> </span>repo<span class="w"> </span>sync<span class="w"> </span>-j4<span class="w"> </span>--no-clone-bundle
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>make<span class="w"> </span>-j8<span class="w"> </span>toolchains
+$<span class="w"> </span>make<span class="w"> </span>-j8
+</pre></div>
+</div>
+<p>At this point we have a working directory <code class="docutils literal notranslate"><span class="pre">~/optee-project</span></code> with all the
+repositories required with the exception of the Versal ACAP board support
+package. A pre-requisite to unpacking the BSP file is installing Petalinux
+(<a class="reference external" href="https://docs.xilinx.com/r/en-US/ug1144-petalinux-tools-reference-guide/Installing-the-PetaLinux-Tool">install</a>) as previously mentioned.</p>
+<p>Having done that, now is the time to unpack the BSP:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/optee-project
+$<span class="w"> </span>cp<span class="w"> </span>~/Downloads/xilinx-vck190-v2022.1-04191534.bsp<span class="w"> </span>.
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>/path/to/petalinux.2022.1/settings.sh
+$<span class="w"> </span>petalinux-create<span class="w"> </span>--type<span class="w"> </span>project<span class="w"> </span>-s<span class="w"> </span>xilinx-vck190-v2022.1-04191534.bsp
+$<span class="w"> </span>ls
+<span class="w">   </span>xilinx-vck190-2022.1
+</pre></div>
+</div>
+<p>In order for the Versal OP-TEE port to work correctly, the PLM needs to be
+updated to add the XilNvm and XilPuf libraries. This can be accomplished by the
+following steps within the PetaLinux workspace created above:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>project-spec/meta-user/recipes-bsp/embeddedsw
+$<span class="w"> </span>cp<span class="w"> </span>~/optee-project/build/versal/plm-firmware_%.bbappend<span class="w"> </span>project-spec/meta-user/recipes-bsp/embeddedsw
+$<span class="w"> </span>petalinux-build<span class="w"> </span>-c<span class="w"> </span>plm
+</pre></div>
+</div>
+<p>The newly created PLM will be located in the folder <code class="docutils literal notranslate"><span class="pre">images/linux/plm.elf</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace the VCK190 BSP with the VMK180 BSP if you want to build this project
+for the VMK180 development board.</p>
+</div>
+<p>Before building the release, you will need to edit the Boot Image File (BIF)
+<code class="docutils literal notranslate"><span class="pre">build/versal/bootImage-versal-vck190.bif</span></code> to point to the required BSP files.
+The paths for the following files in the BIF will need to be updated <em>before</em>
+proceeding:</p>
+<ul class="simple">
+<li><p>vpl_gen_fixed.pdi</p></li>
+<li><p>plm.elf</p></li>
+<li><p>psmfw.elf</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default PLM <strong>only</strong> contains the xilsecure library. If you would like to
+take advantage of all of hardware cryptographic features implemented for
+Versal, you <strong>must</strong> enable the xilpuf and xilnvm libraries by following the
+steps above for customizing the PLM (<a class="reference external" href="https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/2037088327/Versal+Platform+Loader+and+Manager#PLM-Feature-Configuration-for-PetaLinux">PLM_Customization</a>).</p>
+</div>
+<p>The xilpuf library enables support of the physically unclonable function (PUF)
+and the xilnvm library enables support of reading and writing to eFUSEs. Once
+these libraries are enabled, be sure to point to the updated PLM firmware in the
+previously mentioned BIF file.</p>
+<p>After you have done that you can build the images as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/optee-project
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>make<span class="w"> </span>-f<span class="w"> </span>versal.mk<span class="w"> </span>image
+$<span class="w"> </span>ls<span class="w"> </span>versal<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'BIN|ub'</span>
+<span class="w">  </span>BOOT.BIN
+<span class="w">  </span>versal-vck190.ub
+</pre></div>
+</div>
+</section>
+<section id="jtag-boot-to-u-boot-shell">
+<h2>JTAG boot to U-Boot shell<a class="headerlink" href="#jtag-boot-to-u-boot-shell" title="Permalink to this heading"></a></h2>
+<p>To run the bootable image <code class="docutils literal notranslate"><span class="pre">BOOT.BIN</span></code> via JTAG, configure the boot switches as
+seen below and then power up the board.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/vck190-jtag-boot.png"><img alt="../../_images/vck190-jtag-boot.png" src="../../_images/vck190-jtag-boot.png" style="width: 400px;"/></a>
+</figure>
+<p>Then run the boot_jtag.sh script.</p>
+<p>This script will first ask for the path of the Petalinux installation; once
+entered, it will download and execute the image on the Versal ACAP platform.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/optee-project/build/versal/
+$<span class="w"> </span>./boot_jtag.sh
+</pre></div>
+</div>
+</section>
+<section id="sd-card-creation-and-boot">
+<h2>SD card creation and boot<a class="headerlink" href="#sd-card-creation-and-boot" title="Permalink to this heading"></a></h2>
+<p>Prepare a SD card with a single <strong>bootable</strong> partition large enough to hold both
+of the built files.</p>
+<p>Using <code class="docutils literal notranslate"><span class="pre">gparted</span></code> or any other partition manager tool create a single partition
+on the card (remember to flag it as bootable)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>1GB FAT32 bootable partition (i.e: <code class="docutils literal notranslate"><span class="pre">/dev/sdc1</span></code>).</p></li>
+</ul>
+</div></blockquote>
+<p>Once SD card is partitioned, mount it on your file system and copy the images:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cp<span class="w"> </span>~/optee-project/build/versal/BOOT.BIN<span class="w"> </span>&lt;mount_point&gt;/
+$<span class="w"> </span>cp<span class="w"> </span>~/optee-project/build/versal/versal-vck190.ub<span class="w"> </span>&lt;mount_point&gt;/
+$<span class="w"> </span>sync
+$<span class="w"> </span>umount<span class="w"> </span>&lt;mount_point&gt;
+</pre></div>
+</div>
+<p>Now you can use the newly created SD card to boot your board. Make sure the boot
+switches are configured for SD boot.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/vck190-sd-boot.png"><img alt="../../_images/vck190-sd-boot.png" src="../../_images/vck190-sd-boot.png" style="width: 400px;"/></a>
+</figure>
+<p>Unless you have modified the default U-boot boot command, you will need to stop
+the sequence at the U-boot shell and issue these three additional commands to
+boot to Linux:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uboot<span class="w"> </span>shell$<span class="w"> </span>mmc<span class="w"> </span>dev<span class="w"> </span><span class="m">0</span>
+uboot<span class="w"> </span>shell$<span class="w"> </span>fatload<span class="w"> </span>mmc<span class="w"> </span><span class="m">0</span>:1<span class="w"> </span>0x20000000<span class="w"> </span>versal-vck190.ub
+uboot<span class="w"> </span>shell$<span class="w"> </span>bootm<span class="w"> </span>0x20000000
+</pre></div>
+</div>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="index.html" rel="prev" title="Device specific information"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="devbox.html" rel="next" title="DeveloperBox">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GlobalPlatform API — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="libraries.html" rel="next" title="Libraries"/>
+<link href="file_structure.html" rel="prev" title="File structure"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GlobalPlatform API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tee-client-api">TEE Client API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tee-contexts">TEE Contexts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tee-sessions">TEE Sessions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tee-shared-memory">TEE Shared memory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tee-client-api-example-usage">TEE Client API example / usage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tee-internal-core-api">TEE Internal Core API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#examples-usage">Examples / usage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#extensions">Extensions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cache-maintenance-support">Cache Maintenance Support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pkcs-1-v1-5-rsassa-without-hash-oid">PKCS#1 v1.5 RSASSA without hash OID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#concat-kdf">Concat KDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hkdf">HKDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pbkdf2">PBKDF2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#loadable-plugins-framework">Loadable plugins framework</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+<li class="breadcrumb-item active">GlobalPlatform API</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/architecture/globalplatform_api.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/GlobalPlatform API"></a><section id="globalplatform-api">
+<span id="id1"></span><h1>GlobalPlatform API<a class="headerlink" href="#globalplatform-api" title="Permalink to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://globalplatform.org">GlobalPlatform</a> works across industries to identify, develop and publish
+specifications which facilitate the secure and interoperable deployment and
+management of multiple embedded applications on secure chip technology. OP-TEE
+has support for GlobalPlatform TEE Client API <a class="reference external" href="https://globalplatform.org/specs-library/?filter-committee=tee">Specification</a> v1.0 (GPD_SPE_007)
+plus Errata and Precisions 2.0 (GPD_EPR_028) and TEE Internal Core API
+Specification v1.3.1 (GPD_SPE_010).</p>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/TEE Client API"></a><section id="tee-client-api">
+<span id="id2"></span><h2>TEE Client API<a class="headerlink" href="#tee-client-api" title="Permalink to this heading"></a></h2>
+<p>The TEE Client API describes and defines how a client running in a rich
+operating environment (REE) should communicate with the TEE. To identify a
+Trusted Application (TA) to be used, the client provides an <a class="reference external" href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>. All TA’s
+exposes one or several functions. Those functions corresponds to a so called
+<code class="docutils literal notranslate"><span class="pre">commandID</span></code> which also is sent by the client.</p>
+<section id="tee-contexts">
+<h3>TEE Contexts<a class="headerlink" href="#tee-contexts" title="Permalink to this heading"></a></h3>
+<p>The TEE Context is used for creating a logical connection between the client and
+the TEE. The context must be initialized before the TEE Session can be created.
+When the client has completed a job running in secure world, it should finalize
+the context and thereby also release resources.</p>
+</section>
+<section id="tee-sessions">
+<h3>TEE Sessions<a class="headerlink" href="#tee-sessions" title="Permalink to this heading"></a></h3>
+<p>Sessions are used to create logical connections between a client and a specific
+Trusted Application. When the session has been established the client has opened
+up the communication channel towards the specified Trusted Application
+identified by the <code class="docutils literal notranslate"><span class="pre">UUID</span></code>. At this stage the client and the Trusted Application
+can start to exchange data.</p>
+</section>
+<section id="tee-shared-memory">
+<h3>TEE Shared memory<a class="headerlink" href="#tee-shared-memory" title="Permalink to this heading"></a></h3>
+<p>The TEE Client API describes many ways of sharing memory between the client
+and the TEE. Some ways are more efficient than others due to how they are
+implemented, but they have all their advantages too. For example, using a
+temporary memory reference (<code class="docutils literal notranslate"><span class="pre">TEEC_TempMemoryReference</span></code>) is often
+convenient, but depending on the situation often not the most efficient. A
+temporary memory reference is established internally in the TEE Client
+library before it is used, and when the call to secure world has returned
+it is torn down again. That results in a few extra re-entries into the TEE.</p>
+<p>For more efficient communication a shared memory block
+(<code class="docutils literal notranslate"><span class="pre">TEEC_SharedMemory</span></code>) should be used since it can be reused between calls
+and also tuned in more ways. A shared memory block can be initialized
+either with <code class="docutils literal notranslate"><span class="pre">TEEC_RegisterSharedMemory()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">TEEC_AllocateSharedMemory()</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TEEC_RegisterSharedMemory()</span></code> sometimes fails to establish zero-copy
+shared memory and must in those cases fall back to a temporary “shadow
+buffer”. The TEE framework will for instance refuse to register a memory
+block that is mapped read-only in the client. Another reason can be if FF-A
+is used and a part of the memory range has been registered previously.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TEEC_AllocateSharedMemory()</span></code> is the best choice to establish zero-copy
+shared memory. If <code class="docutils literal notranslate"><span class="pre">TEEC_RegisterSharedMemory()</span></code> must be used instead
+because the buffer is allocated in advance or externally there are still a
+few things that helps avoid a fallback to a “shadow buffer”. Make sure that
+the memory range is normal read/write memory and if possible use
+page-aligned memory buffers.</p>
+</section>
+<section id="tee-client-api-example-usage">
+<h3>TEE Client API example / usage<a class="headerlink" href="#tee-client-api-example-usage" title="Permalink to this heading"></a></h3>
+<p>Below you will find the main functions as defined by GlobalPlatform and are used
+in the communication between the client and the TEE.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">TEEC_Result</span><span class="w"> </span><span class="n">TEEC_InitializeContext</span><span class="p">(</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">name</span><span class="p">,</span>
+<span class="w">    </span><span class="n">TEEC_Context</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">TEEC_FinalizeContext</span><span class="p">(</span>
+<span class="w">    </span><span class="n">TEEC_Context</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+
+<span class="n">TEEC_Result</span><span class="w"> </span><span class="n">TEEC_OpenSession</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">TEEC_Context</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">,</span>
+<span class="w">    </span><span class="n">TEEC_Session</span><span class="o">*</span><span class="w"> </span><span class="n">session</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">TEEC_UUID</span><span class="o">*</span><span class="w"> </span><span class="n">destination</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">connectionMethod</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">connectionData</span><span class="p">,</span>
+<span class="w">    </span><span class="n">TEEC_Operation</span><span class="o">*</span><span class="w"> </span><span class="n">operation</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="o">*</span><span class="w"> </span><span class="n">returnOrigin</span><span class="p">)</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">TEEC_CloseSession</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">TEEC_Session</span><span class="o">*</span><span class="w"> </span><span class="n">session</span><span class="p">)</span>
+
+<span class="n">TEEC_Result</span><span class="w"> </span><span class="n">TEEC_InvokeCommand</span><span class="p">(</span>
+<span class="w">    </span><span class="n">TEEC_Session</span><span class="o">*</span><span class="w"> </span><span class="n">session</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">commandID</span><span class="p">,</span>
+<span class="w">    </span><span class="n">TEEC_Operation</span><span class="o">*</span><span class="w"> </span><span class="n">operation</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="o">*</span><span class="w"> </span><span class="n">returnOrigin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In principle the commands are called in this order:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">TEEC_InitializeContext</span><span class="p">(...)</span>
+<span class="n">TEEC_OpenSession</span><span class="p">(...)</span>
+<span class="n">TEEC_InvokeCommand</span><span class="p">(...)</span>
+<span class="n">TEEC_CloseSession</span><span class="p">(...)</span>
+<span class="n">TEEC_FinalizeContext</span><span class="p">(...)</span>
+</pre></div>
+</div>
+<p>It is not uncommon that <code class="docutils literal notranslate"><span class="pre">TEEC_InvokeCommand(...)</span></code> is called several times in
+a row when the session has been established.</p>
+<p>For a complete example, please see chapter <strong>5.2 Example 1: Using the TEE Client
+API</strong> in the GlobalPlatform TEE Client API <a class="reference external" href="https://globalplatform.org/specs-library/?filter-committee=tee">Specification</a> v1.0.</p>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/TEE Internal Core API"></a><section id="tee-internal-core-api">
+<span id="id3"></span><h2>TEE Internal Core API<a class="headerlink" href="#tee-internal-core-api" title="Permalink to this heading"></a></h2>
+<p>The Internal Core API is the API that is exposed to the Trusted Applications
+running in the secure world. The TEE Internal API consists of four major parts:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Trusted Storage API for Data and Keys</p></li>
+<li><p>Cryptographic Operations API</p></li>
+<li><p>Time API</p></li>
+<li><p>Arithmetical API</p></li>
+</ol>
+</div></blockquote>
+<section id="examples-usage">
+<h3>Examples / usage<a class="headerlink" href="#examples-usage" title="Permalink to this heading"></a></h3>
+<p>Calling the Internal Core API is done in the same way as described above using
+Client API. The best place to find information how this should be done is in the
+TEE Internal Core API <a class="reference external" href="https://globalplatform.org/specs-library/?filter-committee=tee">Specification</a> which contains many examples of how
+to call the various APIs. One can also have a look at the examples in the
+<a class="reference external" href="https://github.com/linaro-swg/optee_examples">optee_examples</a> git.</p>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Extensions"></a><section id="extensions">
+<span id="id4"></span><h2>Extensions<a class="headerlink" href="#extensions" title="Permalink to this heading"></a></h2>
+<p>In addition to what is stated in <a class="reference internal" href="#tee-internal-core-api"><span class="std std-ref">TEE Internal Core API</span></a>, there are some
+non-official extensions in OP-TEE.</p>
+<p>Trusted Applications should include header file <code class="docutils literal notranslate"><span class="pre">tee_internal_api_extensions.h</span></code>
+to import the definitions of the extensions. For each extension, a configuration
+directive prefixed <code class="docutils literal notranslate"><span class="pre">CFG_</span></code> allows one to disable support for the extension when
+building the OP-TEE packages.</p>
+<section id="cache-maintenance-support">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Cache Maintenance Support"></a><span id="extensions-cache-maintenance"></span><h3>Cache Maintenance Support<a class="headerlink" href="#cache-maintenance-support" title="Permalink to this heading"></a></h3>
+<p>Following functions have been introduced in order to allow Trusted Applications
+to operate with the data cache:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">TEE_Result</span><span class="w"> </span><span class="nf">TEE_CacheClean</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="n">TEE_Result</span><span class="w"> </span><span class="nf">TEE_CacheFlush</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="n">TEE_Result</span><span class="w"> </span><span class="nf">TEE_CacheInvalidate</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>These functions are available to any Trusted Application defined with the flag
+<code class="docutils literal notranslate"><span class="pre">TA_FLAG_CACHE_MAINTENANCE</span></code> sets on, see <a class="reference internal" href="trusted_applications.html#ta-property-cache-maintenance"><span class="std std-ref">Cache maintenance Flag</span></a>.
+When not set, each function returns the error code <code class="docutils literal notranslate"><span class="pre">TEE_ERROR_NOT_SUPPORTED</span></code>.
+Within these extensions, a Trusted Application is able to operate on the data
+cache, with the following specification:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%"/>
+<col style="width: 86%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TEE_CacheClean()</span></code></p></td>
+<td><p>Write back to memory any dirty data cache lines. The line is marked as
+not dirty. The valid bit is unchanged.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TEE_CacheFlush()</span></code></p></td>
+<td><p>Purges any valid data cache lines. Any dirty cache lines are first
+written back to memory, then the cache line is invalidated.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TEE_CacheInvalidate()</span></code></p></td>
+<td><p>Invalidate any valid data cache lines. Any dirty line are not written
+back to memory.</p></td>
+</tr>
+</tbody>
+</table>
+<p>In the following two cases, the error code <code class="docutils literal notranslate"><span class="pre">TEE_ERROR_ACCESS_DENIED</span></code> is
+returned:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The memory range has not the write access, that is
+<code class="docutils literal notranslate"><span class="pre">TEE_MEMORY_ACCESS_WRITE</span></code> is not set.</p></li>
+<li><p>The memory is <strong>not</strong> user space memory.</p></li>
+</ul>
+</div></blockquote>
+<p>You may disable this extension by setting the following configuration variable
+in <code class="docutils literal notranslate"><span class="pre">conf.mk</span></code>:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nv">CFG_CACHE_API</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>n
+</pre></div>
+</div>
+</section>
+<section id="pkcs-1-v1-5-rsassa-without-hash-oid">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/PKCS#1 v1.5 RSASSA without hash OID"></a><span id="rsassa-na1"></span><h3>PKCS#1 v1.5 RSASSA without hash OID<a class="headerlink" href="#pkcs-1-v1-5-rsassa-without-hash-oid" title="Permalink to this heading"></a></h3>
+<p>This extension adds identifer``TEE_ALG_RSASSA_PKCS1_V1_5`` to allow signing and
+verifying messages with RSASSA-PKCS1-v1_5, in <a class="reference external" href="https://tools.ietf.org/html/rfc3447#section-8.2">RFC 3447</a>, without including the
+OID of the hash in the signature. You may disable this extension by setting the
+following configuration variable in <code class="docutils literal notranslate"><span class="pre">conf.mk</span></code>:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nv">CFG_CRYPTO_RSASSA_NA1</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>n
+</pre></div>
+</div>
+<p>The TEE Internal Core API was extended with a new algorithm descriptor.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%"/>
+<col style="width: 86%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Possible Modes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_RSASSA_PKCS1_V1_5</p></td>
+<td><p>TEE_MODE_SIGN / TEE_MODE_VERIFY</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%"/>
+<col style="width: 86%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Identifier</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_RSASSA_PKCS1_V1_5</p></td>
+<td><p>0xF0000830</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Concat KDF"></a><section id="concat-kdf">
+<span id="id5"></span><h3>Concat KDF<a class="headerlink" href="#concat-kdf" title="Permalink to this heading"></a></h3>
+<p>Support for the Concatenation Key Derivation Function (Concat KDF) according to
+<a class="reference external" href="http://csrc.nist.gov/publications/nistpubs/800-56A/SP800-56A_Revision1_Mar08-2007.pdf">SP 800-56A</a> (<em>Recommendation for Pair-Wise Key Establishment Schemes Using
+Discrete Logarithm Cryptography</em>) can be found in OP-TEE. You may disable this
+extension by setting the following configuration variable in <code class="docutils literal notranslate"><span class="pre">conf.mk</span></code>:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nv">CFG_CRYPTO_CONCAT_KDF</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>n
+</pre></div>
+</div>
+<p><strong>Implementation notes</strong></p>
+<p>All key and parameter sizes <strong>must</strong> be multiples of 8 bits. That is:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Input parameters: the shared secret (<code class="docutils literal notranslate"><span class="pre">Z</span></code>) and <code class="docutils literal notranslate"><span class="pre">OtherInfo</span></code>.</p></li>
+<li><p>Output parameter: the derived key (<code class="docutils literal notranslate"><span class="pre">DerivedKeyingMaterial</span></code>).</p></li>
+</ul>
+</div></blockquote>
+<p>In addition, the maximum size of the derived key is limited by the size of an
+object of type <code class="docutils literal notranslate"><span class="pre">TEE_TYPE_GENERIC_SECRET</span></code> (512 bytes). This implementation does
+<strong>not</strong> enforce any requirement on the content of the <code class="docutils literal notranslate"><span class="pre">OtherInfo</span></code> parameter.
+It is the application’s responsibility to make sure this parameter is
+constructed as specified by the NIST specification if compliance is desired.</p>
+<p><strong>API extension</strong></p>
+<p>To support Concat KDF, the <a class="reference internal" href="#tee-internal-core-api"><span class="std std-ref">TEE Internal Core API</span></a> v1.3.1 was extended with
+new algorithm descriptors, new object types, and new object attributes as
+described below.</p>
+<p><strong>p.95 Add new object type to TEE_PopulateTransientObject</strong></p>
+<p>The following entry shall be added to <strong>Table 5-8</strong>:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%"/>
+<col style="width: 86%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Object type</p></th>
+<th class="head"><p>Parts</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_TYPE_CONCAT_KDF_Z</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">TEE_ATTR_CONCAT_KDF_Z</span></code> part (input shared secret) must be
+provided.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.121 Add new algorithms for TEE_AllocateOperation</strong></p>
+<p>The following entry shall be added to <strong>Table 6-3</strong>:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 14%"/>
+<col style="width: 86%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Possible Modes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_CONCAT_KDF_SHA1_DERIVE_KEY
+TEE_ALG_CONCAT_KDF_SHA224_DERIVE_KEY
+TEE_ALG_CONCAT_KDF_SHA256_DERIVE_KEY
+TEE_ALG_CONCAT_KDF_SHA384_DERIVE_KEY
+TEE_ALG_CONCAT_KDF_SHA512_DERIVE_KEY
+TEE_ALG_CONCAT_KDF_SHA512_DERIVE_KEY</p></td>
+<td><p>TEE_MODE_DERIVE</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.126 Explain usage of HKDF algorithms in TEE_SetOperationKey</strong></p>
+<p>In the bullet list about operation mode, the following shall be added:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>For the Concat KDF algorithms, the only supported mode is
+<code class="docutils literal notranslate"><span class="pre">TEE_MODE_DERIVE</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<p><strong>p.150 Define TEE_DeriveKey input attributes for new algorithms</strong></p>
+<p>The following sentence shall be deleted:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>The TEE_DeriveKey function can only be used with the algorithm
+TEE_ALG_DH_DERIVE_SHARED_SECRET.
+</pre></div>
+</div>
+<p>The following entry shall be added to <strong>Table 6-7</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Possible operation parameters</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_CONCAT_KDF_SHA1_DERIVE_KEY
+TEE_ALG_CONCAT_KDF_SHA224_DERIVE_KEY
+TEE_ALG_CONCAT_KDF_SHA256_DERIVE_KEY
+TEE_ALG_CONCAT_KDF_SHA384_DERIVE_KEY
+TEE_ALG_CONCAT_KDF_SHA512_DERIVE_KEY
+TEE_ALG_CONCAT_KDF_SHA512_DERIVE_KEY</p></td>
+<td><p>TEE_ATTR_CONCAT_KDF_DKM_LENGTH: up to 512 bytes. This parameter is
+mandatory: TEE_ATTR_CONCAT_KDF_OTHER_INFO</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.152 Add new algorithm identifiers</strong></p>
+<p>The following entries shall be added to <strong>Table 6-8</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Identifier</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_CONCAT_KDF_SHA1_DERIVE_KEY</p></td>
+<td><p>0x800020C1</p></td>
+</tr>
+<tr class="row-odd"><td><p>TEE_ALG_CONCAT_KDF_SHA224_DERIVE_KEY</p></td>
+<td><p>0x800030C1</p></td>
+</tr>
+<tr class="row-even"><td><p>TEE_ALG_CONCAT_KDF_SHA256_DERIVE_KEY</p></td>
+<td><p>0x800040C1</p></td>
+</tr>
+<tr class="row-odd"><td><p>TEE_ALG_CONCAT_KDF_SHA384_DERIVE_KEY</p></td>
+<td><p>0x800050C1</p></td>
+</tr>
+<tr class="row-even"><td><p>TEE_ALG_CONCAT_KDF_SHA512_DERIVE_KEY</p></td>
+<td><p>0x800060C1</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.154 Define new main algorithm</strong></p>
+<p>In <strong>Table 6-9</strong> in section 6.10.1, a new value shall be added to the value
+column for row bits <code class="docutils literal notranslate"><span class="pre">[7:0]</span></code>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bits</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Bits [7:0]</p></td>
+<td><p>Identifiy the main underlying algorithm itself</p></td>
+<td><p>…</p>
+<p>0xC1: Concat KDF</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The function column for <code class="docutils literal notranslate"><span class="pre">bits[15:12]</span></code> shall also be modified to read:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bits</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Bits [15:12]</p></td>
+<td><p>Define the message digest for asymmetric signature algorithms or Concat KDF</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.155 Add new object type for Concat KDF input shared secret</strong></p>
+<p>The following entry shall be added to <strong>Table 6-10</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Identifier</p></th>
+<th class="head"><p>Possible sizes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_TYPE_CONCAT_KDF_Z</p></td>
+<td><p>0xA10000C1</p></td>
+<td><p>8 to 4096 bits (multiple of 8)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.156 Add new operation attributes for Concat KDF</strong></p>
+<p>The following entries shall be added to <strong>Table 6-11</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Protection</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ATTR_CONCAT_KDF_Z</p></td>
+<td><p>0xC00001C1</p></td>
+<td><p>Protected</p></td>
+<td><p>Ref</p></td>
+<td><p>The shared secret (<code class="docutils literal notranslate"><span class="pre">Z</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>TEE_ATTR_CONCAT_KDF_OTHER_INFO</p></td>
+<td><p>0xD00002C1</p></td>
+<td><p>Public</p></td>
+<td><p>Ref</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OtherInfo</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>TEE_ATTR_CONCAT_KDF_DKM_LENGTH</p></td>
+<td><p>0xF00003C1</p></td>
+<td><p>Public</p></td>
+<td><p>Value</p></td>
+<td><p>The length (in bytes) of the derived keying material to be generated,
+maximum 512. This is <code class="docutils literal notranslate"><span class="pre">KeyDataLen</span></code> / 8.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/HKDF"></a><section id="hkdf">
+<span id="id6"></span><h3>HKDF<a class="headerlink" href="#hkdf" title="Permalink to this heading"></a></h3>
+<p>OP-TEE implements the <em>HMAC-based Extract-and-Expand Key Derivation Function
+(HKDF)</em> as specified in <a class="reference external" href="https://tools.ietf.org/html/rfc5869">RFC 5869</a>. This file documents the extensions to the
+<a class="reference internal" href="#tee-internal-core-api"><span class="std std-ref">TEE Internal Core API</span></a> v1.3.1 that were implemented to support this
+algorithm.</p>
+<p>Note that the implementation follows the recommendations of version 1.3.1 of the
+specification for adding new algorithms. It should make it compatible with
+future changes to the official specification. You can disable this extension by
+setting the following in <code class="docutils literal notranslate"><span class="pre">conf.mk</span></code>:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nv">CFG_CRYPTO_HKDF</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>n
+</pre></div>
+</div>
+<p><strong>p.95 Add new object type to TEE_PopulateTransientObject</strong></p>
+<p>The following entry shall be added to <strong>Table 5-8</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Object type</p></th>
+<th class="head"><p>Parts</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_TYPE_HKDF_IKM</p></td>
+<td><p>The TEE_ATTR_HKDF_IKM (Input Keying Material) part must be provided.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.121 Add new algorithms for TEE_AllocateOperation</strong></p>
+<p>The following entry shall be added to <strong>Table 6-3</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Possible Modes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_HKDF_MD5_DERIVE_KEY
+TEE_ALG_HKDF_SHA1_DERIVE_KEY
+TEE_ALG_HKDF_SHA224_DERIVE_KEY
+TEE_ALG_HKDF_SHA256_DERIVE_KEY
+TEE_ALG_HKDF_SHA384_DERIVE_KEY
+TEE_ALG_HKDF_SHA512_DERIVE_KEY
+TEE_ALG_HKDF_SHA512_DERIVE_KEY</p></td>
+<td><p>TEE_MODE_DERIVE</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.126 Explain usage of HKDF algorithms in TEE_SetOperationKey</strong></p>
+<p>In the bullet list about operation mode, the following shall be added:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>For the HKDF algorithms, the only supported mode is TEE_MODE_DERIVE.</p></li>
+</ul>
+</div></blockquote>
+<p><strong>p.150 Define TEE_DeriveKey input attributes for new algorithms</strong></p>
+<p>The following sentence shall be deleted:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>The TEE_DeriveKey function can only be used with the algorithm
+TEE_ALG_DH_DERIVE_SHARED_SECRET
+</pre></div>
+</div>
+<p>The following entry shall be added to <strong>Table 6-7</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Possible operation parameters</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_HKDF_MD5_DERIVE_KEY
+TEE_ALG_HKDF_SHA1_DERIVE_KEY
+TEE_ALG_HKDF_SHA224_DERIVE_KEY
+TEE_ALG_HKDF_SHA256_DERIVE_KEY
+TEE_ALG_HKDF_SHA384_DERIVE_KEY
+TEE_ALG_HKDF_SHA512_DERIVE_KEY
+TEE_ALG_HKDF_SHA512_DERIVE_KEY</p></td>
+<td><p>TEE_ATTR_HKDF_OKM_LENGTH: Number of bytes in the Output Keying Material</p>
+<p>TEE_ATTR_HKDF_SALT (optional) Salt to be used during the extract step</p>
+<p>TEE_ATTR_HKDF_INFO (optional) Info to be used during the expand step</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.152 Add new algorithm identifiers</strong></p>
+<p>The following entries shall be added to <strong>Table 6-8</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Identifier</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_HKDF_MD5_DERIVE_KEY</p></td>
+<td><p>0x800010C0</p></td>
+</tr>
+<tr class="row-odd"><td><p>TEE_ALG_HKDF_SHA1_DERIVE_KEY</p></td>
+<td><p>0x800020C0</p></td>
+</tr>
+<tr class="row-even"><td><p>TEE_ALG_HKDF_SHA224_DERIVE_KEY</p></td>
+<td><p>0x800030C0</p></td>
+</tr>
+<tr class="row-odd"><td><p>TEE_ALG_HKDF_SHA256_DERIVE_KEY</p></td>
+<td><p>0x800040C0</p></td>
+</tr>
+<tr class="row-even"><td><p>TEE_ALG_HKDF_SHA384_DERIVE_KEY</p></td>
+<td><p>0x800050C0</p></td>
+</tr>
+<tr class="row-odd"><td><p>TEE_ALG_HKDF_SHA512_DERIVE_KEY</p></td>
+<td><p>0x800060C0</p></td>
+</tr>
+</tbody>
+</table>
+<p>## p.154 Define new main algorithm</p>
+<p>In <strong>Table 6-9</strong> in section 6.10.1, a new value shall be added to the value column
+for row <code class="docutils literal notranslate"><span class="pre">bits</span> <span class="pre">[7:0]</span></code>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bits</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Bits [7:0]</p></td>
+<td><p>Identifiy the main underlying algorithm itself</p></td>
+<td><p>…</p>
+<p>0xC0: HKDF</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The function column for <code class="docutils literal notranslate"><span class="pre">bits[15:12]</span></code> shall also be modified to read:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bits</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Bits [15:12]</p></td>
+<td><p>Define the message digest for asymmetric signature algorithms or HKDF</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.155 Add new object type for HKDF input keying material</strong></p>
+<p>The following entry shall be added to <strong>Table 6-10</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Identifier</p></th>
+<th class="head"><p>Possible sizes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_TYPE_HKDF_IKM</p></td>
+<td><p>0xA10000C0</p></td>
+<td><p>8 to 4096 bits (multiple of 8)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.156 Add new operation attributes for HKDF salt and info</strong></p>
+<p>The following entries shall be added to <strong>Table 6-11</strong>:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 36%"/>
+<col style="width: 9%"/>
+<col style="width: 9%"/>
+<col style="width: 9%"/>
+<col style="width: 36%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Protection</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ATTR_HKDF_IKM</p></td>
+<td><p>0xC00001C0</p></td>
+<td><p>Protected</p></td>
+<td><p>Ref</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>TEE_ATTR_HKDF_SALT</p></td>
+<td><p>0xD00002C0</p></td>
+<td><p>Public</p></td>
+<td><p>Ref</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>TEE_ATTR_HKDF_INFO</p></td>
+<td><p>0xD00003C0</p></td>
+<td><p>Public</p></td>
+<td><p>Ref</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>TEE_ATTR_HKDF_OKM_LENGTH</p></td>
+<td><p>0xF00004C0</p></td>
+<td><p>Public</p></td>
+<td><p>Value</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/PBKDF2"></a><section id="pbkdf2">
+<span id="id7"></span><h3>PBKDF2<a class="headerlink" href="#pbkdf2" title="Permalink to this heading"></a></h3>
+<p>This document describes the OP-TEE implementation of the key derivation
+function, <em>PBKDF2</em> as specified in <a class="reference external" href="https://www.ietf.org/rfc/rfc2898.txt">RFC 2898</a> section 5.2. This RFC is a
+republication of PKCS #5 v2.0 from RSA Laboratories’ Public-Key Cryptography
+Standards (PKCS) series. You may disable this extension by setting the following
+configuration variable in <code class="docutils literal notranslate"><span class="pre">conf.mk</span></code>:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nv">CFG_CRYPTO_PBKDF2</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>n
+</pre></div>
+</div>
+<p><strong>API extension</strong></p>
+<p>To support PBKDF2, the <a class="reference internal" href="#tee-internal-core-api"><span class="std std-ref">TEE Internal Core API</span></a> v1.3.1 was extended with a new
+algorithm descriptor, new object types, and new object attributes as described
+below.</p>
+<p><strong>p.95 Add new object type to TEE_PopulateTransientObject</strong></p>
+<p>The following entry shall be added to <strong>Table 5-8</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Object type</p></th>
+<th class="head"><p>Parts</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_TYPE_PBKDF2_PASSWORD</p></td>
+<td><p>The TEE_ATTR_PBKDF2_PASSWORD part must be provided.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.121 Add new algorithms for TEE_AllocateOperation</strong></p>
+<p>The following entry shall be added to <strong>Table 6-3</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Possible Modes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_PBKDF2_HMAC_SHA1_DERIVE_KEY</p></td>
+<td><p>TEE_MODE_DERIVE</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.126 Explain usage of PBKDF2 algorithm in TEE_SetOperationKey</strong></p>
+<p>In the bullet list about operation mode, the following shall be added:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>For the PBKDF2 algorithm, the only supported mode is TEE_MODE_DERIVE.</p></li>
+</ul>
+</div></blockquote>
+<p><strong>p.150 Define TEE_DeriveKey input attributes for new algorithms</strong></p>
+<p>The following sentence shall be deleted:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>The TEE_DeriveKey function can only be used with the algorithm
+TEE_ALG_DH_DERIVE_SHARED_SECRET
+</pre></div>
+</div>
+<p>The following entry shall be added to <strong>Table 6-7</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Possible operation parameters</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_PBKDF2_HMAC_SHA1_DERIVE_KEY</p></td>
+<td><p>TEE_ATTR_PBKDF2_DKM_LENGTH: up to 512 bytes. This parameter is
+mandatory.</p>
+<p>TEE_ATTR_PBKDF2_SALT</p>
+<p>TEE_ATTR_PBKDF2_ITERATION_COUNT: This parameter is mandatory.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.152 Add new algorithm identifiers</strong></p>
+<p>The following entries shall be added to <strong>Table 6-8</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Identifier</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ALG_PBKDF2_HMAC_SHA1_DERIVE_KEY</p></td>
+<td><p>0x800020C2</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.154 Define new main algorithm</strong></p>
+<p>In <strong>Table 6-9</strong> in section 6.10.1, a new value shall be added to the value
+column for row <code class="docutils literal notranslate"><span class="pre">bits</span> <span class="pre">[7:0]</span></code>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bits</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Bits [7:0]</p></td>
+<td><p>Identifiy the main underlying algorithm itself</p></td>
+<td><p>…</p>
+<p>0xC2: PBKDF2</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The function column for <code class="docutils literal notranslate"><span class="pre">bits[15:12]</span></code> shall also be modified to read:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bits</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Bits [15:12]</p></td>
+<td><p>Define the message digest for asymmetric signature algorithms or PBKDF2</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.155 Add new object type for PBKDF2 password</strong></p>
+<p>The following entry shall be added to <strong>Table 6-10</strong>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Identifier</p></th>
+<th class="head"><p>Possible sizes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_TYPE_PBKDF2_PASSWORD</p></td>
+<td><p>0xA10000C2</p></td>
+<td><p>8 to 4096 bits (multiple of 8)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>p.156 Add new operation attributes for Concat KDF</strong></p>
+<p>The following entries shall be added to <strong>Table 6-11</strong>:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 36%"/>
+<col style="width: 9%"/>
+<col style="width: 9%"/>
+<col style="width: 9%"/>
+<col style="width: 36%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Protection</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEE_ATTR_PBKDF2_PASSWORD</p></td>
+<td><p>0xC00001C2</p></td>
+<td><p>Protected</p></td>
+<td><p>Ref</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>TEE_ATTR_PBKDF2_SALT</p></td>
+<td><p>0xD00002C2</p></td>
+<td><p>Public</p></td>
+<td><p>Ref</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>TEE_ATTR_PBKDF2_ITERATION_COUNT</p></td>
+<td><p>0xF00003C2</p></td>
+<td><p>Public</p></td>
+<td><p>Value</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>TEE_ATTR_PBKDF2_DKM_LENGTH</p></td>
+<td><p>0xF00004C2</p></td>
+<td><p>Public</p></td>
+<td><p>Value</p></td>
+<td><p>The length (in bytes) of the derived keying material to be generated,
+maximum 512.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Loadable plugins framework"></a><section id="loadable-plugins-framework">
+<span id="id8"></span><h3>Loadable plugins framework<a class="headerlink" href="#loadable-plugins-framework" title="Permalink to this heading"></a></h3>
+<p>This framework makes the supplicant a bit more flexible in terms of providing
+services. It is possible to design any REE service for the TEE as
+a tee-supplicant plugin. It makes it easy to:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>add new features to the supplicant that aren’t needed in upstream,
+e.g. Rich OS-specific services</p></li>
+<li><p>sync an own fork of the supplicant with the upstream version</p></li>
+</ul>
+</div></blockquote>
+<p>To create a plugin, developers have to implement the following structure from
+the <code class="docutils literal notranslate"><span class="pre">public/tee_plugin_method.h</span></code> file from the <a class="reference external" href="https://github.com/OP-TEE/optee_client">optee_client</a> git.:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">plugin_method</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">name</span><span class="p">;</span><span class="w"> </span><span class="cm">/* short friendly name of the plugin */</span>
+<span class="w">  </span><span class="n">TEEC_UUID</span><span class="w"> </span><span class="n">uuid</span><span class="p">;</span>
+<span class="w">  </span><span class="n">TEEC_Result</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">init</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
+<span class="w">  </span><span class="n">TEEC_Result</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">invoke</span><span class="p">)(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">cmd</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sub_cmd</span><span class="p">,</span>
+<span class="w">                        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">in_len</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="n">out_len</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The plugin framework is based on the RPC - <code class="docutils literal notranslate"><span class="pre">OPTEE_MSG_RPC_CMD_PLUGIN</span></code>.
+This is a unified interface between TEE and plugins.
+TEE can only access the plugins by its UUID.</p>
+<p>After implementing this structure, a plugin has to be compiled as a shared
+object. The objects have to be placed into the directory defined
+by <code class="docutils literal notranslate"><span class="pre">CFG_TEE_PLUGIN_LOAD_PATH</span></code>. This path can be set in the <code class="docutils literal notranslate"><span class="pre">config.mk</span></code> file
+in the <a class="reference external" href="https://github.com/OP-TEE/optee_client">optee_client</a> git. By default it is set to
+<strong>/usr/lib/tee-supplicant/plugins/</strong>.</p>
+<p>The supplicant loads all of the plugins from the directory during the startup
+process using <strong>libdl</strong>. After this, any requests to plugins
+from TEE will be processed in the common RPC handler.</p>
+<p>On TEE side users can use any plugin by its UUID from TAs code and from
+the OP-TEE kernel code. The following function has been introduced like
+an extension of the TEE API to allow Trusted Applications to operate with
+plugins:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * tee_invoke_supp_plugin() - invoke a tee-supplicant's plugin</span>
+<span class="cm"> * @uuid:       uuid of the plugin</span>
+<span class="cm"> * @cmd:        command for the plugin</span>
+<span class="cm"> * @sub_cmd:    subcommand for the plugin</span>
+<span class="cm"> * @buf:        data [to/from] the plugin [in/out]</span>
+<span class="cm"> * @len:        length of the input buf</span>
+<span class="cm"> * @outlen:     pointer to length of the output data (if they will be used)</span>
+<span class="cm"> *</span>
+<span class="cm"> * Return TEE_SUCCESS on success or TEE_ERRROR_* on failure.</span>
+<span class="cm"> */</span>
+<span class="n">TEE_Result</span><span class="w"> </span><span class="nf">tee_invoke_supp_plugin</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">TEE_UUID</span><span class="w"> </span><span class="o">*</span><span class="n">uuid</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">cmd</span><span class="p">,</span>
+<span class="w">                                  </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sub_cmd</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">,</span>
+<span class="w">                                  </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="n">outlen</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This API calls the <code class="docutils literal notranslate"><span class="pre">system-pta</span></code>, which uses the RPC to call a plugin.
+See <code class="docutils literal notranslate"><span class="pre">OPTEE_RPC_CMD_SUPP_PLUGIN</span></code> in the <code class="docutils literal notranslate"><span class="pre">core/include/optee_rpc_cmd.h</span></code> file
+from <a class="reference external" href="https://github.com/OP-TEE/optee_os">optee_os</a> git. If there is a need to use plugins from the OP-TEE kernel,
+then the following function can be called directly:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">TEE_Result</span><span class="w"> </span><span class="nf">tee_invoke_supp_plugin_rpc</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">TEE_UUID</span><span class="w"> </span><span class="o">*</span><span class="n">uuid</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">cmd</span><span class="p">,</span>
+<span class="w">                                      </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sub_cmd</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">,</span>
+<span class="w">                                      </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="n">outlen</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>One buffer is used for input data to a plugin and for output data
+from a plugin. See an example of using this feature in the <a class="reference external" href="https://github.com/linaro-swg/optee_examples">optee_examples</a>
+git.</p>
+</div>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="file_structure.html" rel="prev" title="File structure"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="libraries.html" rel="next" title="Libraries">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

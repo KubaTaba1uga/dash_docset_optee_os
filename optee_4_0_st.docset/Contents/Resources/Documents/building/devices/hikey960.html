@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HiKey 960 — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="juno.html" rel="next" title="Juno"/>
+<link href="hikey620.html" rel="prev" title="HiKey 620"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Device specific information</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="versal.html">AMD-Xilinx Versal ACAP VCK190</a></li>
+<li class="toctree-l3"><a class="reference internal" href="devbox.html">DeveloperBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fvp.html">FVP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey620.html">HiKey 620</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">HiKey 960</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#supported-hikey960-boards">Supported HiKey960 boards</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uart-adapter-board">UART adapter board</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-instructions">Build instructions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recovery">Recovery</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#external-guide">External guide</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="juno.html">Juno</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nuvoton.html">NUVOTON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html">QEMU v7</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html#qemu-v8">QEMU v8</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rockpi4.html">ROCK Pi 4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rpi3.html">Raspberry Pi 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stm32mp1.html">STM32MP1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ti.html">Texas Instruments SoCs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zynqmp.html">Zynq MPSoC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="index.html">Device specific information</a></li>
+<li class="breadcrumb-item active">HiKey 960</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/devices/hikey960.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="hikey-960">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/HiKey 960"></a><span id="hikey960"></span><h1>HiKey 960<a class="headerlink" href="#hikey-960" title="Permalink to this heading"></a></h1>
+<p>The instructions here will tell how to run OP-TEE on <a class="reference external" href="https://www.96boards.org/product/hikey960/">HiKey 960</a>.</p>
+<section id="supported-hikey960-boards">
+<h2>Supported HiKey960 boards<a class="headerlink" href="#supported-hikey960-boards" title="Permalink to this heading"></a></h2>
+<p>There are three different versions of the HiKey960 board.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 11%"/>
+<col style="width: 21%"/>
+<col style="width: 8%"/>
+<col style="width: 7%"/>
+<col style="width: 53%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Manufacturer</p></th>
+<th class="head"><p>Memory</p></th>
+<th class="head"><p>Flash</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>HiKey960</p></td>
+<td><p>Archermind/LeMaker</p></td>
+<td><p>4GB</p></td>
+<td><p>32GB</p></td>
+<td><p>v2 uses DIP Switches (SW2201), rev B has 4GB RAM</p></td>
+</tr>
+<tr class="row-odd"><td><p>HiKey960</p></td>
+<td><p>Archermind/LeMaker</p></td>
+<td><p>3GB</p></td>
+<td><p>32GB</p></td>
+<td><p>v2 uses DIP Switches (SW2201), rev A has 3GB RAM</p></td>
+</tr>
+<tr class="row-even"><td><p>HiKey960</p></td>
+<td><p>Archermind/LeMaker</p></td>
+<td><p>3GB</p></td>
+<td><p>32GB</p></td>
+<td><p>v1 uses Jumpers (J2001)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="uart-adapter-board">
+<h2>UART adapter board<a class="headerlink" href="#uart-adapter-board" title="Permalink to this heading"></a></h2>
+<p>Everything is configured to use the 96Boards <a class="reference external" href="https://www.96boards.org/product/uartserial/">UART Serial</a> adapter. The UART is
+by default configured to UART6. If you have a v1 board and need to use UART5,
+then you need to change that before building. See <code class="docutils literal notranslate"><span class="pre">CFG_CONSOLE_UART</span></code> in
+<a class="reference external" href="https://github.com/OP-TEE/build/blob/master/hikey960.mk">hikey960.mk</a>.</p>
+</section>
+<section id="build-instructions">
+<h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this heading"></a></h2>
+<p>Just follow the instructions at “<a class="reference internal" href="../gits/build.html#get-and-build-the-solution"><span class="std std-ref">Get and build the solution</span></a>”. If <code class="docutils literal notranslate"><span class="pre">make</span>
+<span class="pre">flash</span></code> doesn’t work, try <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">recovery</span></code>.</p>
+<p>For the 4GB RAM board version (rev B), an update to the <code class="docutils literal notranslate"><span class="pre">CFG_DRAM_SIZE_GB</span></code>
+setting in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/plat-hikey/conf.mk">conf.mk</a> is needed. Either update the value from <code class="docutils literal notranslate"><span class="pre">3</span></code> to <code class="docutils literal notranslate"><span class="pre">4</span></code> in
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/plat-hikey/conf.mk">conf.mk</a> before building, or set the value on the command line when building,
+i.e <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">PLATFORM=hikey-hikey960</span> <span class="pre">CFG_DRAM_SIZE_GB=4</span></code></p>
+</section>
+<section id="recovery">
+<h2>Recovery<a class="headerlink" href="#recovery" title="Permalink to this heading"></a></h2>
+<p>If you manage to corrupt the device, such that fastboot doesn’t load
+automatically on boot, then you will need to run the recovery procedure.
+Basically what you will need to do is use another make target and change some
+jumpers. All that is described when you run the target:</p>
+</section>
+<section id="external-guide">
+<h2>External guide<a class="headerlink" href="#external-guide" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/plat/hikey960.rst">https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/plat/hikey960.rst</a></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>recovery
+</pre></div>
+</div>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="hikey620.html" rel="prev" title="HiKey 620"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="juno.html" rel="next" title="Juno">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

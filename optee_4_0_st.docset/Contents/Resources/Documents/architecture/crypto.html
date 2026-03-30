@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cryptographic implementation — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="device_tree.html" rel="next" title="Device Tree"/>
+<link href="core.html" rel="prev" title="Core"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Crypto</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-tee-cryptographic-operations-api">[1] The TEE Cryptographic Operations API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-crypto-services">[2] The crypto services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#crypto">[3] crypto_*()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#public-private-key-format">Public/private key format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#libtomcrypt">[4] LibTomCrypt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add-a-new-software-based-crypto-implementation">Add a new software based crypto implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#support-for-crypto-ic">[5] Support for crypto IC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nxp-se05x-family-of-secure-elements">NXP SE05X Family of Secure Elements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+<li class="breadcrumb-item active">Cryptographic implementation</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/architecture/crypto.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Cryptographic implementation"></a><section id="cryptographic-implementation">
+<span id="id1"></span><h1>Cryptographic implementation<a class="headerlink" href="#cryptographic-implementation" title="Permalink to this heading"></a></h1>
+<p>This document describes how the TEE Cryptographic Operations API is implemented,
+how the default crypto provider may be configured at compile time, and how it
+may be replaced by another implementation.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>There are several layers from the Trusted Application to the actual crypto
+algorithms. Most of the crypto code runs in kernel mode inside the TEE core.
+Here is a schematic view of a typical call to the crypto API. The numbers in
+square brackets ([1], [2]…) refer to the sections below.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-   some_function()                             (Trusted App) -
+[1]   TEE_*()                      User space   (libutee.a)
+------- utee_*() ----------------------------------------------
+[2]       tee_svc_*()              Kernel space
+[3]         crypto_*()                          (libtomcrypt.a and crypto.c)
+[4]           /* LibTomCrypt */                 (libtomcrypt.a)
+</pre></div>
+</div>
+</section>
+<section id="the-tee-cryptographic-operations-api">
+<h2>[1] The TEE Cryptographic Operations API<a class="headerlink" href="#the-tee-cryptographic-operations-api" title="Permalink to this heading"></a></h2>
+<p>OP-TEE implements the Cryptographic Operations API defined by the GlobalPlatform
+association in the <a class="reference internal" href="globalplatform_api.html#tee-internal-core-api"><span class="std std-ref">TEE Internal Core API</span></a>. This includes cryptographic
+functions that span various cryptographic needs: message digests, symmetric
+ciphers, message authentication codes (MAC), authenticated encryption,
+asymmetric operations (encryption/decryption or signing/verifying), key
+derivation, and random data generation. These functions make up the TEE
+Cryptographic Operations API.</p>
+<p>The Internal API is implemented in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/lib/libutee/tee_api_operations.c">tee_api_operations.c</a>, which is compiled into
+a static library: <code class="docutils literal notranslate"><span class="pre">${O}/ta_arm{32,64}-lib/libutee/libutee.a</span></code>.</p>
+<p>Most API functions perform some parameter checking and manipulations, then
+invoke some <em>utee_*</em> function to switch to kernel mode and perform the
+low-level work.</p>
+<p>The <em>utee_*</em> functions are declared in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/lib/libutee/include/utee_syscalls.h">utee_syscalls.h</a> and implemented in
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/lib/libutee/arch/arm/utee_syscalls_asm.S">utee_syscalls_asm.S</a> They are simple system call wrappers which use the <em>SVC</em>
+instruction to switch to the appropriate system service in the OP-TEE kernel.</p>
+</section>
+<section id="the-crypto-services">
+<h2>[2] The crypto services<a class="headerlink" href="#the-crypto-services" title="Permalink to this heading"></a></h2>
+<p>All cryptography-related system calls are declared in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/include/tee/tee_svc_cryp.h">tee_svc_cryp.h</a> and
+implemented in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_svc_cryp.c">tee_svc_cryp.c</a>. In addition to dealing with the usual work
+required at the user/kernel interface (checking parameters and copying memory
+buffers between user and kernel space), the system calls invoke a private
+abstraction layer: the <strong>Crypto API</strong>, which is declared in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/include/crypto/crypto.h">crypto.h</a>. It serves
+two main purposes:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Allow for alternative implementations, such as hardware-accelerated
+versions.</p></li>
+<li><p>Provide an easy way to disable some families of algorithms at
+compile-time to save space. See <cite>LibTomCrypt</cite> below.</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="crypto">
+<h2>[3] crypto_*()<a class="headerlink" href="#crypto" title="Permalink to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">crypto_*()</span></code> functions implement the actual algorithms and helper
+functions. TEE Core has one global active implementation of this interface. The
+default implementation, mostly based on <a class="reference external" href="https://github.com/libtom/libtomcrypt">LibTomCrypt</a>, is as follows:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">File: core/crypto/crypto.c</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Default implementation for all functions in crypto.h</span>
+<span class="cm"> */</span>
+
+<span class="cp">#if !defined(_CFG_CRYPTO_WITH_HASH)</span>
+<span class="n">TEE_Result</span><span class="w"> </span><span class="nf">crypto_hash_get_ctx_size</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">algo</span><span class="w"> </span><span class="n">__unused</span><span class="p">,</span>
+<span class="w">                                    </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="n">size</span><span class="w"> </span><span class="n">__unused</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">TEE_ERROR_NOT_IMPLEMENTED</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">...</span>
+<span class="cp">#endif </span><span class="cm">/*_CFG_CRYPTO_WITH_HASH*/</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">File: core/lib/libtomcrypt/tee_ltc_provider.c</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#if defined(_CFG_CRYPTO_WITH_HASH)</span>
+<span class="n">TEE_Result</span><span class="w"> </span><span class="nf">crypto_hash_get_ctx_size</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">algo</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">TEE_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#endif </span><span class="cm">/*_CFG_CRYPTO_WITH_HASH*/</span>
+</pre></div>
+</div>
+</div>
+<p>As shown above, families of algorithms can be disabled and <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/crypto/crypto.c">crypto.c</a> will
+provide default null implementations that will return
+<code class="docutils literal notranslate"><span class="pre">TEE_ERROR_NOT_IMPLEMENTED</span></code>.</p>
+</section>
+<section id="public-private-key-format">
+<h2>Public/private key format<a class="headerlink" href="#public-private-key-format" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/include/crypto/crypto.h">crypto.h</a> uses implementation-specific types to hold key data for asymmetric
+algorithms. For instance, here is how a public RSA key is represented:</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">File: core/include/crypto/crypto.h</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">rsa_public_key</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">bignum</span><span class="w"> </span><span class="o">*</span><span class="n">e</span><span class="p">;</span><span class="w">       </span><span class="cm">/* Public exponent */</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">bignum</span><span class="w"> </span><span class="o">*</span><span class="n">n</span><span class="p">;</span><span class="w">       </span><span class="cm">/* Modulus */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<p>This is also how such keys are stored inside the TEE object attributes
+(<code class="docutils literal notranslate"><span class="pre">TEE_ATTR_RSA_PUBLIC_KEY</span></code> in this case). <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bignum</span></code> is an opaque type,
+known to the underlying implementation only. <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bignum_ops</span></code> provides
+functions so that the system services can manipulate data of this type. This
+includes allocation/deallocation, copy, and conversion to or from the big endian
+binary format.</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">File: core/include/crypto/crypto.h</span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">bignum</span><span class="w"> </span><span class="o">*</span><span class="n">crypto_bignum_allocate</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">size_bits</span><span class="p">);</span>
+
+<span class="n">TEE_Result</span><span class="w"> </span><span class="nf">crypto_bignum_bin2bn</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">from</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">fromsize</span><span class="p">,</span>
+<span class="w">                </span><span class="k">struct</span><span class="w"> </span><span class="nc">bignum</span><span class="w"> </span><span class="o">*</span><span class="n">to</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">crypto_bignum_bn2bin</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">bignum</span><span class="w"> </span><span class="o">*</span><span class="n">from</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">to</span><span class="p">);</span>
+<span class="cm">/*...*/</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="libtomcrypt">
+<h2>[4] LibTomCrypt<a class="headerlink" href="#libtomcrypt" title="Permalink to this heading"></a></h2>
+<p>Some algorithms may be disabled at compile time if they are not needed, in order
+to reduce the size of the OP-TEE image and reduces its memory usage. This is
+done by setting the appropriate configuration variable. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nv">CFG_CRYPTO_AES</span><span class="o">=</span>n<span class="w">              </span><span class="c1"># disable AES only</span>
+$<span class="w"> </span>make<span class="w"> </span>CFG_CRYPTO_<span class="o">{</span>AES,DES<span class="o">}=</span>n<span class="w">        </span><span class="c1"># disable symmetric ciphers</span>
+$<span class="w"> </span>make<span class="w"> </span>CFG_CRYPTO_<span class="o">{</span>DSA,RSA,DH,ECC<span class="o">}=</span>n<span class="w"> </span><span class="c1"># disable public key algorithms</span>
+$<span class="w"> </span>make<span class="w"> </span><span class="nv">CFG_CRYPTO</span><span class="o">=</span>n<span class="w">                  </span><span class="c1"># disable all algorithms</span>
+</pre></div>
+</div>
+<p>Please refer to <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/lib/libtomcrypt/sub.mk">core/lib/libtomcrypt/sub.mk</a> for the list of all supported
+variables.</p>
+<p>Note that the application interface is <strong>not</strong> modified when algorithms are
+disabled. This means, for instance, that the functions <code class="docutils literal notranslate"><span class="pre">TEE_CipherInit()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TEE_CipherUpdate()</span></code> and <code class="docutils literal notranslate"><span class="pre">TEE_CipherFinal()</span></code> would remain present in
+<code class="docutils literal notranslate"><span class="pre">libutee.a</span></code> even if all symmetric ciphers are disabled (they would simply
+return <code class="docutils literal notranslate"><span class="pre">TEE_ERROR_NOT_IMPLEMENTED</span></code>).</p>
+</section>
+<section id="add-a-new-software-based-crypto-implementation">
+<h2>Add a new software based crypto implementation<a class="headerlink" href="#add-a-new-software-based-crypto-implementation" title="Permalink to this heading"></a></h2>
+<p>To add a new software based implementation, the default one in
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/lib/libtomcrypt">core/lib/libtomcrypt</a> in combination with what is in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/crypto">core/crypto</a> should be
+used as a reference. Here are the main things to consider when adding a new
+crypto provider:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Put all the new code in its own directory under <code class="docutils literal notranslate"><span class="pre">core/lib</span></code> unless it is
+code that will be used regardless of which crypto provider is in use. How
+we are dealing with AES-GCM in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/crypto">core/crypto</a> could serve as an example.</p></li>
+<li><p>Avoid modifying <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_svc_cryp.c">tee_svc_cryp.c</a>. It should not be needed.</p></li>
+<li><p>Although not all crypto families need to be defined, all are required for
+compliance to the GlobalPlatform specification.</p></li>
+<li><p>If you intend to make some algorithms optional, please try to re-use the
+same names for configuration variables as the default implementation.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="support-for-crypto-ic">
+<h2>[5] Support for crypto IC<a class="headerlink" href="#support-for-crypto-ic" title="Permalink to this heading"></a></h2>
+<p>Some cryptographic co-processors and secure elements are supported under a
+Generic Cryptographic Driver interface, connecting the TEE Crypto generic APIs
+to the HW driver interface. This interface is in
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/drivers/crypto/crypto_api">core/drivers/crypto/crypto_api</a> and should be followed when adding support for
+new devices.</p>
+<p>At the time of writing, OP-TEE does not support the <a class="reference external" href="https://globalplatform.org/specs-library/tee-secure-element-api/">GP TEE Secure Element API</a>
+and therefore the access to the secure element - the NXP EdgeLock® SE05x -
+follows the Cryptographic Operations API presenting a single session to the
+device. This session is shared with the normal world through the PKCS#11
+interface but also through a more generic interface (<a class="reference external" href="https://github.com/OP-TEE/optee_client/commit/f4f54e5a76641fda22a49f00294771f948cd4c92">libseetec</a>) which allows
+clients to send Application Protocol Data Units (APDUs) directly to the device.</p>
+<p>Notice that cryptographic co-processors do not necessarily comply with all the
+GP requirements tested and covered by the OP-TEE sanity test suite
+(<a class="reference external" href="https://github.com/OP-TEE/optee_test">optee_test</a>). In those cases where the cryptographic operations are not
+supported - i.e: the SE05x does not implement all RSA key sizes - we opted for
+disabling those particular tests at build time rather than letting them fail.</p>
+</section>
+<section id="nxp-se05x-family-of-secure-elements">
+<h2>NXP SE05X Family of Secure Elements<a class="headerlink" href="#nxp-se05x-family-of-secure-elements" title="Permalink to this heading"></a></h2>
+<p>This family of I2C bus devices are supported through the se050 cryptographic driver
+located at <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/drivers/crypto/se050">core/drivers/crypto/se050</a>. Before the REE boots, the session with
+the device is established using one of the OP-TEE supported I2C platform device
+drivers. Once the REE is up, the cryptographic driver can be configured to use
+the I2C driver in the REE (via RPC service) or continue using the one in OP-TEE.</p>
+<p>Unless the Secure Element owns the I2C bus (no other elements on the bus, no
+runtime-PM and so forth), it is recommended to route all traffic via the Normal
+World. Initial communication with the device is not data intensive and therefore
+slow I2C drivers - perhaps those not using DMA channels - do not represent much
+of a performance drag; the situation changes once clients start hammering the
+device.</p>
+<p>If using the REE for I2C transfers, it is also <strong>imperative</strong> to configure the
+driver so that the <a class="reference external" href="https://globalplatform.org/wp-content/uploads/2019/03/GPC_2.2_D_SCP03_v1.0.pdf">GP Secure Channel Protocol 03</a> is enabled prior to exiting the
+Secure World; this way all communication between the processor and the secure
+element is encrypted and MAC authenticated. Please check the usage of the
+<code class="docutils literal notranslate"><span class="pre">CFG_CORE_SE05X_SCP03_EARLY</span></code> configuration option.</p>
+<p>Aside of the secure element integration as an OP-TEE cryptographic driver,
+OP-TEE  also presents an Application Protocol Data Units (APDU) interface to
+users via its  OP-TEE client.</p>
+<figure class="align-center align-default" id="id7">
+<img alt="../_images/se050_apdu_pta_interface.png" src="../_images/se050_apdu_pta_interface.png"/>
+<figcaption>
+<p><span class="caption-text">Access to the Secure Element from libseetec and the APDU PTA.</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Using this interface, priviledged applications can control the Secure Element to
+inject or delete keys or certificates, encrypt, decrypt, sign and verify data
+and so forth. An application implementing a subset of those functions can be
+seen in this Foundries.io repository: <a class="reference external" href="https://github.com/foundriesio/fio-se05x-cli">fio-se05x-cli</a></p>
+<p>This reference code is not fully functional in mainline as it’s not yet possible
+to import keys and certificates from the Secure Element into OP-TEE’s PKCS#11
+implementation. However, a user could still clear the Secure Element NVM memory
+and read certificates stored in it.</p>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="core.html" rel="prev" title="Core"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="device_tree.html" rel="next" title="Device Tree">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

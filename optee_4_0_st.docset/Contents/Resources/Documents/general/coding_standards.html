@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Coding standards — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="contribute.html" rel="next" title="Contribute"/>
+<link href="about.html" rel="prev" title="About OP-TEE"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Getting started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="about.html">About OP-TEE</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Coding standards</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-checkpatch">Running checkpatch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license_headers.html">License headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms.html">Platforms supported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="presentations.html">Presentations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releases.html">Releases</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Getting started</a></li>
+<li class="breadcrumb-item active">Coding standards</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/general/coding_standards.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Coding standards"></a><section id="coding-standards">
+<span id="id1"></span><h1>Coding standards<a class="headerlink" href="#coding-standards" title="Permalink to this heading"></a></h1>
+<p>In this project we are trying to adhere to the same coding convention as used
+in the Linux kernel (see <a class="reference external" href="https://www.kernel.org/doc/html/latest/process/coding-style.html">CodingStyle</a>). We achieve this by running
+<a class="reference external" href="http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/scripts/checkpatch.pl">checkpatch</a> from Linux kernel. However there are a few exceptions that we had
+to make since the code also follows GlobalPlatform standards. The exceptions
+are as follows:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>CamelCase</strong> for GlobalPlatform types is allowed.</p></li>
+<li><p>We <strong>do not</strong> run checkpatch on third party code that we might use in
+this project, such as LibTomCrypt, MPA, newlib etc. The reason for that
+and not doing checkpatch fixes for third party code is because we would
+probably deviate too much from upstream and therefore it would be hard to
+rebase against those projects later on and we don’t expect that it is
+easy to convince other software projects to change coding style.</p></li>
+<li><p><strong>All</strong> variables <strong>shall be</strong> initialized to a well known value in one
+or another way. The reason for that is that we have had potential
+security issues in the past that originated from not having variables
+initialized with a well defined value. We have also investigate various
+toolchain flags that are supposed to help out finding uninitialized
+variables. Unfortunately our conclusion is that you cannot trust the
+compilers here, since there are corner cases where compilers cannot
+reliably give a warning.</p></li>
+</ol>
+</div></blockquote>
+<p>Variables are initialized according to these general guidelines:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Scalars (and types like <code class="docutils literal notranslate"><span class="pre">time_t</span></code> which are standardized as scalars)
+are initialized with <code class="docutils literal notranslate"><span class="pre">0</span></code>, unless another value makes more sense.</p></li>
+<li><p>For <a class="reference external" href="https://github.com/OP-TEE/optee_client">optee_client</a> we need maximum portability. So use <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">0</span> <span class="pre">}</span></code> for
+struct types where the first element is known to be a scalar and
+<code class="docutils literal notranslate"><span class="pre">memset()</span></code> otherwise unless there is a good reason not to do so.</p></li>
+<li><p>For the rest of the gits we assume that a recent version of GCC or
+Clang is used so we initialize structs with <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">}</span></code> in order to avoid
+the more clumsy <code class="docutils literal notranslate"><span class="pre">memset()</span></code> procedure. Types like <code class="docutils literal notranslate"><span class="pre">pthread_t</span></code>
+which can be a scalar or a composite type are initialized with
+<code class="docutils literal notranslate"><span class="pre">memset()</span></code> in order to minimize the amount of future headache.
+Arrays are initialized with <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">}</span></code>, too.</p></li>
+</ul>
+</div></blockquote>
+<p>Unsigned integer constants are defined using the <code class="docutils literal notranslate"><span class="pre">U()</span></code>, <code class="docutils literal notranslate"><span class="pre">UL()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">ULL()</span></code> macros, depending on the required width. <code class="docutils literal notranslate"><span class="pre">U()</span></code> is a good choice
+for 32-bit values.  Any of the minimum width cousins
+<code class="docutils literal notranslate"><span class="pre">UINT{8,16,32,64}_C()</span></code> are also accepted for compatibility. This makes
+the sign and size of the integer well defined instead of depend on how
+large the value is or which compiler is used. For example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_UNSIGNED_CONSTANT U(123)</span>
+</pre></div>
+</div>
+<section id="running-checkpatch">
+<h2>Running checkpatch<a class="headerlink" href="#running-checkpatch" title="Permalink to this heading"></a></h2>
+<p>Regarding the checkpatch tool, it is not included directly into this project.
+Please use checkpatch.pl from the Linux kernel git in combination with the local
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/scripts/checkpatch.sh">checkpatch script</a>. Environment variable CHECKPATCH is expected to provide
+the path to the Linux checkpatch script path, i.e.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>export CHECKPATCH=/path/to/linux/scripts/checkpatch.pl
+./scripts/checkpatch.sh HEAD
+./scripts/checkpatch.sh --diff github/master HEAD
+</pre></div>
+</div>
+<p>There are also targets for common use cases in the Makefiles:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>export CHECKPATCH=/path/to/linux/scripts/checkpatch.pl
+make checkpatch         #check staging and working area
+make checkpatch-staging #check staging area (added, but not committed files)
+make checkpatch-working #check working area (modified, but not added files)
+</pre></div>
+</div>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="about.html" rel="prev" title="About OP-TEE"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="contribute.html" rel="next" title="Contribute">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

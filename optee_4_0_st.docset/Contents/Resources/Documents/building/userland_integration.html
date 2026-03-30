@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Linux userland integration — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../debug/index.html" rel="next" title="Debugging techniques"/>
+<link href="optee_with_rust.html" rel="prev" title="OP-TEE with Rust"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/index.html">Device specific information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linux userland integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pkcs-11-driver">PKCS#11 driver</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Build and run</a></li>
+<li class="breadcrumb-item active">Linux userland integration</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/building/userland_integration.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="linux-userland-integration">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Linux userland integration"></a><span id="userland-integration"></span><h1>Linux userland integration<a class="headerlink" href="#linux-userland-integration" title="Permalink to this heading"></a></h1>
+<p>This document gives pointers on how particular features of OP-TEE may be used
+from the Linux userland in typical application scenarios.</p>
+<section id="pkcs-11-driver">
+<h2>PKCS#11 driver<a class="headerlink" href="#pkcs-11-driver" title="Permalink to this heading"></a></h2>
+<p>A common use-case is the integration of OP-TEE to securely store asymmetric
+keys inside the secure enclave. For example, when using TLS with client
+certificates, the corresponding private keys would reside securely within
+OP-TEE. If this client certificate is then used from within userspace, the
+corresponding cryptographic primitives are relayed to OP-TEE which establishes
+the connection using the requested client certificate on behalf of the
+application. However, the key itself never leaves secure storage (this is where
+it is created and resides).</p>
+<p>The way this is done is via PKCS#11 (aka Cryptoki API). PKCS#11 specifies a
+number of standard calls to relay cryptographic requests (such as a signing
+operation) to a third party module.  Such a module may be a smart card or, in
+the case of OP-TEE, it is a software PKCS#11 trusted application that appears
+to the userland as one. This trusted application is accessed using a shared
+object (dynamic library) which serves as the “glue” to translate cryptographic
+requests into OP-TEE calls. This shared object is <code class="docutils literal notranslate"><span class="pre">libckteec.so</span></code> which is
+part of the <a class="reference external" href="https://github.com/OP-TEE/optee_client">OP-TEE client tools</a>.</p>
+<p>Once OP-TEE has been compiled with the PKCS#11 TA, the client tools shared
+object has been built and the OP-TEE supplicant has been started, we can use
+<code class="docutils literal notranslate"><span class="pre">pkcs11-tool</span></code> of the <a class="reference external" href="https://github.com/OpenSC/OpenSC">OpenSC project</a> to
+initiate first communication with the emulated smart card.  In the following,
+we assume that <code class="docutils literal notranslate"><span class="pre">libckteec.so</span></code> has been installed in
+<code class="docutils literal notranslate"><span class="pre">/usr/lib/libckteec.so</span></code>. For simplicity reasons, we define an alias to call
+pkcs11-tool using the appropriate PKCS#11 module.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># alias p11="pkcs11-tool --module /usr/lib/libckteec.so"
+# p11 --show-info
+Cryptoki version 2.40
+Manufacturer     Linaro
+Library          OP-TEE PKCS11 Cryptoki library (ver 0.1)
+Using slot 0 with a present token (0x0)
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>When testing OP-TEE under QEMU, OpenSC should be built by default as well
+and the <code class="docutils literal notranslate"><span class="pre">pkcs11-tool</span></code> should be available without modifications to the
+configuration. It can be explicitly requested by using the</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="nv">BR2_PACKAGE_OPENSC</span><span class="o">=</span>y
+</pre></div>
+</div>
+<p>build parameter when compiling OP-TEE.</p>
+</div>
+<p>This tells us the library code is already working. We can now display the
+different “slots”. You can think of them as different “card readers” for
+virtual smart cards. In a typical use case, only one slot is used for a single
+smart card.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># p11 --list-slots
+Available slots:
+Slot 0 (0x0): OP-TEE PKCS11 TA - TEE UUID 94e9ab89-4c43-56ea-8b35-45dc07226830
+  token state:   uninitialized
+Slot 1 (0x1): OP-TEE PKCS11 TA - TEE UUID 94e9ab89-4c43-56ea-8b35-45dc07226830
+  token state:   uninitialized
+Slot 2 (0x2): OP-TEE PKCS11 TA - TEE UUID 94e9ab89-4c43-56ea-8b35-45dc07226830
+  token state:   uninitialized
+</pre></div>
+</div>
+<p>Observe that the connection to the TA is also successfully working and it is
+showing three inserted (but “empty”, uninitialized) smart cards/tokens. Before
+we are able to create keys on these tokens, we need to initialize them with a
+SO-PIN and PIN.  The SO-PIN is the “super pin”, while the PIN is the “user
+pin”. The concept is likely familiar to you from the SIM card of your phone,
+where the PUK acts as the “super pin”.</p>
+<p>First, we initialize the SO-PIN of slot 0 and name our token “mytoken”:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># p11 --init-token --label mytoken --so-pin 1234567890
+Using slot 0 with a present token (0x0)
+Token successfully initialized
+</pre></div>
+</div>
+<p>We have successfully initialized the SO-PIN to “1234567890”. Now we “log in”
+into the token using that SO-PIN and, using the SO-PIN authorization,
+initialize the PIN of the token to “12345”:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># p11 --label mytoken --login --so-pin 1234567890 --init-pin --pin 12345
+Using slot 0 with a present token (0x0)
+User PIN successfully initialized
+</pre></div>
+</div>
+<p>We can now verify that the token has been successfully initialized:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># p11 --list-slots
+Available slots:
+Slot 0 (0x0): OP-TEE PKCS11 TA - TEE UUID 94e9ab89-4c43-56ea-8b35-45dc07226830
+  token label        : mytoken
+  token manufacturer : Linaro
+  token model        : OP-TEE TA
+  token flags        : login required, rng, token initialized, PIN initialized
+  hardware version   : 0.0
+  firmware version   : 0.1
+  serial num         : 0000000000000000
+  pin min/max        : 4/128
+Slot 1 (0x1): OP-TEE PKCS11 TA - TEE UUID 94e9ab89-4c43-56ea-8b35-45dc07226830
+  token state:   uninitialized
+Slot 2 (0x2): OP-TEE PKCS11 TA - TEE UUID 94e9ab89-4c43-56ea-8b35-45dc07226830
+  token state:   uninitialized
+</pre></div>
+</div>
+<p>Now we have a fully initialized token but it still contains no keys. To list
+what cryptographic primitives the particular OP-TEE version offers, you can
+query the supported mechanisms:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># p11 --list-mechanisms
+Using slot 0 with a present token (0x0)
+Supported mechanisms:
+  SHA224-RSA-PKCS-PSS, keySize={256,4096}, sign, verify
+  SHA224-RSA-PKCS, keySize={256,4096}, sign, verify
+  SHA512-RSA-PKCS-PSS, keySize={256,4096}, sign, verify
+  SHA384-RSA-PKCS-PSS, keySize={256,4096}, sign, verify
+  SHA256-RSA-PKCS-PSS, keySize={256,4096}, sign, verify
+  SHA512-RSA-PKCS, keySize={256,4096}, sign, verify
+  SHA384-RSA-PKCS, keySize={256,4096}, sign, verify
+  SHA256-RSA-PKCS, keySize={256,4096}, sign, verify
+  SHA1-RSA-PKCS-PSS, keySize={256,4096}, sign, verify
+  RSA-PKCS-OAEP, keySize={256,4096}, encrypt, decrypt
+  SHA1-RSA-PKCS, keySize={256,4096}, sign, verify
+  MD5-RSA-PKCS, keySize={256,4096}, sign, verify
+  RSA-PKCS-PSS, sign, verify
+  RSA-PKCS, keySize={256,4096}, encrypt, decrypt, sign, verify
+  RSA-PKCS-KEY-PAIR-GEN, keySize={256,4096}, generate_key_pair
+  ECDSA-SHA512, keySize={160,521}, sign, verify
+  ECDSA-SHA384, keySize={160,521}, sign, verify
+  ECDSA-SHA256, keySize={160,521}, sign, verify
+  ECDSA-SHA224, keySize={160,521}, sign, verify
+  ECDSA-SHA1, keySize={160,521}, sign, verify
+  ECDSA, keySize={160,521}, sign, verify
+  ECDSA-KEY-PAIR-GEN, keySize={160,521}, generate_key_pair
+  mechtype-0x272, keySize={32,128}, sign, verify
+  mechtype-0x262, keySize={32,128}, sign, verify
+  mechtype-0x252, keySize={24,128}, sign, verify
+  mechtype-0x257, keySize={14,64}, sign, verify
+  SHA-1-HMAC-GENERAL, keySize={10,64}, sign, verify
+  MD5-HMAC-GENERAL, keySize={8,64}, sign, verify
+  SHA512-HMAC, keySize={32,128}, sign, verify
+  SHA384-HMAC, keySize={32,128}, sign, verify
+  SHA256-HMAC, keySize={24,128}, sign, verify
+  SHA224-HMAC, keySize={14,64}, sign, verify
+  SHA-1-HMAC, keySize={10,64}, sign, verify
+  MD5-HMAC, keySize={8,64}, sign, verify
+  SHA512, digest
+  SHA384, digest
+  SHA256, digest
+  SHA224, digest
+  SHA-1, digest
+  MD5, digest
+  GENERIC-SECRET-KEY-GEN, keySize={1,4096}, generate
+  AES-KEY-GEN, keySize={16,32}, generate
+  AES-CBC-ENCRYPT-DATA, derive
+  AES-ECB-ENCRYPT-DATA, derive
+  mechtype-0x108B, keySize={16,32}, sign, verify
+  AES-CMAC, keySize={16,32}, sign, verify
+  mechtype-0x1089, keySize={16,32}, encrypt, decrypt
+  AES-CTR, keySize={16,32}, encrypt, decrypt
+  AES-CBC-PAD, keySize={16,32}, encrypt, decrypt
+  AES-CBC, keySize={16,32}, encrypt, decrypt, wrap, unwrap
+  AES-ECB, keySize={16,32}, encrypt, decrypt, wrap, unwrap
+</pre></div>
+</div>
+<p>In our case, we would want to create an elliptic curve keypair on P-256 (aka
+secp256r1 or prime256v1). As you can see, this is supported (“ECDSA-KEY-PAIR-GEN” supports
+between 160 and 521 bit curves).</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># p11 -l --pin 12345 --keypairgen --key-type EC:prime256v1 --label mykey
+Using slot 0 with a present token (0x0)
+Key pair generated:
+Private Key Object; EC
+  label:      mykey
+  Usage:      sign, derive
+  Access:     sensitive, always sensitive, never extractable, local
+Public Key Object; EC  EC_POINT 256 bits
+  EC_POINT:   044104e3f89bd32ac8101ba675815fbaf34c4f34bb7bb2d233589983bad934cfa09795d56811747778d22b94e245028d3af6aff9e6abbbdb3a75fe1433182c605868c7
+  EC_PARAMS:  06082a8648ce3d030107
+  label:      mykey
+  Usage:      verify, derive
+  Access:     local
+</pre></div>
+</div>
+<p>You can see the public key, which is a point on the elliptic curve. The byte
+<code class="docutils literal notranslate"><span class="pre">04</span></code> at byte offset 2 indicates that this point is represented in
+uncompressed affine representation, i.e., X and Y coordinates follow that byte
+directly. This format is not ideal to interface common libraries, however.
+Especially when using PKI with X.509 certificates, we typically want a
+PEM-formatted CSR to be able to create a certificate from.</p>
+<p>For this, we create a small configuration file for OpenSSL and call it
+<code class="docutils literal notranslate"><span class="pre">optee_hsm.conf</span></code>. It references a library of <a class="reference external" href="https://github.com/OpenSC/libp11">libp11</a> which acts as a driver that enables
+OpenSSL to interface with a PKCS#11 library.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">openssl_conf</span> <span class="o">=</span> <span class="n">openssl_conf</span>
+
+<span class="p">[</span><span class="n">openssl_conf</span><span class="p">]</span>
+<span class="n">engines</span> <span class="o">=</span> <span class="n">engine_section</span>
+
+<span class="p">[</span><span class="n">engine_section</span><span class="p">]</span>
+<span class="n">pkcs11</span> <span class="o">=</span> <span class="n">pkcs11_section</span>
+
+<span class="p">[</span><span class="n">pkcs11_section</span><span class="p">]</span>
+<span class="n">engine_id</span> <span class="o">=</span> <span class="n">pkcs11</span>
+<span class="n">dynamic_path</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">engines</span><span class="o">-</span><span class="mf">1.1</span><span class="o">/</span><span class="n">libpkcs11</span><span class="o">.</span><span class="n">so</span>
+<span class="n">MODULE_PATH</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libckteec</span><span class="o">.</span><span class="n">so</span>
+<span class="n">PIN</span> <span class="o">=</span> <span class="mi">12345</span>
+
+<span class="p">[</span><span class="n">req</span><span class="p">]</span>
+<span class="n">distinguished_name</span> <span class="o">=</span> <span class="n">req_distinguished_name</span>
+
+<span class="p">[</span><span class="n">req_distinguished_name</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>When testing OP-TEE under QEMU, libp11 is not compiled by default. For easy
+access to this library, you can build OP-TEE using the command</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>make BR2_PACKAGE_OPENSC=y BR2_PACKAGE_LIBOPENSSL=y BR2_PACKAGE_LIBOPENSSL_BIN=y BR2_PACKAGE_LIBP11=y
+</pre></div>
+</div>
+<p>This will ensure that OpenSC (for the command line utility <code class="docutils literal notranslate"><span class="pre">pkcs11-tool</span></code>),
+OpenSSL, and libp11 are all built and installed in the QEMU environment.
+Note that in that environment, <code class="docutils literal notranslate"><span class="pre">libpkcs11.so</span></code> will reside at
+<code class="docutils literal notranslate"><span class="pre">/usr/lib/engines-1.1/libpkcs11.so</span></code>.</p>
+</div>
+<p>Then, we can ask OpenSSL to create a CSR from the key we have previously created:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># OPENSSL_CONF=optee_hsm.conf openssl req -new -engine pkcs11 -keyform engine -key label_mykey -subj "/CN=My CSR" -out mykey_csr.pem
+engine "pkcs11" set.
+</pre></div>
+</div>
+<p>We can then inspect said CSR:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ openssl req -in mykey_csr.pem -text
+Certificate Request:
+    Data:
+        Version: 1 (0x0)
+        Subject: CN = My CSR
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:e3:f8:9b:d3:2a:c8:10:1b:a6:75:81:5f:ba:f3:
+                    4c:4f:34:bb:7b:b2:d2:33:58:99:83:ba:d9:34:cf:
+                    a0:97:95:d5:68:11:74:77:78:d2:2b:94:e2:45:02:
+                    8d:3a:f6:af:f9:e6:ab:bb:db:3a:75:fe:14:33:18:
+                    2c:60:58:68:c7
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+        Attributes:
+            a0:00
+    Signature Algorithm: ecdsa-with-SHA256
+         30:45:02:20:61:7e:05:30:cf:4d:d0:93:22:78:9e:45:cf:af:
+         3c:83:bb:04:c4:f0:81:f6:9a:5c:97:cd:ac:1e:94:cd:17:1b:
+         02:21:00:e7:7f:88:1d:4f:56:b8:e2:87:be:76:de:28:b3:92:
+         68:a7:16:3a:56:af:79:2f:98:bd:fd:6d:b3:82:e1:15:6c
+</pre></div>
+</div>
+<p>Note that the public key matches exactly that which we have previously created
+(<code class="docutils literal notranslate"><span class="pre">04</span> <span class="pre">e3</span> <span class="pre">f8...</span></code>). This CSR could then be signed by a CA. For simplicity
+purposes, we can also use a self-signed certificate and sign with our own
+OP-TEE contained key:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># OPENSSL_CONF=optee_hsm.conf openssl req -new -engine pkcs11 -keyform engine -key label_mykey -subj "/CN=My CSR" -x509 -out mykey_selfsigned_cert.pem
+engine "pkcs11" set.
+</pre></div>
+</div>
+<p>Again we can review this self-signed certificate:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ openssl x509 -in mykey_selfsigned_cert.pem -text
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number:
+            3f:8f:c8:c0:de:a8:75:ca:9d:62:79:31:c2:6c:48:f4:fd:50:22:1d
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: CN = My CSR
+        Validity
+            Not Before: Mar 22 20:19:15 2023 GMT
+            Not After : Apr 21 20:19:15 2023 GMT
+        Subject: CN = My CSR
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:e3:f8:9b:d3:2a:c8:10:1b:a6:75:81:5f:ba:f3:
+                    4c:4f:34:bb:7b:b2:d2:33:58:99:83:ba:d9:34:cf:
+                    a0:97:95:d5:68:11:74:77:78:d2:2b:94:e2:45:02:
+                    8d:3a:f6:af:f9:e6:ab:bb:db:3a:75:fe:14:33:18:
+                    2c:60:58:68:c7
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+    Signature Algorithm: ecdsa-with-SHA256
+         30:45:02:20:4a:9d:63:f2:e0:12:4b:46:eb:eb:62:34:9e:86:
+         3d:d4:c8:cf:5f:c0:44:fe:8b:71:a0:b8:fa:41:d9:0b:60:3a:
+         02:21:00:fb:c2:b3:0a:7b:54:e9:bb:66:7b:8e:f7:11:52:81:
+         69:81:a6:cc:d0:bf:a2:7c:f7:2a:67:db:ab:f1:f3:2c:9f
+-----BEGIN CERTIFICATE-----
+MIIBHDCBwwIUP4/IwN6odcqdYnkxwmxI9P1QIh0wCgYIKoZIzj0EAwIwETEPMA0G
+A1UEAwwGTXkgQ1NSMB4XDTIzMDMyMjIwMTkxNVoXDTIzMDQyMTIwMTkxNVowETEP
+MA0GA1UEAwwGTXkgQ1NSMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE4/ib0yrI
+EBumdYFfuvNMTzS7e7LSM1iZg7rZNM+gl5XVaBF0d3jSK5TiRQKNOvav+earu9s6
+df4UMxgsYFhoxzAKBggqhkjOPQQDAgNIADBFAiBKnWPy4BJLRuvrYjSehj3UyM9f
+wET+i3GguPpB2QtgOgIhAPvCswp7VOm7ZnuO9xFSgWmBpszQv6J89ypn26vx8yyf
+-----END CERTIFICATE-----
+</pre></div>
+</div>
+<p>To test our self-signed certificate as a client certificate, we first need to
+initialize a TLS server. This can either be done on a remote machine or
+locally. For the server we will again use a self-signed certificate (but simply
+store the corresponding private key in a file).</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ openssl ecparam -genkey -name prime256v1 -out server_key.pem
+$ openssl req -new -x509 -key server_key.pem -subj '/CN=Server' -out server_cert.pem
+$ openssl s_server -accept 9876 -cert server_cert.pem -key server_key.pem -www -Verify 1
+verify depth is 1, must return a certificate
+Using default temp DH parameters
+ACCEPT
+</pre></div>
+</div>
+<p>This starts a HTTPS server which listens at port 9876 and requires a TLS client
+certificate. We can validate that the connection to the server is refused if no
+client certificate is provided. Assume that <code class="docutils literal notranslate"><span class="pre">192.168.178.34</span></code> is the IPv4
+address of the server:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ curl -k https://192.168.178.34:9876
+curl: (56) OpenSSL SSL_read: error:0A00045C:SSL routines::tlsv13 alert certificate required, errno 0
+</pre></div>
+</div>
+<p>Now on our OP-TEE device we can use OpenSSL to establish a connection using our
+OP-TEE stored client certificate:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># OPENSSL_CONF=optee_hsm.conf openssl s_client -engine pkcs11 -connect 192.168.178.34:9876 -cert mykey_selfsigned_cert.pem -keyform engine -key label_mykey
+engine "pkcs11" set.
+CONNECTED(00000004)
+Can't use SSL_get_servername
+depth=0 CN = Server
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 CN = Server
+verify return:1
+---
+Certificate chain
+ 0 s:CN = Server
+   i:CN = Server
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+MIIBeDCCAR2gAwIBAgIUDnUzOcNS9AgeJhvVmp73wF5DwxQwCgYIKoZIzj0EAwIw
+ETEPMA0GA1UEAwwGU2VydmVyMB4XDTIzMDMyMjIwMjMwMloXDTIzMDQyMTIwMjMw
+MlowETEPMA0GA1UEAwwGU2VydmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE
+qnCvLjLa1XWBtY1OQjaHa60re5vnZ2WY555XSsFCe2RoF7wGBDDrdXKkQz9Vy0t4
+d5OC6VMcFhia967nGa5zPqNTMFEwHQYDVR0OBBYEFBKTMLG057a/a2exmeF7dHVH
+85D0MB8GA1UdIwQYMBaAFBKTMLG057a/a2exmeF7dHVH85D0MA8GA1UdEwEB/wQF
+MAMBAf8wCgYIKoZIzj0EAwIDSQAwRgIhAIeKwlghSkhA8zvpXsl9y6WSCXo9fRzt
+DSl6myUsgac/AiEAhipKSjVQAvJAqXIecmMylqjY79XVzrbxKWYjsL1XdLw=
+-----END CERTIFICATE-----
+subject=CN = Server
+
+issuer=CN = Server
+
+---
+No client certificate CA names sent
+Requested Signature Algorithms: ECDSA+SHA256:ECDSA+SHA384:ECDSA+SHA512:Ed25519:Ed448:RSA-PSS+SHA256:RSA-PSS+SHA384:RSA-PSS+SHA512:RSA-PSS+SHA256:RSA-PSS+SHA384:RSA-PSS+SHA512:RSA+SHA256:RSA+SHA384:RSA+SHA512:ECDSA+SHA224:RSA+SHA224
+Shared Requested Signature Algorithms: ECDSA+SHA256:ECDSA+SHA384:ECDSA+SHA512:Ed25519:Ed448:RSA-PSS+SHA256:RSA-PSS+SHA384:RSA-PSS+SHA512:RSA-PSS+SHA256:RSA-PSS+SHA384:RSA-PSS+SHA512:RSA+SHA256:RSA+SHA384:RSA+SHA512
+Peer signing digest: SHA256
+Peer signature type: ECDSA
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 817 bytes and written 797 bytes
+Verification error: self signed certificate
+---
+New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+Server public key is 256 bit
+Secure Renegotiation IS NOT supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 18 (self signed certificate)
+[...]
+</pre></div>
+</div>
+<p>When connected, you can type “GET /” and press return to get a HTML response
+back from the HTTPS server, which will echo your client certificate inside a
+HTML page.</p>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="optee_with_rust.html" rel="prev" title="OP-TEE with Rust"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="../debug/index.html" rel="next" title="Debugging techniques">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Subkeys — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="trusted_applications.html" rel="next" title="Trusted Applications"/>
+<link href="secure_storage.html" rel="prev" title="Secure storage"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+<li class="breadcrumb-item active">Subkeys</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/architecture/subkeys.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Subkeys"></a><section id="subkeys">
+<span id="id1"></span><h1>Subkeys<a class="headerlink" href="#subkeys" title="Permalink to this heading"></a></h1>
+<p>Subkeys is an OP-TEE-specific implementation to provide a public key
+hierarchy. Subkeys can be delegated to allow different actors to sign
+different TAs without sharing a private key.</p>
+<p>The first key in the chain is verified using a root key. Example Subkey
+hierarchy:</p>
+<p class="plantuml">
+<a href="../_images/plantuml-7e79cfe65898f926bb378393efbab1a0a0ec64f0.png"><img alt='object "Root key" as root
+object "First-level subkey" as first
+object "Second-level subkey" as second
+
+object root {
+        PublicKey
+}
+
+object first {
+        Signature
+        UUID
+        PublicKey
+}
+
+object second {
+        Signature
+        UUID
+        PublicKey
+}
+
+root -&gt; first
+first -&gt; second' src="../_images/plantuml-7e79cfe65898f926bb378393efbab1a0a0ec64f0.png" style="width: 800.0px"/></a>
+</p>
+<p>Each subkey defines a UUIDv5 namespace <a class="footnote-reference brackets" href="#f1" id="id2">1</a> to which another signed
+subkey or TA must belong. This avoids that one subkey can be used to sign
+TAs which should be signed with a different key. Since the UUIDs are
+restricted by this there is also a special kind of subkey, called identity
+subkey, which uses the same UUID as the TA it is supposed to sign.</p>
+<p>A subkey consists of two files, a private key pair in a .pem file and the
+signed public key in a .bin file. Subkeys reuse the signed header (SHDR)
+format used for signed TAs, followed by a payload holding a public key and
+UUID among other fields. A subkey is formatted with all fields in
+little endian as:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15%"/>
+<col style="width: 26%"/>
+<col style="width: 28%"/>
+<col style="width: 31%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Size in
+bytes</p></td>
+<td><p>Field Name</p></td>
+<td><p>Protected by field</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td colspan="3"><p class="centered">
+<strong>Signed header (struct shdr)</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>magic</p></td>
+<td><p>hash</p></td>
+<td><p>0x4f545348</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>img_type</p></td>
+<td><p>hash</p></td>
+<td><p>3, SHDR_SUBKEY</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>img_size</p></td>
+<td><p>hash</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>algo</p></td>
+<td><p>hash</p></td>
+<td><p>Signature algorithm,
+GP TEE_ALG_*</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>hash_size</p></td>
+<td><p>hash</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>sig_size</p></td>
+<td><p>hash</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>hash_size</p></td>
+<td><p>hash</p></td>
+<td><p>sig</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sig_size</p></td>
+<td><p>sig</p></td>
+<td><p>previous pub key</p></td>
+<td><p>Root key or a subkey
+higher up in the
+chain</p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p class="centered">
+<strong>Subkey header (struct shdr_subkey)</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>16</p></td>
+<td><p>UUID</p></td>
+<td><p>hash</p></td>
+<td><p>UUIDv5 namespace for
+next subkey or TA</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>name_size</p></td>
+<td><p>hash</p></td>
+<td><p>Size of the UUIDv5
+name for the
+next subkey or TA,
+0 for identiy subkeys</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>subkey_version</p></td>
+<td><p>hash</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>max_depth</p></td>
+<td><p>hash</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>algo</p></td>
+<td><p>hash</p></td>
+<td><p>Signature algorithm
+for the next
+subkey or TA</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>attr_count</p></td>
+<td><p>hash</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td colspan="2"><p class="centered">
+<strong>Subkey attrs * attr_count</strong></p></td>
+<td><p>Attributes of the
+public key in this
+subkey</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>id</p></td>
+<td><p>hash</p></td>
+<td><p>GP TEE_ATTR_*</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>offs</p></td>
+<td><p>hash</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>size</p></td>
+<td><p>hash</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td colspan="2"><p>opaque data padding up this
+binary to img_size</p></td>
+<td><p>hash</p></td>
+<td><p>The subkey attributes
+above point into
+this area using
+offset and size</p></td>
+</tr>
+</tbody>
+</table>
+<p>All subkeys included in the subkey hierarchy are added in front when a TA
+is signed using a subkey. For example, if a TA is signed using the
+second-level subkey above it would look like this:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%"/>
+<col style="width: 29%"/>
+<col style="width: 47%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Size in bytes</p></td>
+<td><p>Binary</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>first.img_size</p></td>
+<td colspan="2"><p>First-level subkey     | Signed by Root key</p></td>
+</tr>
+<tr class="row-odd"><td><p>first.name_size</p></td>
+<td><p>UUIDv5 name string
+for the next subkey</p></td>
+<td><p>Not signed, used to prove that
+the next UUID is in the namespace
+of the First-level subkey.
+This size is from “name_size”
+of the previous subkey
+(First-level).</p></td>
+</tr>
+<tr class="row-even"><td><p>second.img_size</p></td>
+<td><p>Second-level subkey</p></td>
+<td><p>Signed by First-level subkey</p></td>
+</tr>
+<tr class="row-odd"><td><p>second.name_size</p></td>
+<td><p>UUIDv5 name string
+for the TA</p></td>
+<td><p>Not signed used to prove that
+the next UUID is in the namespace
+of the Second-level subkey.
+This size is from “name_size”
+of the previous subkey
+(Second-level).</p></td>
+</tr>
+<tr class="row-even"><td><p>second.img_size</p></td>
+<td><p>TA</p></td>
+<td><p>Signed by Second-level subkey</p></td>
+</tr>
+</tbody>
+</table>
+<p>The signed TA binary is self-contained with all the public keys
+needed for verification included, except the public root key which is
+embedded in the TEE core binary.</p>
+<p>The UUIDv5 name string is a separate field between subkeys and the next
+subkey or TA to allow a subkey to be used to sign more than one other
+subkey or TA.</p>
+<p>A signed TA or subkey can be inspected using the sign_encrypt.py script,
+for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ scripts/sign_encrypt.py display --in 5c206987-16a3-59cc-ab0f-64b9cfc9e758.ta
+Subkey
+ struct shdr
+  magic:      0x4f545348
+  img_type:   3 (SHDR_SUBKEY)
+  img_size:   320 bytes
+  algo:       0x70414930 (TEE_ALG_RSASSA_PKCS1_PSS_MGF1_SHA256)
+  hash_size:  32 bytes
+  sig_size:   256 bytes
+  hash:       f573f329fe77be686ce71647909c4ea35b5e1cd7de86369bd7d9fca31f6a4d65
+ struct shdr_subkey
+  uuid:       f04fa996-148a-453c-b037-1dcfbad120a6
+  name_size:  64
+  subkey_version: 1
+  max_depth:  4
+  algo:       0x70414930 (TEE_ALG_RSASSA_PKCS1_PSS_MGF1_SHA256)
+  attr_count: 2
+  next name:  "mid_level_subkey"
+Next header at offset: 692 (0x2b4)
+Subkey
+ struct shdr
+  magic:      0x4f545348
+  img_type:   3 (SHDR_SUBKEY)
+  img_size:   320 bytes
+  algo:       0x70414930 (TEE_ALG_RSASSA_PKCS1_PSS_MGF1_SHA256)
+  hash_size:  32 bytes
+  sig_size:   256 bytes
+  hash:       233a6dcf1a2cf69e50cde8e20c4129157da707c76fa86ce12ee31037edef02d7
+ struct shdr_subkey
+  uuid:       1a5948c5-1aa0-518c-86f4-be6f6a057b16
+  name_size:  64
+  subkey_version: 1
+  max_depth:  3
+  algo:       0x70414930 (TEE_ALG_RSASSA_PKCS1_PSS_MGF1_SHA256)
+  attr_count: 2
+  next name:  "subkey1_ta"
+Next header at offset: 1384 (0x568)
+Bootstrap TA
+ struct shdr
+  magic:      0x4f545348
+  img_type:   1 (SHDR_BOOTSTRAP_TA)
+  img_size:   84576 bytes
+  algo:       0x70414930 (TEE_ALG_RSASSA_PKCS1_PSS_MGF1_SHA256)
+  hash_size:  32 bytes
+  sig_size:   256 bytes
+  hash:       ea31ac7dc2cc06a9dc2853cd791dd00f784b5edc062ecfa274deeb66589b4ca5
+ struct shdr_bootstrap_ta
+  uuid:       5c206987-16a3-59cc-ab0f-64b9cfc9e758
+  ta_version: 0
+ TA offset:  1712 (0x6b0) bytes
+ TA size:    84576 (0x14a60) bytes
+</pre></div>
+</div>
+<p class="rubric">Footnotes</p>
+<dl class="footnote brackets">
+<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
+<dd><p>UUIDv5 and namespaces are described in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc4122">RFC4122</a>.
+Note that OP-TEE uses a truncated SHA-512 instead of the
+weak SHA-1 hash when when deriving a new UUID from a
+namespace and name.</p>
+</dd>
+</dl>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="secure_storage.html" rel="prev" title="Secure storage"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="trusted_applications.html" rel="next" title="Trusted Applications">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>STM32MP1 — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="ti.html" rel="next" title="Texas Instruments SoCs"/>
+<link href="rpi3.html" rel="prev" title="Raspberry Pi 3"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Device specific information</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="versal.html">AMD-Xilinx Versal ACAP VCK190</a></li>
+<li class="toctree-l3"><a class="reference internal" href="devbox.html">DeveloperBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fvp.html">FVP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey620.html">HiKey 620</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey960.html">HiKey 960</a></li>
+<li class="toctree-l3"><a class="reference internal" href="juno.html">Juno</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nuvoton.html">NUVOTON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html">QEMU v7</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html#qemu-v8">QEMU v8</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rockpi4.html">ROCK Pi 4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rpi3.html">Raspberry Pi 3</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">STM32MP1</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#supported-boards">Supported boards</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-instructions">Build instructions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ti.html">Texas Instruments SoCs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zynqmp.html">Zynq MPSoC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="index.html">Device specific information</a></li>
+<li class="breadcrumb-item active">STM32MP1</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/devices/stm32mp1.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/STM32MP1"></a><section id="stm32mp1">
+<span id="id1"></span><h1>STM32MP1<a class="headerlink" href="#stm32mp1" title="Permalink to this heading"></a></h1>
+<p>The instructions here will tell how to run OP-TEE on one of the supported
+STM32MP1 boards.</p>
+<section id="supported-boards">
+<h2>Supported boards<a class="headerlink" href="#supported-boards" title="Permalink to this heading"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 24%"/>
+<col style="width: 14%"/>
+<col style="width: 37%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Board Name</p></th>
+<th class="head"><p>Manufacturer</p></th>
+<th class="head"><p>Boot media</p></th>
+<th class="head"><p>Hardware Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp135f-dk.html">STM32MP135F-DK</a></p></td>
+<td><p>STMicroelectronics</p></td>
+<td><p>SDcard</p></td>
+<td><p><a class="reference external" href="https://wiki.st.com/stm32mpu/wiki/STM32MP135x-DK_-_hardware_description">Wiki STM32MP135x-DK</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp157a-dk1.html">STM32MP157A-DK1</a></p></td>
+<td rowspan="2"><p>STMicroelectronics</p></td>
+<td rowspan="2"><p>SDcard</p></td>
+<td rowspan="2"><p><a class="reference external" href="https://wiki.st.com/stm32mpu/wiki/STM32MP157x-DKx_-_hardware_description">Wiki STM32MP157x-DKx</a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp157d-dk1.html">STM32MP157D-DK1</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp157c-dk2.html">STM32MP157C-DK2</a></p></td>
+<td rowspan="2"><p>STMicroelectronics</p></td>
+<td rowspan="2"><p>SDcard</p></td>
+<td rowspan="2"><p><a class="reference external" href="https://wiki.st.com/stm32mpu/wiki/STM32MP157x-DKx_-_hardware_description">Wiki STM32MP157x-DKx</a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp157f-dk2.html">STM32MP157F-DK2</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp157c-ev1.html">STM32MP157C-EV1</a></p></td>
+<td rowspan="2"><p>STMicroelectronics</p></td>
+<td rowspan="2"><p>SDCard (1)</p></td>
+<td rowspan="2"><p><a class="reference external" href="https://wiki.st.com/stm32mpu/wiki/STM32MP157x-EV1_-_hardware_description">Wiki STM32MP157x-EV1</a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp157f-ev1.html">STM32MP157F-EV1</a></p></td>
+</tr>
+</tbody>
+</table>
+<p>(1): STM32MP157x-EV1 boards also integrate an eMMC device, a NOR flash and a
+Nand flash the system can boot on. OP-TEE distribution however only supports
+booting from the SDcard slot.</p>
+</section>
+<section id="build-instructions">
+<h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this heading"></a></h2>
+<p>Follow the instructions at “<a class="reference internal" href="../gits/build.html#get-and-build-the-solution"><span class="std std-ref">Get and build the solution</span></a>”.</p>
+<p>Configuration switch <code class="docutils literal notranslate"><span class="pre">PLATFORM</span></code> can be used to specify the target device
+as listed in table below:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 39%"/>
+<col style="width: 61%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Board Name</p></th>
+<th class="head"><p>Build configuration directive</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp135f-dk.html">STM32MP135F-DK</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=stm32mp1-135F_DK</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>STM32MP157A-DK1</cite>
+<cite>STM32MP157D-DK1</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=stm32mp1-157A_DK1</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><cite>STM32MP157C-DK2</cite>
+<cite>STM32MP157F-DK2</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=stm32mp1-157C_DK2</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>STM32MP157C-EV1</cite>
+<cite>STM32MP157F-EV1</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=stm32mp1-157C_EV1</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>When the build completes, generated image file sdcard.img can be found
+in the generated binary images directory <code class="docutils literal notranslate"><span class="pre">../out/bin/</span></code> from build
+root path. The images is a GPT multipartition image you can raw copy
+to the target SDcard using a tool like dd.</p>
+<p>A usual short fecth/build/load shell sequence is like the one below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>repo<span class="w"> </span>init<span class="w"> </span>-u<span class="w"> </span>https://github.com/OP-TEE/manifest.git<span class="w"> </span>-m<span class="w"> </span>stm32mp1.xml
+$<span class="w"> </span>repo<span class="w"> </span>sync
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>make<span class="w"> </span>toolchains
+$<span class="w"> </span>make<span class="w"> </span><span class="nv">PLATFORM</span><span class="o">=</span>stm32mp1-157C_DK2<span class="w"> </span>all
+$<span class="w"> </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>../out/bin/sdcard.img<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/sdX<span class="w"> </span><span class="nv">conv</span><span class="o">=</span>fdatasync<span class="w"> </span><span class="nv">status</span><span class="o">=</span>progress
+$<span class="w"> </span>sgdisk<span class="w"> </span>-e<span class="w"> </span>/dev/sdX
+</pre></div>
+</div>
+<p>Command <code class="docutils literal notranslate"><span class="pre">sgdisk</span> <span class="pre">-e</span></code> fixes the GPT backup data which location depends on
+storage device effective size.</p>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="rpi3.html" rel="prev" title="Raspberry Pi 3"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="ti.html" rel="next" title="Texas Instruments SoCs">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Benchmark framework — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="ftrace.html" rel="next" title="Ftrace (function tracing)"/>
+<link href="abort_dumps.html" rel="prev" title="Abort dumps / call stack"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Debugging techniques</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="abort_dumps.html">Abort dumps / call stack</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Benchmark framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-details">Implementation details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#design-overview">Design overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#timestamp-source">Timestamp source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#call-sequence-diagram">Call sequence diagram</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-custom-timestamps">Adding custom timestamps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-run-benchmark">Build and run benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitations-and-further-steps">Limitations and further steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ftrace.html">Ftrace (function tracing)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gprof.html">Gprof</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Debugging techniques</a></li>
+<li class="breadcrumb-item active">Benchmark framework</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/debug/benchmark.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The feature described in this section depends on a Linux
+<a class="reference external" href="https://github.com/linaro-swg/linux/commit/d9b0331b46540fa67c0f16e391940f12fde1288b">kernel patch</a> that is not available upstream and has been maintained in
+the <a class="reference external" href="https://github.com/linaro-swg/Linux">linaro-swg kernel</a> repository up to OP-TEE version 3.15.0. The latest
+kernel source with this patch can be found in the <a class="reference external" href="https://github.com/linaro-swg/linux/commits/optee-3.15.0">optee-3.15.0</a> branch
+based on Linux 5.14.</p>
+<p>The benchmark framework should still work as described here with OP-TEE
+3.16.0 or later provided that either: (a) a Linux kernel built from branch
+<a class="reference external" href="https://github.com/linaro-swg/linux/commits/optee-3.15.0">optee-3.15.0</a> is used, or (b) the benchmark <a class="reference external" href="https://github.com/linaro-swg/linux/commit/d9b0331b46540fa67c0f16e391940f12fde1288b">kernel patch</a> is forward
+ported.</p>
+<p>If the kernel patch is missing the following errors are printed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ benchmark optee_example_hello_world
+[Benchmark] INFO: 1. Opening Benchmark Static TA...
+[Benchmark] INFO: 2. Allocating per-core buffers, cores detected = 2
+[Benchmark] ERROR: TEEC_InvokeCommand: 0xffff000c
+
+E/TC:? 0 alloc_benchmark_buffer:72 Benchmark: can't create mobj for timestamp buffer
+</pre></div>
+</div>
+</div>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Benchmark framework"></a><section id="benchmark-framework">
+<span id="id1"></span><h1>Benchmark framework<a class="headerlink" href="#benchmark-framework" title="Permalink to this heading"></a></h1>
+<p>Due to its nature, OP-TEE is being a solution spanning over several
+architectural layers, where each layer includes its own complex parts. For
+further optimizations of performance, there is a need of tool which will
+provide detailed and precise profiling information for each layer.</p>
+<p>It is necessary to receive latency values for:</p>
+<blockquote>
+<div><ul>
+<li><p>The roundtrip time for going from a client application in normal world,
+down to a Trusted Application and back again.</p></li>
+<li><p>Detailed information for amount of time taken to go through each layer:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>libTEEC -&gt; Linux OP-TEE kernel driver</p></li>
+<li><p>Linux OP-TEE kernel driver -&gt; OP-TEE OS Core</p></li>
+<li><p>OP-TEE OS Core -&gt; TA entry point (<strong>not supported yet</strong>)</p></li>
+<li><p>The same way back</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<section id="implementation-details">
+<h2>Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this heading"></a></h2>
+<section id="design-overview">
+<h3>Design overview<a class="headerlink" href="#design-overview" title="Permalink to this heading"></a></h3>
+<p>Benchmark framework consists of such components:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>Benchmark Client Application (CA)</strong>: a dedicated client application,
+which is responsible for allocating timestamp circular buffers,
+registering these buffers in the Benchmark PTA and consuming all
+timestamp data generated by all OP-TEE layers. Finally, it puts timestamp
+data into appropriate file with <code class="docutils literal notranslate"><span class="pre">.ts</span></code> extension. Additional build
+details can be found at <a class="reference internal" href="../building/gits/optee_benchmark.html#optee-benchmark"><span class="std std-ref">optee_benchmark</span></a>.</p></li>
+<li><p><strong>Benchmark Pseudo Trusted Application (PTA)</strong>: which owns all per-cpu
+circular non-secure buffers from a shared memory. Benchmark PTA must be
+invoked (by a CA) to register the timestamp circular buffers. In turn,
+the Benchmark PTA invokes the OP-TEE Linux driver (through some RPC mean)
+to register this circular buffers in the Linux kernel layer.</p></li>
+<li><p><strong>libTEEC</strong> and <strong>Linux kernel OP-TEE driver</strong> include functionality for
+handling timestamp buffer registration requests from the Benchmark
+PTA.</p></li>
+</ol>
+</div></blockquote>
+<p>When the benchmark is enabled, all OP-TEE layers (libTEEC, Linux kernel OP-TEE
+driver, OP-TEE OS core) do fill the registered timestamp circular buffer with
+timestamp data for all invocation requests on condition that the circular buffer
+is allocated/registered.</p>
+<img alt="../_images/benchmark_design.png" src="../_images/benchmark_design.png"/>
+</section>
+<section id="timestamp-source">
+<h3>Timestamp source<a class="headerlink" href="#timestamp-source" title="Permalink to this heading"></a></h3>
+<p>Arm Performance Monitor Units are used as the main source of timestamp values.
+The reason why this technology was chosen is that it is supported on all
+Armv7-A/Armv8-A cores. Besides it can provide precise pre-cpu cycle counter
+values, it is possible to enable EL0 access to all events, so usermode
+applications can directly read cpu counter values from coprocessor registers,
+achieving minimal latency by avoiding additional syscalls to EL1 core.</p>
+<p>Besides CPU cycle counter values, timestamp by itself contains also information
+about:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Executing CPU core index</p></li>
+<li><p>OP-TEE layer id, where this timestamp was obtained from</p></li>
+<li><p>Program counter value when timestamp was logged, which can be used for
+getting a symbol name (a filename and line number)</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="call-sequence-diagram">
+<h3>Call sequence diagram<a class="headerlink" href="#call-sequence-diagram" title="Permalink to this heading"></a></h3>
+<img alt="../_images/benchmark_sequence.png" src="../_images/benchmark_sequence.png"/>
+</section>
+</section>
+<section id="adding-custom-timestamps">
+<h2>Adding custom timestamps<a class="headerlink" href="#adding-custom-timestamps" title="Permalink to this heading"></a></h2>
+<p>Currently, timestamping is done only for <code class="docutils literal notranslate"><span class="pre">InvokeCommand</span></code> calls, but it’s also
+possible to choose custom places in the supported OP-TEE layers. To add
+timestamp storing command to custom c source file:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Include appropriate header:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>OP-TEE OS Core: <code class="docutils literal notranslate"><span class="pre">bench.h</span></code></p></li>
+<li><p>Linux kernel OP-TEE module: <code class="docutils literal notranslate"><span class="pre">optee_bench.h</span></code></p></li>
+<li><p>libTEEC: <code class="docutils literal notranslate"><span class="pre">teec_benchmark.h</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Invoke <code class="docutils literal notranslate"><span class="pre">bm_timestamp()</span></code> (for linux kmod use <code class="docutils literal notranslate"><span class="pre">optee_bm_timestamp()</span></code>)
+in the function, where you want to put timestamp from.</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="build-and-run-benchmark">
+<h2>Build and run benchmark<a class="headerlink" href="#build-and-run-benchmark" title="Permalink to this heading"></a></h2>
+<p>Please see the instructions available at <a class="reference internal" href="../building/gits/optee_benchmark.html#optee-benchmark"><span class="std std-ref">optee_benchmark</span></a>.</p>
+</section>
+<section id="limitations-and-further-steps">
+<h2>Limitations and further steps<a class="headerlink" href="#limitations-and-further-steps" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>Implementation of application which will analyze timestamp data and
+provide statistics for different types of calls providing avg/min/max
+values (both CPU cycles and time values).</p></li>
+<li><p>Add support for all platforms, where OP-TEE is supported.</p></li>
+<li><p>Adding support of S-EL0 timestamping.</p></li>
+<li><p>Attaching additional payload information to each timestamp, for example,
+session.</p></li>
+<li><p>Timestamping within interrupt context in the OP-TEE OS Core.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="abort_dumps.html" rel="prev" title="Abort dumps / call stack"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="ftrace.html" rel="next" title="Ftrace (function tracing)">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

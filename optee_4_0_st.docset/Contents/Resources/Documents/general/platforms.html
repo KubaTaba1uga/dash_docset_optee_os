@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Platforms supported — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="presentations.html" rel="next" title="Presentations"/>
+<link href="license_headers.html" rel="prev" title="License headers"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Getting started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="about.html">About OP-TEE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coding_standards.html">Coding standards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license_headers.html">License headers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Platforms supported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="presentations.html">Presentations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releases.html">Releases</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Getting started</a></li>
+<li class="breadcrumb-item active">Platforms supported</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/general/platforms.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Platforms supported"></a><section id="platforms-supported">
+<span id="id2"></span><h1>Platforms supported<a class="headerlink" href="#platforms-supported" title="Permalink to this heading"></a></h1>
+<p>Several platforms are supported. In order to manage slight differences between
+platforms, a <code class="docutils literal notranslate"><span class="pre">PLATFORM_FLAVOR</span></code> flag has been introduced. The <code class="docutils literal notranslate"><span class="pre">PLATFORM</span></code> and
+<code class="docutils literal notranslate"><span class="pre">PLATFORM_FLAVOR</span></code> flags define the whole configuration for a chip the where
+the Trusted OS runs. Note that there is also a composite form which makes it
+possible to append <code class="docutils literal notranslate"><span class="pre">PLATFORM_FLAVOR</span></code> directly, by adding a dash in-between the
+names. The composite form is shown below for the different boards. For more
+specific details about build flags etc, please read
+<a class="reference internal" href="../building/gits/optee_os.html#configuration-and-flags"><span class="std std-ref">Configuration and flags</span></a>. Some platforms have different sub-maintainers,
+please refer to the file <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/MAINTAINERS">MAINTAINERS</a> for contact details for various platforms.</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Platforms officially supported in OP-TEE</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Platform</p></th>
+<th class="head"><p>Composite PLATFORM flag</p></th>
+<th class="head"><p>Publicly available?</p></th>
+<th class="head"><p>Maintained?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.arm.com/products/tools/development-boards/versatile-express/juno-arm-development-platform.php">ARM Juno Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=vexpress-juno</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.atmel.com/tools/atsama5d2-xult.aspx">Atmel ATSAMA5D2-XULT Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=sam</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.broadcom.com/products/ethernet-connectivity/smartnic/bcm58800">Broadcom ns3</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=bcm-ns3</span></code></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.96boards.org/product/developerbox/">DeveloperBox (Socionext Synquacer SC2A11)</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=synquacer</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.freescale.com/tools/embedded-software-and-tools/hardware-development-tools/tower-development-boards/mcu-and-processor-modules/powerquicc-and-qoriq-modules/qoriq-ls1021a-tower-system-module:TWR-LS1021A?lang_cd=en">FSL ls1021a</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ls-ls1021atwr</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.nxp.com/products/microcontrollers-and-processors/power-architecture-processors/qoriq-platforms/developer-resources/qoriq-ls1043a-reference-design-board:LS1043A-RDB">NXP ls1043ardb</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ls-ls1043ardb</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.nxp.com/products/microcontrollers-and-processors/power-architecture-processors/qoriq-platforms/developer-resources/qoriq-ls1046a-reference-design-board:LS1046A-RDB">NXP ls1046ardb</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ls-ls1046ardb</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.nxp.com/products/microcontrollers-and-processors/power-architecture-processors/qoriq-platforms/developer-resources/qoriq-ls1012a-reference-design-board:LS1012A-RDB">NXP ls1012ardb</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ls-ls1012ardb</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.nxp.com/pages/design/qoriq-developer-resources/ls1028a-reference-design-board:LS1028ARDB">NXP ls1028ardb</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ls-ls1028ardb</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.nxp.com/products/microcontrollers-and-processors/power-architecture-processors/qoriq-platforms/developer-resources/qoriq-ls1088a-reference-design-board:LS1088A-RDB">NXP ls1088ardb</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ls-ls1088ardb</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.nxp.com/products/microcontrollers-and-processors/power-architecture-processors/qoriq-platforms/developer-resources/qoriq-ls2088a-reference-design-board:LS2088A-RDB">NXP ls2088ardb</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ls-ls2088ardb</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.nxp.com/support/developer-resources/software-development-tools/qoriq-developer-resources/layerscape-frwy-ls1012a-board:FRWY-LS1012A">NXP ls1012afrwy</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ls-ls1012afrwy</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://boundarydevices.com/product/sabre-lite-imx6-sbc/">FSL i.MX6 Quad SABRE Lite Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-mx6qsabrelite</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.nxp.com/products/software-and-tools/hardware-development-tools/sabre-development-system/sabre-board-for-smart-devices-based-on-the-i.mx-6quad-applications-processors:RD-IMX6Q-SABRE">FSL i.MX6 Quad SABRE SD Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-mx6qsabresd</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.solid-run.com/product/hummingboard-edge-imx6q-wa-h/">SolidRun i.MX6 Quad Hummingboard Edge</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-mx6qhmbedge</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.solid-run.com/product/hummingboard-edge-imx6d-wa-h/">SolidRun i.MX6 Dual Hummingboard Edge</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-mx6dhmbedge</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.solid-run.com/product/hummingboard-edge-imx6dl-0c-h/">SolidRun i.MX6 Dual Lite Hummingboard Edge</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-mx6dlhmbedge</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.solid-run.com/product/hummingboard-edge-imx6s-wa-h/">SolidRun i.MX6 Solo Hummingboard Edge</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-mx6shmbedge</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.freescale.com/products/arm-processors/i.mx-applications-processors-based-on-arm-cores/i.mx-6-processors/i.mx6qp/i.mx6ultralite-evaluation-kit:MCIMX6UL-EVK">FSL i.MX6 UltraLite EVK Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-mx6ulevk</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.nxp.com/products/software-and-tools/hardware-development-tools/sabre-development-system/sabre-board-for-smart-devices-based-on-the-i.mx-7dual-applications-processors:MCIMX7SABRE">NXP i.MX7Dual SabreSD Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-mx7dsabresd</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.nxp.com/products/developer-resources/reference-designs/warp7-next-generation-iot-and-wearable-development-platform:WARP7">NXP i.MX7Solo WaRP7 Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-mx7swarp7</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.nxp.com/support/developer-resources/run-time-software/i.mx-developer-resources/evaluation-kit-for-the-i.mx-8m-applications-processor:MCIMX8M-EVK">NXP i.MX8MQEVK Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-imx8mqevk</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.nxp.com/products/processors-and-microcontrollers/arm-based-processors-and-mcus/i.mx-applications-processors/i.mx-8-processors/i.mx-8m-mini-family-arm-cortex-a53-cortex-m4-audio-voice-video:i.MX8MMINI?lang=en&amp;lang_cd=en&amp;">NXP i.MX8MMEVK Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=imx-imx8mmevk</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://developer.arm.com/products/system-design/fixed-virtual-platforms">ARM Foundation FVP</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=vexpress-fvp</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://open-estuary.org/d02-2">HiSilicon D02</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=d02</span></code></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.hisilicon.com/en/Products/ProductList/Surveillance">HiSilicon Hi3519AV100 Demo Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=hisilicon-hi3519av100_demo</span></code></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.96boards.org/product/hikey">HiKey Board (HiSilicon Kirin 620)</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=hikey`</span> <span class="pre">or</span> <span class="pre">`PLATFORM=hikey-hikey</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.96boards.org/product/hikey960">HiKey960 Board (HiSilicon Kirin 960)</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=hikey-hikey960</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.marvell.com/embedded-processors/armada-70xx/">Marvell ARMADA 7K Family</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=marvell-armada7k8k</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.marvell.com/embedded-processors/armada-80xx/">Marvell ARMADA 8K Family</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=marvell-armada7k8k</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.marvell.com/embedded-processors/armada-3700/">Marvell ARMADA 3700 Family</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=marvell-armada3700</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.mediatek.com/products/tablets/mt8173">MediaTek MT8173 EVB Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=mediatek-mt8173</span></code></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.96boards.org/product/poplar">Poplar Board (HiSilicon Hi3798C V200)</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=poplar</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://wiki.qemu.org/Main_Page">QEMU</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=vexpress-qemu_virt</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://wiki.qemu.org/Main_Page">QEMUv8</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=vexpress-qemu_armv8a</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b">Raspberry Pi 3</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=rpi3</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.renesas.com/en-sg/solutions/automotive/products/rcar-h3.html">Renesas RCAR</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=rcar</span></code></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rz-cortex-a-mpus/rzg-linux-platform/rzg-marketplace/board-solutions">Renesas RZ/G</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=rzg</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://rock-chips.com/a/en/products/rkpower/2018/0709/913.html">Rockchip PX30</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=rockchip-px30</span></code></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.rock-chips.com/a/en/products/RK32_Series/2016/1109/799.html">Rockchip RK322X</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=rockchip-rk322x</span></code></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://rock-chips.com/a/en/products/RK33_Series/2016/0419/758.html">Rockchip RK3399</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=rockchip-rk3399</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.st.com/web/en/catalog/mmc/FM131/SC999/SS1628/PF258776">STMicroelectronics b2260 - h410 (96boards fmt)</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=stm-b2260</span></code></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.st.com/web/en/catalog/mmc/FM131/SC999/SS1628/PF258776">STMicroelectronics b2120 - h310 / h410</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=stm-cannes</span></code></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.st.com/stm32mp1">STMicroelectronics STM32MP1 series</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=stm32mp1</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.pine64.org/">Allwinner A64 Pine64 Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=sunxi-sun50i_a64</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.ti.com/processors/sitara-arm/am6x-cortex-a53-r5/overview.html">Texas Instruments AM65x</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=k3-am65x</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.ti.com/processors/automotive-processors/drax-infotainment-socs/overview.html">Texas Instruments DRA7xx</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ti-dra7xx</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.ti.com/processors/sitara/arm-cortex-a15/am57x/overview.html">Texas Instruments AM57xx</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ti-am57xx</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.ti.com/processors/sitara/arm-cortex-a9/am438x/overview.html">Texas Instruments AM43xx</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ti-am43xx</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.xilinx.com/products/silicon-devices/acap/versal.html">AMD/Xilinx Versal ACAP</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=versal</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.xilinx.com/products/boards-and-kits/ek-z7-zc702-g.html">Xilinx Zynq 7000 ZC702</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=zynq7k-zc702</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>No (v2.3.0)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html">Xilinx Zynq UltraScale+ MPSOC</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=zynqmp-zcu102</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>No (v2.4.0)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://spreadtrum.com/en/SC9860GV.html">Spreadtrum SC9860</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=sprd-sc9860</span></code></p></td>
+<td><p>No</p></td>
+<td><p>No (v2.1.0)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="license_headers.html" rel="prev" title="License headers"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="presentations.html" rel="next" title="Presentations">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

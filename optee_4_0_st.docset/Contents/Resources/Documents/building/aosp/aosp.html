@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AOSP — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="../linux/tee_framework.html" rel="next" title="Linux kernel TEE framework"/>
+<link href="../devices/zynqmp.html" rel="prev" title="Zynq MPSoC"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/index.html">Device specific information</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">AOSP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-instructions">Build instructions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#flashing-the-image">Flashing the image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#partial-flashing">Partial flashing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#experimental-prebuilts">Experimental prebuilts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-xtest">Running xtest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-vts-gtest-unit-for-gatekeeper-and-keymaster-optional">Running VTS Gtest unit for Gatekeeper and Keymaster (Optional)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#enable-adb-over-usb">Enable adb over USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#known-issues">Known issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item active">AOSP</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/aosp/aosp.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/AOSP"></a><section id="aosp">
+<span id="id1"></span><h1>AOSP<a class="headerlink" href="#aosp" title="Permalink to this heading"></a></h1>
+<p>This page contains information that tells how to get OP-TEE up and running on
+HiKey devices (see <a class="reference internal" href="../devices/hikey620.html#hikey"><span class="std std-ref">HiKey 620</span></a>, <a class="reference internal" href="../devices/hikey960.html#hikey960"><span class="std std-ref">HiKey 960</span></a>) together with AOSP.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The build used to be based on the latest OP-TEE release and used to be
+updated every quarter together with the regular OP-TEE releases. However, the
+AOSP build hasn’t been updated since July 2021 and is <strong>no longer
+maintained</strong>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We <strong>only</strong> use and support this static/stable configuration. If you try
+using it with the latest available AOSP, there is a risk that both OP-TEE
+and other parts are not working as expected.</p>
+</div>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>You should already be able to build AOSP for Hikey according to the
+<a class="reference external" href="https://source.android.com/source/devices.html">official instructions</a>. Note that the official build is <strong>NOT</strong> part
+of the OP-TEE build. It is a separate and non-related build used only
+to verify and make sure that your system has everything needed to
+build AOSP without any issues.</p></li>
+<li><p>Distro should have necessary packages installed, and the repo tool
+should be installed. Note that AOSP is built with Java. Also make sure
+that the <code class="docutils literal notranslate"><span class="pre">mtools</span></code> package is installed, which is needed to make the
+hikey boot image.</p></li>
+<li><p>In addition, you will need the pre-requisites necessary to build
+optee-os.</p></li>
+</ul>
+</div></blockquote>
+<p>After following the AOSP setup instructions, the following additional packages
+from main <a class="reference internal" href="../prerequisites.html#prerequisites"><span class="std std-ref">Prerequisites</span></a> page are needed. Please install them.</p>
+</section>
+<section id="build-instructions">
+<h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/linaro-swg/optee_android_manifest<span class="w"> </span><span class="o">[</span>-b<span class="w"> </span>&lt;release_tag&gt;<span class="o">]</span>
+<span class="c1"># release tags come in the form of X.Y.Z, e.g. 3.8.0</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>optee_android_manifest
+</pre></div>
+</div>
+<dl>
+<dt>HiKey620 - LeMaker 8GB</dt><dd><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./sync-p.sh
+$<span class="w"> </span>./build-p.sh
+</pre></div>
+</div>
+</dd>
+<dt>HiKey620 - CircuitCo 4GB</dt><dd><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./sync-p.sh
+$<span class="w"> </span>./build-p.sh<span class="w"> </span>-4g
+</pre></div>
+</div>
+</dd>
+<dt>HiKey960</dt><dd><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./sync-p-hikey960.sh
+$<span class="w"> </span>./build-p-hikey960.sh
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>These steps <strong>MUST</strong> finish with <strong>no errors</strong>. For <code class="docutils literal notranslate"><span class="pre">sync*.sh</span></code> scripts, that
+means there must be no errors prior to the <code class="docutils literal notranslate"><span class="pre">Sync</span> <span class="pre">done!</span></code> console output. For
+<code class="docutils literal notranslate"><span class="pre">build*.sh</span></code> scripts, that means there must be a <code class="docutils literal notranslate"><span class="pre">####</span> <span class="pre">build</span> <span class="pre">completed</span>
+<span class="pre">successfully</span> <span class="pre">(MM:SS</span> <span class="pre">(mm:ss))</span> <span class="pre">####</span></code> console output! If there are errors, then
+there is no point in trying to flash the device.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--force-sync</span></code> is used which means you might <strong>lose your work</strong> so save
+often, save frequent, and save accordingly, especially before running
+<code class="docutils literal notranslate"><span class="pre">sync-p.sh</span></code> again!</p></li>
+<li><p><strong>Attention!</strong> Do <strong>NOT</strong> use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clean</span></code> with <code class="docutils literal notranslate"><span class="pre">-x</span></code> or <code class="docutils literal notranslate"><span class="pre">-X</span></code> or
+<code class="docutils literal notranslate"><span class="pre">-e</span></code> option in <code class="docutils literal notranslate"><span class="pre">optee_android_manifest/</span></code>, else risk <strong>losing all
+files</strong> in the directory!!!</p></li>
+</ul>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can add the <code class="docutils literal notranslate"><span class="pre">-squashfs</span></code> option to <code class="docutils literal notranslate"><span class="pre">build.sh</span></code> option to make
+<code class="docutils literal notranslate"><span class="pre">system.img</span></code> size smaller, but this will make <code class="docutils literal notranslate"><span class="pre">/system</span></code> read-only, so
+you won’t be able to push files to it.</p>
+</div>
+<p>Currently, only version P is supported. Other existing files are for internal
+development purposes ONLY and <strong>NOT SUPPORTED</strong>!</p>
+</section>
+<section id="flashing-the-image">
+<h2>Flashing the image<a class="headerlink" href="#flashing-the-image" title="Permalink to this heading"></a></h2>
+<p>The instructions for flashing the image can be found in detail under
+<code class="docutils literal notranslate"><span class="pre">device/linaro/hikey/installer/hikey{960}/README</span></code> in the tree.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Set jumpers/switches <code class="docutils literal notranslate"><span class="pre">1-2</span></code> and <code class="docutils literal notranslate"><span class="pre">3-4</span></code>, and unset <code class="docutils literal notranslate"><span class="pre">5-6</span></code>.</p></li>
+<li><p>Reset the board. After that, invoke:</p></li>
+</ol>
+</div></blockquote>
+<dl>
+<dt>HiKey620</dt><dd><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cp<span class="w"> </span>-a<span class="w"> </span>out/target/product/hikey/*.img<span class="w"> </span>device/linaro/hikey/installer/hikey/
+$<span class="w"> </span>sudo<span class="w"> </span>./device/linaro/hikey/installer/hikey/flash-all.sh<span class="w"> </span>/dev/ttyUSBn
+</pre></div>
+</div>
+</dd>
+<dt>HiKey960</dt><dd><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cp<span class="w"> </span>-a<span class="w"> </span>out/target/product/hikey960/*.img<span class="w"> </span>device/linaro/hikey/installer/hikey960/
+$<span class="w"> </span>sudo<span class="w"> </span>./device/linaro/hikey/installer/hikey960/flash-all.sh<span class="w"> </span>/dev/ttyUSBn
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>where the <code class="docutils literal notranslate"><span class="pre">/dev/ttyUSBn</span></code> device is the one that appears after rebooting with
+the 3-4 jumper set. Note that the device only remains in this recovery mode for
+about 90 seconds. If you take too long to run the flash commands, it will need
+to be reset again. After flashing, unset the 3-4 jumper again to boot normally.</p>
+</section>
+<section id="partial-flashing">
+<h2>Partial flashing<a class="headerlink" href="#partial-flashing" title="Permalink to this heading"></a></h2>
+<p>The last handful of lines in the <code class="docutils literal notranslate"><span class="pre">flash-all.sh</span></code> script flash various images.
+After modifying and rebuilding Android, it is only necessary to flash <cite>boot</cite>,
+<cite>system</cite>, <cite>cache</cite>, <cite>vendor</cite> and <cite>userdata</cite>. If you aren’t modifying the kernel,
+<cite>boot</cite> is not necessary, either.</p>
+</section>
+<section id="experimental-prebuilts">
+<h2>Experimental prebuilts<a class="headerlink" href="#experimental-prebuilts" title="Permalink to this heading"></a></h2>
+<p>Available at <a class="reference external" href="http://snapshots.linaro.org/android">http://snapshots.linaro.org/android</a> under <code class="docutils literal notranslate"><span class="pre">android-hikey*</span></code>
+directories. Note that these images do not always work and are <strong>NOT
+SUPPORTED</strong> as well!</p>
+</section>
+<section id="running-xtest">
+<h2>Running xtest<a class="headerlink" href="#running-xtest" title="Permalink to this heading"></a></h2>
+<p>Do NOT try to run <code class="docutils literal notranslate"><span class="pre">tee-supplicant</span></code> as it has already been started
+automatically as a service! Once booted to the command prompt, <code class="docutils literal notranslate"><span class="pre">xtest</span></code> can be
+run immediately from the console or an <code class="docutils literal notranslate"><span class="pre">adb</span></code> shell. For more details about
+running OP-TEE, please see <a class="reference internal" href="../gits/optee_test.html#optee-test-run-xtest"><span class="std std-ref">Run xtest</span></a> at <a class="reference internal" href="../gits/optee_test.html#optee-test"><span class="std std-ref">optee_test</span></a>.</p>
+</section>
+<section id="running-vts-gtest-unit-for-gatekeeper-and-keymaster-optional">
+<h2>Running VTS Gtest unit for Gatekeeper and Keymaster (Optional)<a class="headerlink" href="#running-vts-gtest-unit-for-gatekeeper-and-keymaster-optional" title="Permalink to this heading"></a></h2>
+<p>On the device after going into the command prompt, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>su
+$<span class="w"> </span>./data/nativetest64/VtsHalGatekeeperV1_0TargetTest/VtsHalGatekeeperV1_0TargetTest
+$<span class="w"> </span>./data/nativetest64/VtsHalKeymasterV3_0TargetTest/VtsHalKeymasterV3_0TargetTest
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These tests need to be run as root.</p>
+</div>
+</section>
+<section id="enable-adb-over-usb">
+<h2>Enable adb over USB<a class="headerlink" href="#enable-adb-over-usb" title="Permalink to this heading"></a></h2>
+<p>Boot the device. On serial console:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>su<span class="w"> </span>setprop<span class="w"> </span>sys.usb.configfs<span class="w"> </span><span class="m">1</span>
+$<span class="w"> </span>stop<span class="w"> </span>adbd
+$<span class="w"> </span>start<span class="w"> </span>adbd
+</pre></div>
+</div>
+</section>
+<section id="known-issues">
+<h2>Known issues<a class="headerlink" href="#known-issues" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>If you don’t have a monitor or hdmi emulator (dummy plug) connected to
+the board, you’ll see constant errors scrolling on the console. As a
+workaround, move <code class="docutils literal notranslate"><span class="pre">android.hardware.graphics.composer@2.1-service.rc</span></code>
+out of <code class="docutils literal notranslate"><span class="pre">/vendor/etc/init</span></code>. Move it back in when working with a
+monitor again.</p></li>
+<li><p>Adb over USB currently doesn’t work on HiKey960. As a workaround, use
+adb over tcpip. See <a class="reference external" href="https://bugs.96boards.org/show_bug.cgi?id=502">https://bugs.96boards.org/show_bug.cgi?id=502</a> for
+details on how to connect. There are still some limitations however.
+E.g. running <code class="docutils literal notranslate"><span class="pre">adb</span> <span class="pre">shell</span></code> or a second <code class="docutils literal notranslate"><span class="pre">adb</span></code> instance will break the
+current adb tcpip connection. This might be due to unstable WiFi
+(there are periodic error messages like <code class="docutils literal notranslate"><span class="pre">wlcore:</span> <span class="pre">WARNING</span> <span class="pre">corrupted</span>
+<span class="pre">packet</span> <span class="pre">in</span> <span class="pre">RX:</span> <span class="pre">status:</span> <span class="pre">0x1</span> <span class="pre">len:</span> <span class="pre">76</span></code>) or just incompleteness of the
+generic HiKey960 builds under P.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="../devices/zynqmp.html" rel="prev" title="Zynq MPSoC"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="../linux/tee_framework.html" rel="next" title="Linux kernel TEE framework">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client (OP-TEE) / Server solution &mdash; OP-TEE documentation  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/mystyle.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            OP-TEE documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">OP-TEE documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Client (OP-TEE) / Server solution</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/building/gits/optee_examples/hotp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p><strong>HMAC based One Time Password in OP-TEE</strong></p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a> based One Time Passwords or shortly just ‘HOTP’ has been around for many
+years and was initially defined in <a class="reference external" href="https://www.ietf.org/rfc/rfc4226.txt">RFC4226</a> back in 2005. Since then it has been
+a popular choice for doing <a class="reference external" href="https://en.wikipedia.org/wiki/Multi-factor_authentication">two factor authentication</a>. With the implementation
+here we are showing how one could leverage OP-TEE for generating such HMAC based
+One Time Passwords in a secure manner.</p>
+<section id="client-op-tee-server-solution">
+<h1>Client (OP-TEE) / Server solution<a class="headerlink" href="#client-op-tee-server-solution" title="Permalink to this heading"></a></h1>
+<p>The most common way of using HOTP is in a client/server setup, where the client
+needs to authenticate itself to be able to get access to some resources on the
+server. In those cases the server will ask for an One Time Password, the client
+will generate that and send it over to the server and if the server is OK with
+the password it will grant access to the client.</p>
+<p>Technically how it is working is that the server and the client needs to agree
+on shared key (’<code class="docutils literal notranslate"><span class="pre">K</span></code>’) and also start from the same counter (’<code class="docutils literal notranslate"><span class="pre">C</span></code>’). How that
+is done in practice is another topic, but <a class="reference external" href="https://www.ietf.org/rfc/rfc4226.txt">RFC4226</a> has some discussion about it.
+You should at least have a secure channel between the client and the server when
+sharing the key, but even better would be if you could establish a secure
+channel all the way down to the TEE (currently we have TCP/UDP support in
+OP-TEE, but not TLS).</p>
+<p>When both the server and the client knows about and use the same key and counter
+they can start doing client authentication using HOTP. In short what happens is
+that both the client and the server computes the same HOTP and the server
+compares the result of both computations (which should be the same to grant
+access). How that could work can be seen in the sequence diagram below.</p>
+<p>In the current implementation we have OP-TEE acting as a client and the server
+is a remote service running somewhere else. There is no server implemented, but
+that should be pretty easy to add in a real scenario. The important thing here
+is to be able to register the shared key in the TEE and to get HOTP values from
+the TEE on request.</p>
+<p>Since the current implementation works as a client we do not need to think about
+implementing the look-ahead synchronization window (’<code class="docutils literal notranslate"><span class="pre">s</span></code>’) nor do we have to
+think about adding throttling (which prevents/slows down brute force attacks).</p>
+</section>
+<section id="sequence-diagram-client-server">
+<h1>Sequence diagram - Client / Server<a class="headerlink" href="#sequence-diagram-client-server" title="Permalink to this heading"></a></h1>
+<figure class="align-default">
+<img alt="../../../_images/sequence_diagram_01.png" src="../../../_images/sequence_diagram_01.png" />
+</figure>
+</section>
+<section id="client-server-op-tee">
+<h1>Client / Server (OP-TEE)?<a class="headerlink" href="#client-server-op-tee" title="Permalink to this heading"></a></h1>
+<p>Even though the current implementation works as a HOTP client, there is nothing
+saying that the implementation cannot be updated to also work as the validating
+server. One could for example have a simple device (a [security token] only
+generating one time passwords) and use the TEE as a validating service to open
+up other secure services.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

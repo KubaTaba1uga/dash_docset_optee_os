@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture &mdash; OP-TEE documentation  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/mystyle.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Core" href="core.html" />
+    <link rel="prev" title="Releases" href="../general/releases.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OP-TEE documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OP-TEE documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Architecture</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#interrupt-handling">Interrupt handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#notifications">Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#memory-objects">Memory objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#mmu">MMU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#pager">Pager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#stacks">Stacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#shared-memory">Shared Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#smc">SMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#thread-handling">Thread handling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="crypto.html">Crypto</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html#the-tee-cryptographic-operations-api">[1] The TEE Cryptographic Operations API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html#the-crypto-services">[2] The crypto services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html#crypto">[3] crypto_*()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html#public-private-key-format">Public/private key format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html#libtomcrypt">[4] LibTomCrypt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html#add-a-new-software-based-crypto-implementation">Add a new software based crypto implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html#support-for-crypto-ic">[5] Support for crypto IC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html#nxp-se05x-family-of-secure-elements">NXP SE05X Family of Secure Elements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="device_tree.html">Device Tree</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html#secure-and-non-secure-device-trees">Secure and Non-Secure Device Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html#generic-boot-and-dtbs">Generic boot and DTBs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html#early-boot-external-device-tree">Early boot external device tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html#early-boot-device-tree-overlay">Early boot device tree overlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html#embedded-secure-device-tree">Embedded Secure Device Tree</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="file_structure.html">File structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html#top-level-directories">Top level directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html#core">core/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html#core-arch-arm">core/arch/arm/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html#lib">lib/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html#ta">ta/</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html#tee-client-api">TEE Client API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html#tee-internal-core-api">TEE Internal Core API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html#extensions">Extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="libraries.html">Libraries</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html#libutee">libutee</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html#libmpa">libmpa</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html#add-a-new-platform">Add a new platform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html#hardware-unique-key">Hardware Unique Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html#secure-clock">Secure Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html#root-and-chain-of-trust">Root and Chain of Trust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html#hardware-crypto-ip">Hardware Crypto IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html#random-number-generator">Random Number Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html#power-management-psci">Power Management / PSCI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html#memory-firewalls-tzasc">Memory firewalls / TZASC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html#trusted-application-private-public-keypair">Trusted Application private/public keypair</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html#platform-ports">Platform ports</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="secure_boot.html">Secure boot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html#armv8-a-using-the-authentication-framework-in-tf-a">Armv8-A - Using the authentication framework in TF-A</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html#armv7-a-systems">Armv7-A systems</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="secure_storage.html">Secure storage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html#background">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html#ree-fs-secure-storage">REE FS Secure Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html#key-manager">Key Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html#hash-tree">Hash Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html#atomic-operation">Atomic Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html#rpmb-secure-storage">RPMB Secure Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html#important-caveats">Important caveats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#pseudo-trusted-applications">Pseudo Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#user-mode-trusted-applications">User Mode Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#ta-locations">TA locations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#loading-and-preparing-ta-for-execution">Loading and preparing TA for execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#ta-properties">TA Properties</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="virtualization.html">Virtualization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html#requirements-for-hypervisor">Requirements for hypervisor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="spmc.html">SPMC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html#spmc-responsibilities">SPMC Responsibilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html#secure-partitions">Secure Partitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html#secure-partition-formats">Secure Partition formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html#spmc-program-flow">SPMC Program Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html#ff-a-compliance">FF-A compliance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html#branch-target-identification">Branch Target Identification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="platforms/index.html">Platform documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="platforms/nxp.html">NXP</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../general/releases.html" class="btn btn-neutral float-left" title="Releases" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core.html" class="btn btn-neutral float-right" title="Core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

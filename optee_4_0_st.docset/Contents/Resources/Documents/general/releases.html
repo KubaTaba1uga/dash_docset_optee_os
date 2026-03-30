@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Releases — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../architecture/index.html" rel="next" title="Architecture"/>
+<link href="presentations.html" rel="prev" title="Presentations"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Getting started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="about.html">About OP-TEE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coding_standards.html">Coding standards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribute.html">Contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license_headers.html">License headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms.html">Platforms supported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="presentations.html">Presentations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Releases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cadence">Cadence</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#release-dates">Release dates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#changelog">Changelog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#versioning-schema">Versioning schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#release-procedure">Release procedure</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tl-dr">tl;dr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#long-version">Long version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Getting started</a></li>
+<li class="breadcrumb-item active">Releases</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/general/releases.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Releases"></a><section id="releases">
+<span id="id1"></span><h1>Releases<a class="headerlink" href="#releases" title="Permalink to this heading"></a></h1>
+<section id="cadence">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Cadence"></a><span id="releases-cadance"></span><h2>Cadence<a class="headerlink" href="#cadence" title="Permalink to this heading"></a></h2>
+<p>New versions of OP-TEE are released four times a year, i.e., quarterly releases.</p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Release dates"></a><section id="release-dates">
+<span id="id2"></span><h3>Release dates<a class="headerlink" href="#release-dates" title="Permalink to this heading"></a></h3>
+<p>Starting from version 3.10.0 we track the old and also show the releases being
+planned for the future in the table below. The dates will tell whether it is an
+old, upcoming or future release.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 52%"/>
+<col style="width: 48%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Version</p></th>
+<th class="head"><p>Release date</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>OP-TEE 4.4.0</p></td>
+<td><p>18/Oct/24</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP-TEE 4.3.0</p></td>
+<td><p>12/Jul/24</p></td>
+</tr>
+<tr class="row-even"><td><p>OP-TEE 4.2.0</p></td>
+<td><p>12/Apr/24</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP-TEE 4.1.0</p></td>
+<td><p>19/Jan/24</p></td>
+</tr>
+<tr class="row-even"><td><p>OP-TEE 4.0.0</p></td>
+<td><p>20/Oct/23</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP-TEE 3.22.0</p></td>
+<td><p>14/Jul/23</p></td>
+</tr>
+<tr class="row-even"><td><p>OP-TEE 3.21.0</p></td>
+<td><p>14/Apr/23</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP-TEE 3.20.0</p></td>
+<td><p>20/Jan/23</p></td>
+</tr>
+<tr class="row-even"><td><p>OP-TEE 3.19.0</p></td>
+<td><p>14/Oct/22</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP-TEE 3.18.0</p></td>
+<td><p>15/July/22</p></td>
+</tr>
+<tr class="row-even"><td><p>OP-TEE 3.17.0</p></td>
+<td><p>15/Apr/22</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP-TEE 3.16.0</p></td>
+<td><p>28/Jan/22</p></td>
+</tr>
+<tr class="row-even"><td><p>OP-TEE 3.15.0</p></td>
+<td><p>18/Oct/21</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP-TEE 3.14.0</p></td>
+<td><p>16/July/21</p></td>
+</tr>
+<tr class="row-even"><td><p>OP-TEE 3.13.0</p></td>
+<td><p>30/Apr/21</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP-TEE 3.12.0</p></td>
+<td><p>20/Jan/21</p></td>
+</tr>
+<tr class="row-even"><td><p>OP-TEE 3.11.0</p></td>
+<td><p>16/Oct/20</p></td>
+</tr>
+<tr class="row-odd"><td><p>OP-TEE 3.10.0</p></td>
+<td><p>21/Aug/20</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="changelog">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Changelog"></a><span id="releases-changelog"></span><h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading"></a></h2>
+<p>The changelog is stored in the <a class="reference internal" href="../building/gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> git (<a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/CHANGELOG.md">CHANGELOG.md</a>). There you
+can see what has been done between the different releases in terms of commits as
+well as pull requests.</p>
+</section>
+<section id="versioning-schema">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Versioning schema"></a><span id="releases-versioning-schema"></span><h2>Versioning schema<a class="headerlink" href="#versioning-schema" title="Permalink to this heading"></a></h2>
+<p>OP-TEE follows <a class="reference external" href="https://semver.org">Semantic Versioning 2.0.0</a>. What that means in practice is well
+described at the link just shown.</p>
+</section>
+<section id="release-procedure">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Release procedure"></a><span id="releases-release-procedure"></span><h2>Release procedure<a class="headerlink" href="#release-procedure" title="Permalink to this heading"></a></h2>
+<p>There are certain steps that needs to be done when making a release. This
+checklist here serves as guidance to the one in charge of making a new release.
+Roughly start with this 2-3 weeks before the targeted release date.</p>
+<section id="tl-dr">
+<h3>tl;dr<a class="headerlink" href="#tl-dr" title="Permalink to this heading"></a></h3>
+<table class="colwidths-given docutils align-default" id="id3">
+<caption><span class="caption-text">Short version of the OP-TEE release procedure</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 16%"/>
+<col style="width: 81%"/>
+<col style="width: 3%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>When
+(Tminus)</p></th>
+<th class="head"><p>Action</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>3w</p></td>
+<td><p>Create release pull request</p></td>
+<td><p><a class="reference external" href="https://github.com/OP-TEE/optee_os/pull/3099">PR#3099</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>3w</p></td>
+<td><p>Inform maintainers about upcoming release</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>1w</p></td>
+<td><p>Increment the revision number in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/mk/config.mk">mk/config.mk</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CFG_OPTEE_REVISION_MAJOR</span> <span class="pre">?=</span> <span class="pre">3</span></code> <code class="docutils literal notranslate"><span class="pre">CFG_OPTEE_REVISION_MINOR</span> <span class="pre">?=</span> <span class="pre">x</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>1w</p></td>
+<td><p>Create release candidate tag in optee_* + build.git</p></td>
+<td><p>git tag -a 3.x.y-rc1 -m “3.x.y-rc1”</p></td>
+</tr>
+<tr class="row-even"><td><p>1w</p></td>
+<td><p>Let maintainers know about the release candidate tag</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>1w</p></td>
+<td><p>Test platform builds / devices</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Release day</p></td>
+<td><p>Update <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/CHANGELOG.md">CHANGELOG.md</a></p></td>
+<td><p><a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/f398d4923da875370149ffee45c963d7adb41495#diff-4ac32a78649ca5bdd8e0ba38b7006a1e">changelog example</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Release day</p></td>
+<td><p>Collect/merge <code class="docutils literal notranslate"><span class="pre">Tested-By</span></code> tags</p></td>
+<td><p><a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/f398d4923da875370149ffee45c963d7adb41495">commit example</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Release day</p></td>
+<td><p>Create release tag in optee_* + build.git + linux.git</p></td>
+<td><div class="line-block">
+<div class="line">git tag -a 3.x.y -m “3.x.y”</div>
+<div class="line">git tag -a optee-3.x.y -m “optee-3.x.y” # (Linux)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Release day</p></td>
+<td><p>Create release branch in <a class="reference internal" href="../building/gits/manifest.html#manifest"><span class="std std-ref">manifest</span></a></p></td>
+<td><p>git checkout -b 3.x.y origin/master</p></td>
+</tr>
+<tr class="row-even"><td><p>Release day</p></td>
+<td><p>Update manifest XML-files</p></td>
+<td><p><a class="reference external" href="https://github.com/OP-TEE/manifest/commit/f181e959c21baddce82552104daf81a25f8fd898">3.6.0 stable</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Release day</p></td>
+<td><p>Inform maintainers and stakeholder that release has been completed.</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="long-version">
+<h3>Long version<a class="headerlink" href="#long-version" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Create a “release pull request” at GitHub ought to collect <code class="docutils literal notranslate"><span class="pre">Tested-By</span></code>
+tags from various maintainers. As an example, see <a class="reference external" href="https://github.com/OP-TEE/optee_os/pull/3099">PR#3099</a>.</p></li>
+<li><p>Send email to all maintainers to let them know about the upcoming
+release. The addresses to the maintainers can be found in the
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/MAINTAINERS">MAINTAINERS</a> file.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>With this command you will get all email addresses</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>scripts/get_maintainer.py<span class="w"> </span>--release-to
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>Increment the revision number in <cite>mk/config.mk</cite>:
+<code class="docutils literal notranslate"><span class="pre">CFG_OPTEE_REVISION_MAJOR</span></code> and <code class="docutils literal notranslate"><span class="pre">CFG_OPTEE_REVISION_MINOR</span></code>. These
+values are made available to TAs and to the Normal World driver at boot
+time.</p></li>
+<li><p>Create a release candidate (RC) tag (annotated tag, i.e., <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">tag</span> <span class="pre">-a</span>
+<span class="pre">3.x.y-rc1</span> <span class="pre">-m</span> <span class="pre">"3.x.y-rc1"</span></code>) in the following gits
+<code class="docutils literal notranslate"><span class="pre">optee_*</span></code> and <code class="docutils literal notranslate"><span class="pre">build.git</span></code>. One way to do it is like this</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">VER</span><span class="o">=</span><span class="m">3</span>.x.y-rc1
+$<span class="w"> </span><span class="k">for</span><span class="w"> </span>d<span class="w"> </span><span class="k">in</span><span class="w"> </span>optee*<span class="w"> </span>build<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$d</span><span class="p">;</span><span class="w"> </span>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span><span class="nv">$VER</span><span class="w"> </span>-m<span class="w"> </span><span class="nv">$VER</span><span class="w"> </span><span class="o">)</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+$<span class="w"> </span><span class="k">for</span><span class="w"> </span>d<span class="w"> </span><span class="k">in</span><span class="w"> </span>optee*<span class="w"> </span>build<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$d</span><span class="p">;</span><span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span><span class="nv">$VER</span><span class="w"> </span><span class="o">)</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+</li>
+<li><p>Send a follow up email to all maintainers to let them know that there is
+a release tag ready to be tested on their devices for the platforms that
+they are maintaining.</p></li>
+<li><p>In case major regressions are found, then fix those and create a another
+release candidate tag (i.e., repeat step 3 and 4 until there are no
+remaining issues left).</p></li>
+<li><p>On release day: Update <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/CHANGELOG.md">CHANGELOG.md</a> see this <a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/f398d4923da875370149ffee45c963d7adb41495#diff-4ac32a78649ca5bdd8e0ba38b7006a1e">changelog example</a> to see
+how that should look like.</p></li>
+<li><p>Collect all tags (<code class="docutils literal notranslate"><span class="pre">Tested-By</span></code> etc) from maintainers and use those in
+the commit message, for an example see this <a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/f398d4923da875370149ffee45c963d7adb41495">commit example</a>.</p></li>
+<li><p>Create a release tag (annotated tag, i.e., <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">tag</span> <span class="pre">-a</span> <span class="pre">3.x.y</span> <span class="pre">-m</span>
+<span class="pre">"3.x.y"</span></code>) in the following gits <code class="docutils literal notranslate"><span class="pre">optee_*</span></code> and <code class="docutils literal notranslate"><span class="pre">build.git</span></code>. Tag the
+tip of the <code class="docutils literal notranslate"><span class="pre">optee</span></code> branch in <code class="docutils literal notranslate"><span class="pre">linux.git</span></code>, the name of the tag has
+to be prefixed with <code class="docutils literal notranslate"><span class="pre">optee-</span></code> to avoid confusions. For instance:
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">tag</span> <span class="pre">-a</span> <span class="pre">optee-3.x.y</span> <span class="pre">-m</span> <span class="pre">"optee-3.x.y"</span></code>.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can use the same steps as in step 4, when creating the tags.</p>
+</div>
+</li>
+<li><p>Create a new branch in <a class="reference internal" href="../building/gits/manifest.html#manifest"><span class="std std-ref">manifest</span></a> from <code class="docutils literal notranslate"><span class="pre">master</span></code> where the name
+corresponds to the release you are preparing. I.e., <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span>
+<span class="pre">3.x.y</span> <span class="pre">origin/master</span></code>.</p></li>
+<li><p>Update all <a class="reference internal" href="../building/gits/manifest.html#manifest"><span class="std std-ref">manifest</span></a> XML-files in the <a class="reference internal" href="../building/gits/manifest.html#manifest"><span class="std std-ref">manifest</span></a> git, so they
+refer to the tag in the release we are working with (see <a class="reference external" href="https://github.com/OP-TEE/manifest/commit/f181e959c21baddce82552104daf81a25f8fd898">3.6.0 stable</a>
+commit as an example). This can be done with the <a class="reference external" href="https://github.com/OP-TEE/manifest/blob/master/make_stable.sh">make_stable.sh</a> script.
+Now it is also time to push the new branch and tag it. Example:</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">VER</span><span class="o">=</span><span class="m">3</span>.x.y
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>manifest
+$<span class="w"> </span>./make_stable.sh<span class="w"> </span>-o<span class="w"> </span>-r<span class="w"> </span><span class="nv">$VER</span>
+$<span class="w"> </span>git<span class="w"> </span>diff<span class="w">  </span><span class="c1"># make sure everything looks good</span>
+$<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-a<span class="w"> </span>-m<span class="w"> </span><span class="s2">"OP-TEE </span><span class="nv">$VER</span><span class="s2"> stable"</span>
+$<span class="w"> </span>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>git@github.com:OP-TEE/manifest
+$<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>upstream
+$<span class="w"> </span>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span><span class="nv">$VER</span><span class="w"> </span>-m<span class="w"> </span><span class="nv">$VER</span>
+$<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>upstream<span class="w"> </span>tag<span class="w"> </span><span class="nv">$VER</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="12">
+<li><p>Send a last email to maintainers and other stakeholders telling that the
+release has been completed.</p></li>
+</ol>
+</div></blockquote>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="presentations.html" rel="prev" title="Presentations"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="../architecture/index.html" rel="next" title="Architecture">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

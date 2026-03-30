@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>File structure — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="globalplatform_api.html" rel="next" title="GlobalPlatform API"/>
+<link href="device_tree.html" rel="prev" title="Device Tree"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">File structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#top-level-directories">Top level directories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#core">core/</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#core-arch-arm">core/arch/arm/</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lib">lib/</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ta">ta/</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+<li class="breadcrumb-item active">File structure</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/architecture/file_structure.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/File structure"></a><section id="file-structure">
+<span id="id1"></span><h1>File structure<a class="headerlink" href="#file-structure" title="Permalink to this heading"></a></h1>
+<p>This page describes organization of the tree structure in <a class="reference internal" href="../building/gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a>.</p>
+<p>The description is dived into different tables. First the flat top directory
+followed by the <code class="docutils literal notranslate"><span class="pre">core/</span></code> directory tree with the <code class="docutils literal notranslate"><span class="pre">core/arch/arm/</span></code> tree
+in separate table. There are two more tables covering the <code class="docutils literal notranslate"><span class="pre">lib/</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ta/</span></code> trees.</p>
+<section id="top-level-directories">
+<h2>Top level directories<a class="headerlink" href="#top-level-directories" title="Permalink to this heading"></a></h2>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 17%"/>
+<col style="width: 83%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Directory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>core/</p></td>
+<td><p>Files that are only used building OP-TEE core, the privileged mode part</p></td>
+</tr>
+<tr class="row-odd"><td><p>keys/</p></td>
+<td><p>Secure keys or not so secure example keys</p></td>
+</tr>
+<tr class="row-even"><td><p>ldelf/</p></td>
+<td><p>Ldelf the user mode ELF loader, for instance used to load TAs</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib/</p></td>
+<td><p>Libraries that are used both when building more than one component,
+for instance, OP-TEE core, ldelf, or TAs</p></td>
+</tr>
+<tr class="row-even"><td><p>mk/</p></td>
+<td><p>Makefiles supporting the build system</p></td>
+</tr>
+<tr class="row-odd"><td><p>scripts/</p></td>
+<td><p>Helper scripts for miscellaneous tasks</p></td>
+</tr>
+<tr class="row-even"><td><p>ta/</p></td>
+<td><p>Files that are only used when building TAs</p></td>
+</tr>
+<tr class="row-odd"><td><p>out/</p></td>
+<td><p>Created when building unless a different out directory is specified with
+<code class="docutils literal notranslate"><span class="pre">O=...</span></code> on the command line</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="core">
+<h2>core/<a class="headerlink" href="#core" title="Permalink to this heading"></a></h2>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 17%"/>
+<col style="width: 83%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Directory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>arch/</p></td>
+<td><p>Architecture and platform specific files</p></td>
+</tr>
+<tr class="row-odd"><td><p>arch/arm/</p></td>
+<td><p>Arm specific architecture and platform files</p></td>
+</tr>
+<tr class="row-even"><td><p>crypto/</p></td>
+<td><p>Crypto infrastructure including software implementations of certain
+algorithms.</p></td>
+</tr>
+<tr class="row-odd"><td><p>drivers/</p></td>
+<td><p>Various device drivers</p></td>
+</tr>
+<tr class="row-even"><td><p>include/</p></td>
+<td><p>Header files of resources exported to the rest of the core</p></td>
+</tr>
+<tr class="row-odd"><td><p>include/crypto/</p></td>
+<td><p>Include files related to files in /core/crypto</p></td>
+</tr>
+<tr class="row-even"><td><p>include/drivers/</p></td>
+<td><p>Include files related to device drivers</p></td>
+</tr>
+<tr class="row-odd"><td><p>include/dt-bindings/</p></td>
+<td><p>Include files for the device tree bindings</p></td>
+</tr>
+<tr class="row-even"><td><p>include/kernel/</p></td>
+<td><p>Include files related to files in /core/kernel</p></td>
+</tr>
+<tr class="row-odd"><td><p>include/mm/</p></td>
+<td><p>Include files related to memory management and files in /core/mm</p></td>
+</tr>
+<tr class="row-even"><td><p>include/tee/</p></td>
+<td><p>Include files related to files in /core/tee</p></td>
+</tr>
+<tr class="row-odd"><td><p>kernel/</p></td>
+<td><p>Miscellaneous architecture neutral files</p></td>
+</tr>
+<tr class="row-even"><td><p>lib/</p></td>
+<td><p>Libraries that are used by core only</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib/libfdt/</p></td>
+<td><p>Flat Device Trees manipulation library</p></td>
+</tr>
+<tr class="row-even"><td><p>lib/libfdt/include/</p></td>
+<td><p>Include files related to libfdt</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib/libtomcrypt/</p></td>
+<td><p>Libtomcrypt crypto library</p></td>
+</tr>
+<tr class="row-even"><td><p>lib/libtomcrypt/include/</p></td>
+<td><p>Include files related to libtomcrypt</p></td>
+</tr>
+<tr class="row-odd"><td><p>lib/libtomcrypt/src/</p></td>
+<td><p>Source files of libtomcrypt</p></td>
+</tr>
+<tr class="row-even"><td><p>lib/zlib/</p></td>
+<td><p>Zlib compression library</p></td>
+</tr>
+<tr class="row-odd"><td><p>mm/</p></td>
+<td><p>Architecture neutral memory management</p></td>
+</tr>
+<tr class="row-even"><td><p>pta/</p></td>
+<td><p>Various pseudo TAs</p></td>
+</tr>
+<tr class="row-odd"><td><p>tee/</p></td>
+<td><p>Architecture neutral TEE files</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="core-arch-arm">
+<h2>core/arch/arm/<a class="headerlink" href="#core-arch-arm" title="Permalink to this heading"></a></h2>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 17%"/>
+<col style="width: 83%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Directory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>cpu/</p></td>
+<td><p>CPU specific settings</p></td>
+</tr>
+<tr class="row-odd"><td><p>crypto/</p></td>
+<td><p>Architecture specific software implementations of crypto algorithms</p></td>
+</tr>
+<tr class="row-even"><td><p>dts/</p></td>
+<td><p>Device tree source files</p></td>
+</tr>
+<tr class="row-odd"><td><p>include/</p></td>
+<td><p>Header files of resources exported to the rest of the core</p></td>
+</tr>
+<tr class="row-even"><td><p>include/crypto/</p></td>
+<td><p>Architecture specific include files related to /core/crypto or
+/core/arch/arm/crypto files</p></td>
+</tr>
+<tr class="row-odd"><td><p>include/kernel/</p></td>
+<td><p>Architecture specific include files related to /core/kernel or
+/core/arch/arm/kernel files</p></td>
+</tr>
+<tr class="row-even"><td><p>include/mm/</p></td>
+<td><p>Architecture specific include files related to /core/mm or
+/core/arch/arm/mm files</p></td>
+</tr>
+<tr class="row-odd"><td><p>include/sm/</p></td>
+<td><p>Include files related to the secure monitor</p></td>
+</tr>
+<tr class="row-even"><td><p>include/tee/</p></td>
+<td><p>Architecture specific include files related to /core/tee or
+/core/arch/arm/tee files</p></td>
+</tr>
+<tr class="row-odd"><td><p>kernel/</p></td>
+<td><p>Miscellaneous low level architecure specific files</p></td>
+</tr>
+<tr class="row-even"><td><p>plat-*/</p></td>
+<td><p>Specific files for the different supported platform</p></td>
+</tr>
+<tr class="row-odd"><td><p>mm/</p></td>
+<td><p>Memory management</p></td>
+</tr>
+<tr class="row-even"><td><p>tee/</p></td>
+<td><p>TEE files</p></td>
+</tr>
+<tr class="row-odd"><td><p>sm/</p></td>
+<td><p>Secure Monitor, ARMv7-A only</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="lib">
+<h2>lib/<a class="headerlink" href="#lib" title="Permalink to this heading"></a></h2>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 17%"/>
+<col style="width: 83%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Directory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>libdl/</p></td>
+<td><p>Implementation of dlopen(), dlsym() and dlclose() used by TAs and ldelf</p></td>
+</tr>
+<tr class="row-odd"><td><p>libdl/include/</p></td>
+<td><p>Include files for libdl</p></td>
+</tr>
+<tr class="row-even"><td><p>libmbedtls/</p></td>
+<td><p>Mbed TLS crypto library</p></td>
+</tr>
+<tr class="row-odd"><td><p>libmbedtls/core/</p></td>
+<td><p>Glue code only compiled with core to connect with the core internal
+&lt;crypto/crypto.h&gt; API.</p></td>
+</tr>
+<tr class="row-even"><td><p>libmbedtls/include/</p></td>
+<td><p>Include files with configuration of Mbed TLS</p></td>
+</tr>
+<tr class="row-odd"><td><p>libmbedtls/mbedtls/</p></td>
+<td><p>Top directory of the imported Mbed TLS source tree</p></td>
+</tr>
+<tr class="row-even"><td><p>libmbedtls/mbedtls/include/</p></td>
+<td><p>Mbed TLS include files</p></td>
+</tr>
+<tr class="row-odd"><td><p>libmbedtls/mbedtls/library/</p></td>
+<td><p>Mbed TLS implementation</p></td>
+</tr>
+<tr class="row-even"><td><p>libunw/</p></td>
+<td><p>Unwind library</p></td>
+</tr>
+<tr class="row-odd"><td><p>libunw/include/</p></td>
+<td><p>Include files for libunwnd</p></td>
+</tr>
+<tr class="row-even"><td><p>libutee/</p></td>
+<td><p>Libutee which provide the implementation of TEE Internal Core API.</p></td>
+</tr>
+<tr class="row-odd"><td><p>libutee/arch/</p></td>
+<td><p>Architecture specific implementation</p></td>
+</tr>
+<tr class="row-even"><td><p>libutee/include/</p></td>
+<td><p>Include files related to libutee and the header files for
+TEE Internal Core API</p></td>
+</tr>
+<tr class="row-odd"><td><p>libutils/</p></td>
+<td><p>The reduced “libc” of OP-TEE</p></td>
+</tr>
+<tr class="row-even"><td><p>libutils/ext/</p></td>
+<td><p>Extensions to a standard libc</p></td>
+</tr>
+<tr class="row-odd"><td><p>libutils/ext/arch/</p></td>
+<td><p>Architecture specific implmementation of the extensions</p></td>
+</tr>
+<tr class="row-even"><td><p>libutils/ext/include/</p></td>
+<td><p>Include files related to the extensions</p></td>
+</tr>
+<tr class="row-odd"><td><p>libutils/isoc/</p></td>
+<td><p>A subset of ISOC</p></td>
+</tr>
+<tr class="row-even"><td><p>libutils/isoc/arch/</p></td>
+<td><p>Architecture specific</p></td>
+</tr>
+<tr class="row-odd"><td><p>libutils/isoc/include/</p></td>
+<td><p>Header files related to the provided subset of ISOC</p></td>
+</tr>
+<tr class="row-even"><td><p>libutils/isoc/newlib/</p></td>
+<td><p>Routines imported from newlib</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ta">
+<h2>ta/<a class="headerlink" href="#ta" title="Permalink to this heading"></a></h2>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 17%"/>
+<col style="width: 83%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Directory</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>trusted_keys</p></td>
+<td><p>Trusted key TA</p></td>
+</tr>
+<tr class="row-odd"><td><p>trusted_keys/include</p></td>
+<td><p>Header file of the ABI provided by the trusted key TA</p></td>
+</tr>
+<tr class="row-even"><td><p>arch</p></td>
+<td><p>Architecture specific files needed to compile a TA</p></td>
+</tr>
+<tr class="row-odd"><td><p>mk</p></td>
+<td><p>Makefile includes needed to build TAs and the TA dev kit</p></td>
+</tr>
+<tr class="row-even"><td><p>avb</p></td>
+<td><p>TA to support AVB (Android Verified Boot)</p></td>
+</tr>
+<tr class="row-odd"><td><p>avb/include</p></td>
+<td><p>Header file of the ABI provided by the AVB TA</p></td>
+</tr>
+<tr class="row-even"><td><p>pkcs11</p></td>
+<td><p>TA to support PKCS#11</p></td>
+</tr>
+<tr class="row-odd"><td><p>pkcs11/src</p></td>
+<td><p>Source code for the PKCS#11 TA</p></td>
+</tr>
+<tr class="row-even"><td><p>pkcs11/include</p></td>
+<td><p>Header file for the ABI provided by the PKCS#11 TA</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="device_tree.html" rel="prev" title="Device Tree"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="globalplatform_api.html" rel="next" title="GlobalPlatform API">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

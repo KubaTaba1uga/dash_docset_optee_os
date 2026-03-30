@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build and run &mdash; OP-TEE documentation  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/mystyle.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Prerequisites" href="prerequisites.html" />
+    <link rel="prev" title="NXP" href="../architecture/platforms/nxp.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OP-TEE documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Build and run</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/index.html">Device specific information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OP-TEE documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Build and run</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/building/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="build-and-run">
+<h1>Build and run<a class="headerlink" href="#build-and-run" title="Permalink to this heading"></a></h1>
+<p>In this part of the documentation you will find information telling you how to
+build OP-TEE as a whole developer setup or as individual components. Likewise it
+will also tell you how to run OP-TEE on various devices.</p>
+<p>Since you pressed this, it’s likely that you want to know how to build a full
+OP-TEE developer setup. So a first place to start looking is probably at the
+“<a class="reference internal" href="gits/build.html#build"><span class="std std-ref">build</span></a>” page to get started.</p>
+<p>You may also want to look at “<a class="reference internal" href="../faq/faq.html#faq-try-optee"><span class="std std-ref">Q: What is the quickest and easiest way to try OP-TEE?</span></a>”.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devices/index.html">Device specific information</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="devices/versal.html">AMD-Xilinx Versal ACAP VCK190</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/devbox.html">DeveloperBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/fvp.html">FVP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/hikey620.html">HiKey 620</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/hikey960.html">HiKey 960</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/juno.html">Juno</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/nuvoton.html">NUVOTON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/qemu.html">QEMU v7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/qemu.html#qemu-v8">QEMU v8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/rockpi4.html">ROCK Pi 4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/rpi3.html">Raspberry Pi 3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/stm32mp1.html">STM32MP1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/ti.html">Texas Instruments SoCs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/zynqmp.html">Zynq MPSoC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aosp/aosp.html">AOSP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html#build-instructions">Build instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html#flashing-the-image">Flashing the image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html#partial-flashing">Partial flashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html#experimental-prebuilts">Experimental prebuilts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html#running-xtest">Running xtest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html#running-vts-gtest-unit-for-gatekeeper-and-keymaster-optional">Running VTS Gtest unit for Gatekeeper and Keymaster (Optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html#enable-adb-over-usb">Enable adb over USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html#known-issues">Known issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gits/index.html">OP-TEE gits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gits/build.html">build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/build_legacy.html">Build stable releases v1.0.0 to v3.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/build_legacy_3_1_0-3_8_0.html">Build stable releases 3.1.0 to 3.8.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/manifest.html">manifest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/optee_benchmark.html">optee_benchmark</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/optee_client.html">optee_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/optee_docs.html">optee_docs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/optee_examples/optee_examples.html">optee_examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/optee_os.html">optee_os</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/optee_test.html">optee_test</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toolchains.html">Toolchains</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="toolchains.html#download-install">Download/install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolchains.html#export-path">Export PATH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolchains.html#llvm-clang">LLVM / Clang</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#ta-mandatory-files">TA Mandatory files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#ta-makefile-basics">TA Makefile Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#android-build-environment">Android Build Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#ta-mandatory-entry-points">TA Mandatory Entry Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#ta-properties">TA Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#checking-ta-parameters">Checking TA parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html#signing-of-tas">Signing of TAs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="efi_vars/stmm.html">StandAloneMM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="efi_vars/stmm.html#edk2-build-instructions">EDK2 Build instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="efi_vars/stmm.html#op-tee-build-instructions">OP-TEE Build instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="efi_vars/stmm.html#u-boot-build-instructions">U-Boot Build instructions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="optee_with_rust.html">OP-TEE with Rust</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="optee_with_rust.html#clone-op-tee-repo">Clone OP-TEE repo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optee_with_rust.html#compile-rust-examples">Compile Rust examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optee_with_rust.html#development-documents">Development Documents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="userland_integration.html">Linux userland integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="userland_integration.html#pkcs-11-driver">PKCS#11 driver</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../architecture/platforms/nxp.html" class="btn btn-neutral float-left" title="NXP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="prerequisites.html" class="btn btn-neutral float-right" title="Prerequisites" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

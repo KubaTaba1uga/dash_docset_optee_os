@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Frequently Asked Questions — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../debug/gprof.html" rel="prev" title="Gprof"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abbreviations">Abbreviations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-which-platforms-architectures-are-supported">Q: Which platforms/architectures are supported?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-are-32-bit-as-well-as-64-bit-support">Q: Are 32-bit as well as 64-bit support?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-does-op-tee-support-mixed-mode-i-e-both-aarch32-and-aarch64-trusted-applications-on-top-of-an-aarch64-core">Q: Does OP-TEE support mixed-mode, i.e., both AArch32 and AArch64 Trusted Applications on top of an AArch64 core?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-whats-the-maximum-size-for-heap-and-stack-can-it-be-changed">Q: What’s the maximum size for heap and stack? Can it be changed?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-what-is-the-size-of-op-tee-itself">Q: What is the size of OP-TEE itself?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-can-neon-optimizations-be-done-in-op-tee">Q: Can NEON optimizations be done in OP-TEE?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-can-i-use-c-libraries-in-op-tee">Q: Can I use C++ libraries in OP-TEE?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-would-using-malloc-in-op-tee-give-physically-contiguous-memory">Q: Would using <cite>malloc()</cite> in OP-TEE give physically contiguous memory?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-can-i-limit-what-cpus-cores-op-tee-runs-on">Q: Can I limit what CPUs / cores OP-TEE runs on?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-is-op-tee-being-scheduled">Q: How is OP-TEE being scheduled?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#board-support">Board support</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-do-i-port-op-tee-to-another-platform">Q: How do I port OP-TEE to another platform?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#building">Building</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-i-got-build-errors-running-latest-why">Q: I got build errors running latest, why?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-i-got-build-errors-running-stable-tag-x-y-z-why">Q: I got build errors running stable tag x.y.z, why?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-i-get-gcc-xyz-or-g-xyz-compiler-error-messages">Q: I get <cite>gcc XYZ</cite> or <cite>g++ XYZ</cite> compiler error messages?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-i-found-this-build-git-what-is-that">Q: I found this build.git, what is that?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-when-running-make-from-build-git-it-fails-to-download-the-toolchains">Q: When running <cite>make</cite> from build.git it fails to download the toolchains?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-can-i-build-llvm-compiler-rt-with-bti-enabled">Q: How can I build LLVM compiler-rt with BTI enabled ?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-can-i-build-gcc-with-bti-enabled">Q: How can I build GCC with BTI enabled?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-what-is-the-quickest-and-easiest-way-to-try-op-tee">Q: What is the quickest and easiest way to try OP-TEE?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#certification-and-security-reviews">Certification and security reviews</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-will-trustedfirmware-org-be-involved-in-globalplatform-certification-qualification">Q: Will TrustedFirmware.org be involved in GlobalPlatform certification/qualification?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-has-any-test-lab-been-testing-op-tee">Q: Has any test lab been testing OP-TEE?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-where-are-listed-security-vulnerabilities-addressed-in-op-tee">Q: Where are listed security vulnerabilities addressed in OP-TEE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-have-there-been-any-code-audit-code-review-done">Q: Have there been any code audit / code review done?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#contribution">Contribution</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-do-i-contribute">Q: How do I contribute?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-where-can-i-get-help">Q: Where can I get help?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-i-m-new-to-op-tee-but-i-would-like-to-help-out-what-can-i-do">Q: I’m new to OP-TEE but I would like to help out, what can I do?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#interfaces">Interfaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-which-apis-have-been-implemented-in-op-tee">Q: Which API’s have been implemented in OP-TEE?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-which-linux-kernel-version-supports-some-op-tee-feature">Q: Which Linux kernel version supports &lt;some OP-TEE feature&gt;?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-and-peripherals">Hardware and peripherals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-can-i-use-my-own-hardware-ip-for-crypto-acceleration">Q: Can I use my own hardware IP for crypto acceleration?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-under-what-license-is-op-tee-released">Q: Under what license is OP-TEE released?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-globalplatform-click-through-license">Q: GlobalPlatform click-through license</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-i-ve-modified-op-tee-by-using-code-with-non-bsd-2-clause-license-will-you-accept-it">Q: I’ve modified OP-TEE by using code with non BSD 2-Clause license, will you accept it?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#promotion">Promotion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-i-want-to-get-my-company-logo-on-op-tee-org-how">Q: I want to get my company logo on op-tee.org, how?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#security-vulnerabilities">Security vulnerabilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-i-have-a-found-a-security-flaw-in-op-tee-how-can-i-disclose-it-with-you">Q: I have a found a security flaw in OP-TEE, how can I disclose it with you?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#source-code">Source code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-where-is-the-source-code">Q: Where is the source code?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-where-do-i-download-the-test-suite-called-xtest">Q: Where do I download the test suite called xtest?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-where-is-the-linux-kernel-tee-driver">Q: Where is the Linux kernel TEE driver?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-are-you-testing-op-tee">Q: How are you testing OP-TEE?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#trusted-applications">Trusted Applications</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-do-i-write-a-trusted-application-ta">Q: How do I write a Trusted Application (TA)?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-do-i-link-a-library-into-a-trusted-application">Q: How do I link a library into a Trusted Application?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-where-should-i-put-my-compiled-trusted-application-on-the-device">Q: Where should I put my compiled Trusted Application on the device?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-what-is-a-pseudo-ta-and-how-do-i-write-one">Q: What is a Pseudo TA and how do I write one?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-are-pseudo-user-space-tas-supported">Q: Are Pseudo <strong>user space</strong> TAs supported?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-can-a-static-ta-open-invoke-dynamic-ta">Q: Can a static TA Open/Invoke dynamic TA?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-can-i-extend-the-globalplatform-internal-core-api">Q: How can I extend the GlobalPlatform Internal Core API?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-are-trusted-applications-verified">Q: How are Trusted Applications verified?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-is-multi-core-ta-supported">Q: Is multi-core TA supported?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-is-multi-threading-supported-in-a-ta">Q: Is multi-threading supported in a TA?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-can-i-use-or-call-op-tee-from-native-android-apk-applications">Q: How can I use or call OP-TEE from native Android (apk) applications?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-i-ve-heard-that-there-is-a-widevine-and-playready-ta-how-do-i-get-access">Q: I’ve heard that there is a Widevine and PlayReady TA, how do I get access?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item active">Frequently Asked Questions</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/faq/faq.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="frequently-asked-questions">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Frequently Asked Questions"></a><span id="faq"></span><h1><a class="toc-backref" href="#id2">Frequently Asked Questions</a><a class="headerlink" href="#frequently-asked-questions" title="Permalink to this heading"></a></h1>
+<div class="contents topic" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#frequently-asked-questions" id="id2">Frequently Asked Questions</a></p>
+<ul>
+<li><p><a class="reference internal" href="#abbreviations" id="id3">Abbreviations</a></p></li>
+<li><p><a class="reference internal" href="#architecture" id="id4">Architecture</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-which-platforms-architectures-are-supported" id="id5">Q: Which platforms/architectures are supported?</a></p></li>
+<li><p><a class="reference internal" href="#q-are-32-bit-as-well-as-64-bit-support" id="id6">Q: Are 32-bit as well as 64-bit support?</a></p></li>
+<li><p><a class="reference internal" href="#q-does-op-tee-support-mixed-mode-i-e-both-aarch32-and-aarch64-trusted-applications-on-top-of-an-aarch64-core" id="id7">Q: Does OP-TEE support mixed-mode, i.e., both AArch32 and AArch64 Trusted Applications on top of an AArch64 core?</a></p></li>
+<li><p><a class="reference internal" href="#q-whats-the-maximum-size-for-heap-and-stack-can-it-be-changed" id="id8">Q: What’s the maximum size for heap and stack? Can it be changed?</a></p></li>
+<li><p><a class="reference internal" href="#q-what-is-the-size-of-op-tee-itself" id="id9">Q: What is the size of OP-TEE itself?</a></p></li>
+<li><p><a class="reference internal" href="#q-can-neon-optimizations-be-done-in-op-tee" id="id10">Q: Can NEON optimizations be done in OP-TEE?</a></p></li>
+<li><p><a class="reference internal" href="#q-can-i-use-c-libraries-in-op-tee" id="id11">Q: Can I use C++ libraries in OP-TEE?</a></p></li>
+<li><p><a class="reference internal" href="#q-would-using-malloc-in-op-tee-give-physically-contiguous-memory" id="id12">Q: Would using <cite>malloc()</cite> in OP-TEE give physically contiguous memory?</a></p></li>
+<li><p><a class="reference internal" href="#q-can-i-limit-what-cpus-cores-op-tee-runs-on" id="id13">Q: Can I limit what CPUs / cores OP-TEE runs on?</a></p></li>
+<li><p><a class="reference internal" href="#q-how-is-op-tee-being-scheduled" id="id14">Q: How is OP-TEE being scheduled?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#board-support" id="id15">Board support</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-how-do-i-port-op-tee-to-another-platform" id="id16">Q: How do I port OP-TEE to another platform?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#building" id="id17">Building</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-i-got-build-errors-running-latest-why" id="id18">Q: I got build errors running latest, why?</a></p></li>
+<li><p><a class="reference internal" href="#q-i-got-build-errors-running-stable-tag-x-y-z-why" id="id19">Q: I got build errors running stable tag x.y.z, why?</a></p></li>
+<li><p><a class="reference internal" href="#q-i-get-gcc-xyz-or-g-xyz-compiler-error-messages" id="id20">Q: I get <cite>gcc XYZ</cite> or <cite>g++ XYZ</cite> compiler error messages?</a></p></li>
+<li><p><a class="reference internal" href="#q-i-found-this-build-git-what-is-that" id="id21">Q: I found this build.git, what is that?</a></p></li>
+<li><p><a class="reference internal" href="#q-when-running-make-from-build-git-it-fails-to-download-the-toolchains" id="id22">Q: When running <cite>make</cite> from build.git it fails to download the toolchains?</a></p></li>
+<li><p><a class="reference internal" href="#q-how-can-i-build-llvm-compiler-rt-with-bti-enabled" id="id23">Q: How can I build LLVM compiler-rt with BTI enabled ?</a></p></li>
+<li><p><a class="reference internal" href="#q-how-can-i-build-gcc-with-bti-enabled" id="id24">Q: How can I build GCC with BTI enabled?</a></p></li>
+<li><p><a class="reference internal" href="#q-what-is-the-quickest-and-easiest-way-to-try-op-tee" id="id25">Q: What is the quickest and easiest way to try OP-TEE?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#certification-and-security-reviews" id="id26">Certification and security reviews</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-will-trustedfirmware-org-be-involved-in-globalplatform-certification-qualification" id="id27">Q: Will TrustedFirmware.org be involved in GlobalPlatform certification/qualification?</a></p></li>
+<li><p><a class="reference internal" href="#q-has-any-test-lab-been-testing-op-tee" id="id28">Q: Has any test lab been testing OP-TEE?</a></p></li>
+<li><p><a class="reference internal" href="#q-where-are-listed-security-vulnerabilities-addressed-in-op-tee" id="id29">Q: Where are listed security vulnerabilities addressed in OP-TEE</a></p></li>
+<li><p><a class="reference internal" href="#q-have-there-been-any-code-audit-code-review-done" id="id30">Q: Have there been any code audit / code review done?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#contribution" id="id31">Contribution</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-how-do-i-contribute" id="id32">Q: How do I contribute?</a></p></li>
+<li><p><a class="reference internal" href="#q-where-can-i-get-help" id="id33">Q: Where can I get help?</a></p></li>
+<li><p><a class="reference internal" href="#q-i-m-new-to-op-tee-but-i-would-like-to-help-out-what-can-i-do" id="id34">Q: I’m new to OP-TEE but I would like to help out, what can I do?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#interfaces" id="id35">Interfaces</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-which-apis-have-been-implemented-in-op-tee" id="id36">Q: Which API’s have been implemented in OP-TEE?</a></p></li>
+<li><p><a class="reference internal" href="#q-which-linux-kernel-version-supports-some-op-tee-feature" id="id37">Q: Which Linux kernel version supports &lt;some OP-TEE feature&gt;?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#hardware-and-peripherals" id="id38">Hardware and peripherals</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-can-i-use-my-own-hardware-ip-for-crypto-acceleration" id="id39">Q: Can I use my own hardware IP for crypto acceleration?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#license" id="id40">License</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-under-what-license-is-op-tee-released" id="id41">Q: Under what license is OP-TEE released?</a></p></li>
+<li><p><a class="reference internal" href="#q-globalplatform-click-through-license" id="id42">Q: GlobalPlatform click-through license</a></p></li>
+<li><p><a class="reference internal" href="#q-i-ve-modified-op-tee-by-using-code-with-non-bsd-2-clause-license-will-you-accept-it" id="id43">Q: I’ve modified OP-TEE by using code with non BSD 2-Clause license, will you accept it?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#promotion" id="id44">Promotion</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-i-want-to-get-my-company-logo-on-op-tee-org-how" id="id45">Q: I want to get my company logo on op-tee.org, how?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#security-vulnerabilities" id="id46">Security vulnerabilities</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-i-have-a-found-a-security-flaw-in-op-tee-how-can-i-disclose-it-with-you" id="id47">Q: I have a found a security flaw in OP-TEE, how can I disclose it with you?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#source-code" id="id48">Source code</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-where-is-the-source-code" id="id49">Q: Where is the source code?</a></p></li>
+<li><p><a class="reference internal" href="#q-where-do-i-download-the-test-suite-called-xtest" id="id50">Q: Where do I download the test suite called xtest?</a></p></li>
+<li><p><a class="reference internal" href="#q-where-is-the-linux-kernel-tee-driver" id="id51">Q: Where is the Linux kernel TEE driver?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#testing" id="id52">Testing</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-how-are-you-testing-op-tee" id="id53">Q: How are you testing OP-TEE?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#trusted-applications" id="id54">Trusted Applications</a></p>
+<ul>
+<li><p><a class="reference internal" href="#q-how-do-i-write-a-trusted-application-ta" id="id55">Q: How do I write a Trusted Application (TA)?</a></p></li>
+<li><p><a class="reference internal" href="#q-how-do-i-link-a-library-into-a-trusted-application" id="id56">Q: How do I link a library into a Trusted Application?</a></p></li>
+<li><p><a class="reference internal" href="#q-where-should-i-put-my-compiled-trusted-application-on-the-device" id="id57">Q: Where should I put my compiled Trusted Application on the device?</a></p></li>
+<li><p><a class="reference internal" href="#q-what-is-a-pseudo-ta-and-how-do-i-write-one" id="id58">Q: What is a Pseudo TA and how do I write one?</a></p></li>
+<li><p><a class="reference internal" href="#q-are-pseudo-user-space-tas-supported" id="id59">Q: Are Pseudo <strong>user space</strong> TAs supported?</a></p></li>
+<li><p><a class="reference internal" href="#q-can-a-static-ta-open-invoke-dynamic-ta" id="id60">Q: Can a static TA Open/Invoke dynamic TA?</a></p></li>
+<li><p><a class="reference internal" href="#q-how-can-i-extend-the-globalplatform-internal-core-api" id="id61">Q: How can I extend the GlobalPlatform Internal Core API?</a></p></li>
+<li><p><a class="reference internal" href="#q-how-are-trusted-applications-verified" id="id62">Q: How are Trusted Applications verified?</a></p></li>
+<li><p><a class="reference internal" href="#q-is-multi-core-ta-supported" id="id63">Q: Is multi-core TA supported?</a></p></li>
+<li><p><a class="reference internal" href="#q-is-multi-threading-supported-in-a-ta" id="id64">Q: Is multi-threading supported in a TA?</a></p></li>
+<li><p><a class="reference internal" href="#q-how-can-i-use-or-call-op-tee-from-native-android-apk-applications" id="id65">Q: How can I use or call OP-TEE from native Android (apk) applications?</a></p></li>
+<li><p><a class="reference internal" href="#q-i-ve-heard-that-there-is-a-widevine-and-playready-ta-how-do-i-get-access" id="id66">Q: I’ve heard that there is a Widevine and PlayReady TA, how do I get access?</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr class="docutils"/>
+<section id="abbreviations">
+<h2><a class="toc-backref" href="#id3">Abbreviations</a><a class="headerlink" href="#abbreviations" title="Permalink to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">OP-TEE</dt>
+<dd class="field-odd"><p>Open Portable TEE</p>
+</dd>
+<dt class="field-even">TA</dt>
+<dd class="field-even"><p>Trusted Application</p>
+</dd>
+<dt class="field-odd">TEE</dt>
+<dd class="field-odd"><p>Trusted Execution Environment</p>
+</dd>
+<dt class="field-even">TZASC</dt>
+<dd class="field-even"><p>TrustZone Address Space Controller</p>
+</dd>
+<dt class="field-odd">TZPC</dt>
+<dd class="field-odd"><p>TrustZone Protection Controller</p>
+</dd>
+</dl>
+</section>
+<hr class="docutils"/>
+<section id="architecture">
+<h2><a class="toc-backref" href="#id4">Architecture</a><a class="headerlink" href="#architecture" title="Permalink to this heading"></a></h2>
+<section id="q-which-platforms-architectures-are-supported">
+<h3><a class="toc-backref" href="#id5">Q: Which platforms/architectures are supported?</a><a class="headerlink" href="#q-which-platforms-architectures-are-supported" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>The <a class="reference internal" href="../general/platforms.html#platforms-supported"><span class="std std-ref">Platforms supported</span></a> page lists all platforms and architectures
+currently supported in the official tree.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-are-32-bit-as-well-as-64-bit-support">
+<h3><a class="toc-backref" href="#id6">Q: Are 32-bit as well as 64-bit support?</a><a class="headerlink" href="#q-are-32-bit-as-well-as-64-bit-support" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Both 32- and 64-bit are fully supported for all OP-TEE components.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-does-op-tee-support-mixed-mode-i-e-both-aarch32-and-aarch64-trusted-applications-on-top-of-an-aarch64-core">
+<h3><a class="toc-backref" href="#id7">Q: Does OP-TEE support mixed-mode, i.e., both AArch32 and AArch64 Trusted Applications on top of an AArch64 core?</a><a class="headerlink" href="#q-does-op-tee-support-mixed-mode-i-e-both-aarch32-and-aarch64-trusted-applications-on-top-of-an-aarch64-core" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Yes!</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-whats-the-maximum-size-for-heap-and-stack-can-it-be-changed">
+<h3><a class="toc-backref" href="#id8">Q: What’s the maximum size for heap and stack? Can it be changed?</a><a class="headerlink" href="#q-whats-the-maximum-size-for-heap-and-stack-can-it-be-changed" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Yes, it can be changed. In the current setup (for vexpress for example),
+there are <code class="docutils literal notranslate"><span class="pre">32MB</span> <span class="pre">DDR</span></code> dedicated for OP-TEE. <code class="docutils literal notranslate"><span class="pre">1MB</span></code> for <code class="docutils literal notranslate"><span class="pre">TEE</span> <span class="pre">RAM</span></code> and
+<code class="docutils literal notranslate"><span class="pre">1MB</span></code> for <code class="docutils literal notranslate"><span class="pre">PUB</span> <span class="pre">RAM</span></code>, this leaves <code class="docutils literal notranslate"><span class="pre">30MB</span></code> for Trusted Applications. In
+the Trusted Applications, you set <code class="docutils literal notranslate"><span class="pre">TA_STACK_SIZE</span></code> and <code class="docutils literal notranslate"><span class="pre">TA_DATA_SIZE</span></code>.
+Typically, we set stack to <code class="docutils literal notranslate"><span class="pre">2KB</span></code> and data to <code class="docutils literal notranslate"><span class="pre">32K</span></code>. But you are free
+to adjust those according to the amount of memory you have available. If
+you need them to be bigger than <code class="docutils literal notranslate"><span class="pre">1MB</span></code> then you also must adjust TA’s MMU
+L1 table accordingly, since default section mapping is 1MB.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-what-is-the-size-of-op-tee-itself">
+<h3><a class="toc-backref" href="#id9">Q: What is the size of OP-TEE itself?</a><a class="headerlink" href="#q-what-is-the-size-of-op-tee-itself" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul>
+<li><p>As of 2016.01, optee_os is about <code class="docutils literal notranslate"><span class="pre">244KB</span></code> (release build). It is
+preferred to run <a class="reference internal" href="../building/gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> entirely in SRAM, but if there is not
+enough room, DRAM can be used and protected with TZASC. We are also
+looking into the possibility of creating a ‘minimal’ OP-TEE, i.e. a
+limited OP-TEE usable even in a very memory constrained environment, by
+eliminating as many memory-hungry parts as possible. There is however no
+ETA for this at the moment.</p></li>
+<li><p>You can check the memory usage by using the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">mem_usage</span></code> target in
+<a class="reference internal" href="../building/gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a>, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>...<span class="w"> </span>mem_usage
+<span class="c1"># Which will output a file with the figures here:</span>
+<span class="c1"># out/arm/core/tee.mem_usage</span>
+</pre></div>
+</div>
+<p>You will of course get different sizes depending on what compile time
+flags you have enabled when running <cite>make mem_usage</cite>.</p>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-can-neon-optimizations-be-done-in-op-tee">
+<h3><a class="toc-backref" href="#id10">Q: Can NEON optimizations be done in OP-TEE?</a><a class="headerlink" href="#q-can-neon-optimizations-be-done-in-op-tee" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Yes (for additional information, please also see <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/953">Issue#953</a>)</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-can-i-use-c-libraries-in-op-tee">
+<h3><a class="toc-backref" href="#id11">Q: Can I use C++ libraries in OP-TEE?</a><a class="headerlink" href="#q-can-i-use-c-libraries-in-op-tee" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>C++ libraries are currently not supported. Technically, it is possible but
+will require a fair amount of work to implement, especially more so if
+exceptions are required. There are currently no plans to do this.</p></li>
+<li><p>See <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/2628">Issue#2628</a> for related information.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-would-using-malloc-in-op-tee-give-physically-contiguous-memory">
+<h3><a class="toc-backref" href="#id12">Q: Would using <cite>malloc()</cite> in OP-TEE give physically contiguous memory?</a><a class="headerlink" href="#q-would-using-malloc-in-op-tee-give-physically-contiguous-memory" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">malloc()</span></code> in OP-TEE currently gives physically contiguous memory. It is
+not guaranteed as it is not mentioned anywhere in the documentation, but
+in practice the heap only has physically contiguous memory in the pool(s).
+The heap in OP-TEE is normally quite small, ~24KiB, and could be a bit
+fragmented.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-can-i-limit-what-cpus-cores-op-tee-runs-on">
+<h3><a class="toc-backref" href="#id13">Q: Can I limit what CPUs / cores OP-TEE runs on?</a><a class="headerlink" href="#q-can-i-limit-what-cpus-cores-op-tee-runs-on" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Currently it’s up to the kernel to decide which core it runs on, i.e, it
+will be the same core as the one initiating the SMC in Linux. Please also
+see <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/1194">Issue#1194</a>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-how-is-op-tee-being-scheduled">
+<h3><a class="toc-backref" href="#id14">Q: How is OP-TEE being scheduled?</a><a class="headerlink" href="#q-how-is-op-tee-being-scheduled" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>OP-TEE does not have its own scheduler, instead it is being scheduled by
+Linux kernel. For more information, please see <cite>Issue#1036</cite> and
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/1183">Issue#1183</a>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="board-support">
+<h2><a class="toc-backref" href="#id15">Board support</a><a class="headerlink" href="#board-support" title="Permalink to this heading"></a></h2>
+<section id="q-how-do-i-port-op-tee-to-another-platform">
+<h3><a class="toc-backref" href="#id16">Q: How do I port OP-TEE to another platform?</a><a class="headerlink" href="#q-how-do-i-port-op-tee-to-another-platform" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul>
+<li><p>Start by reading the <a class="reference internal" href="../architecture/porting_guidelines.html#porting-guidelines"><span class="std std-ref">Porting guidelines</span></a>.</p></li>
+<li><p>See the <a class="reference internal" href="../general/presentations.html#presentations"><span class="std std-ref">Presentations</span></a> page. There might be some interesting
+information in the “LCU14-302 How To Port OP-TEE To Another Platform” deck
+and video. Beware that the presentation is more than five years old, so
+even though it is a good source, there might be parts that are not
+relevant any longer.</p></li>
+<li><p>As a good example for</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Armv8-A</strong> patch enabling OP-TEE support on a new device, please see
+the <a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/dc57f5a0e8f3b502fc958bc64a5ec0b0f46ef11a">ZynqMP port</a> that enabled support for running OP-TEE on <cite>Xilinx
+UltraScale+ Zynq MPSoC</cite>. Besides that there are similar patches for
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/90e7497e0480892e2c262cec64e6c47242d4db7f">Juno port</a>, <a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/66d9cacf37e6bd4b0d86e7b32e4e5edefe8decfd">Raspberry Pi3 port</a>, <a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/d70e78c49fc9c63b2d37c596b7ad3cbd38f8e574">HiKey port</a>.</p></li>
+<li><p><strong>ARMv7-A</strong>, please have a look at the <a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/85278139a8f914dddb36808861c86a472ecb0271">Freescale ls1021a port</a>,
+another example would be the <a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/9b5060cd92a19b4d114a1ce8a338b18424974037">TI DRA7xx port</a>.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="building">
+<h2><a class="toc-backref" href="#id17">Building</a><a class="headerlink" href="#building" title="Permalink to this heading"></a></h2>
+<section id="q-i-got-build-errors-running-latest-why">
+<h3><a class="toc-backref" href="#id18">Q: I got build errors running latest, why?</a><a class="headerlink" href="#q-i-got-build-errors-running-latest-why" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>What did you try to build? Only <a class="reference internal" href="../building/gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a>? A full OP-TEE developer
+setup using QEMU, HiKey, RPi3, Juno using repo? AOSP? OpenEmbedded? What
+we build on daily basis are the OP-TEE developer setups (see
+<a class="reference internal" href="../building/gits/build.html#optee-developer-setup"><span class="std std-ref">Platforms supported by build.git</span></a>) , but other builds like AOSP and
+OpenEmbedded are builds that we try from time to time, but we have no
+CI/regression testing configured for those builds.</p></li>
+<li><p>By running latest instead of stable also comes with a risk of getting
+build errors due to version and/or interdependency skew which can result
+in build error. Now, such issues most often affects running xtest and not
+the building. If you however clean all gits and do a <code class="docutils literal notranslate"><span class="pre">repo</span> <span class="pre">sync</span> <span class="pre">-d</span></code>. Then
+we’re almost 100% sure you will get back to a working state again, since
+as mentioned in next bullet, we build (and run xtest) on all QEMU on all
+patches sent to OP-TEE.</p></li>
+<li><p>Every pull request in OP-TEE are tested on hardware (see
+<a class="reference internal" href="#how-are-you-testing-optee"><span class="std std-ref">Q: How are you testing OP-TEE?</span></a>).</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-i-got-build-errors-running-stable-tag-x-y-z-why">
+<h3><a class="toc-backref" href="#id19">Q: I got build errors running stable tag x.y.z, why?</a><a class="headerlink" href="#q-i-got-build-errors-running-stable-tag-x-y-z-why" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Stable releases are quite well tested both in terms of building for all
+supported platforms and running xtest on all platforms, so if you cannot
+get that to build and run, then there is a great chance you have something
+wrong on your side. All platforms that has been tested on a stable release
+can be found in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/CHANGELOG.md">CHANGELOG.md</a> file. Having that said, we do make mistakes
+on stable builds also from time to time.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-i-get-gcc-xyz-or-g-xyz-compiler-error-messages">
+<h3><a class="toc-backref" href="#id20">Q: I get <cite>gcc XYZ</cite> or <cite>g++ XYZ</cite> compiler error messages?</a><a class="headerlink" href="#q-i-get-gcc-xyz-or-g-xyz-compiler-error-messages" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Most likely you’re trying to build OP-TEE using the regular x86 compiler
+and not the using the Arm toolchain. Please install the
+<a class="reference internal" href="../building/prerequisites.html#prerequisites"><span class="std std-ref">Prerequisites</span></a> and make sure you have gotten and installed the Arm
+toolchains as described at the <a class="reference internal" href="../building/toolchains.html#toolchains"><span class="std std-ref">Toolchains</span></a> page. (for additional
+information, please see <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/846">Issue#846</a>).</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-i-found-this-build-git-what-is-that">
+<h3><a class="toc-backref" href="#id21">Q: I found this build.git, what is that?</a><a class="headerlink" href="#q-i-found-this-build-git-what-is-that" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="../building/gits/build.html#build"><span class="std std-ref">build</span></a> is a git that is used in conjunction with the
+<a class="reference internal" href="../building/gits/manifest.html#manifest"><span class="std std-ref">manifest</span></a> to create full OP-TEE developer builds. It contains
+helper makefiles that makes it easy to get OP-TEE up and running on the
+setups that are using repo.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-when-running-make-from-build-git-it-fails-to-download-the-toolchains">
+<h3><a class="toc-backref" href="#id22">Q: When running <cite>make</cite> from build.git it fails to download the toolchains?</a><a class="headerlink" href="#q-when-running-make-from-build-git-it-fails-to-download-the-toolchains" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>We try to stay somewhat up to date with running recent <code class="docutils literal notranslate"><span class="pre">GCC</span></code> versions. But
+just like everywhere else on the net things moves around. In some cases like
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/1195">Issue#1195</a>, the URL was changed without us noticing it. If you find and fix
+such an issue, please send the fix as pull request and we will be happy to
+merge it.</p></li>
+</ul>
+</section>
+<section id="q-how-can-i-build-llvm-compiler-rt-with-bti-enabled">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Q: How can I build LLVM compiler-rt with BTI enabled ?"></a><span id="faq-llvm-bti"></span><h3><a class="toc-backref" href="#id23">Q: How can I build LLVM compiler-rt with BTI enabled ?</a><a class="headerlink" href="#q-how-can-i-build-llvm-compiler-rt-with-bti-enabled" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul>
+<li><p>Download the llvm-12 sources either from the releases page or you can
+checkout the “release/12.x” from llvm’s github. (12 to match your
+chosen clang version).</p></li>
+<li><p>Make a build directory and cd into that.</p></li>
+<li><p>Run this cmake command to configure a standalone build of compiler-rt.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>-G<span class="w"> </span>Ninja<span class="w"> </span>&lt;llvm<span class="w"> </span>sources&gt;/compiler-rt/<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-DLLVM_CONFIG_PATH<span class="o">=</span>&lt;path<span class="w"> </span>to&gt;/llvm-config<span class="s2">" \</span>
+<span class="s2">    -DCMAKE_CXX_FLAGS="</span>-mbranch-protection<span class="o">=</span>bti<span class="s2">" \</span>
+<span class="s2">    -DCMAKE_C_FLAGS="</span>-mbranch-protection<span class="o">=</span>bti<span class="s2">" \</span>
+<span class="s2">    -DCMAKE_ASM_FLAGS="</span>-mbranch-protection<span class="o">=</span>bti<span class="s2">" \</span>
+<span class="s2">    -DCOMPILER_RT_BUILD_SANITIZERS=OFF \</span>
+<span class="s2">    -DCOMPILER_RT_BUILD_XRAY=OFF \</span>
+<span class="s2">    -DCOMPILER_RT_BUILD_LIBFUZZER=OFF \</span>
+<span class="s2">    -DCOMPILER_RT_BUILD_PROFILE=OFF \</span>
+<span class="s2">    -DCOMPILER_RT_BUILD_MEMPROF=OFF</span>
+</pre></div>
+</div>
+<p>Replace the path to llvm-config with the path to the clang install you
+want to use to compile. What this does is enable BTI protection for
+c/cxx/assembly files (all the types in compiler-rt) and disable some
+parts of the build that you wouldn’t need. If you
+need more components you can find cmake options for them in
+<code class="docutils literal notranslate"><span class="pre">compiler-rt/CMakeLists.txt</span></code>.</p>
+<p>Once you’ve built that you will find the libraries in <code class="docutils literal notranslate"><span class="pre">&lt;build</span>
+<span class="pre">folder&gt;/lib/linux</span></code>. You can verify that each object in the builtins has
+the BTI marker by doing the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/build-llvm-aarch64/lib/linux$<span class="w"> </span>mkdir<span class="w"> </span>tmp<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>tmp
+/build-llvm-aarch64/lib/linux/tmp$<span class="w"> </span>cp<span class="w"> </span>../libclang_rt.builtins-aarch64.a<span class="w"> </span>.
+/build-llvm-aarch64/lib/linux/tmp$<span class="w"> </span>ar<span class="w"> </span>x<span class="w"> </span>libclang_rt.builtins-aarch64.a
+/build-llvm-aarch64/lib/linux/tmp$<span class="w"> </span>rm<span class="w"> </span>libclang_rt.builtins-aarch64.a
+/build-llvm-aarch64/lib/linux/tmp$<span class="w"> </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.o<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$i</span><span class="s2">:"</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+readelf<span class="w"> </span>-a<span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>bti<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+<p>This should find a BTI line for every file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.o<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$i</span><span class="s2">:"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>readelf<span class="w"> </span>-a<span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>bti<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<span class="w">  </span><span class="m">502</span>
+$<span class="w"> </span>ls<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<span class="w">  </span><span class="m">251</span>
+</pre></div>
+</div>
+<p>251 * 2 = 502 so all objects in the archive are bti compatible.</p>
+<p>How you take this set of libraries and integrate it into your overall
+build system is up to you. The major thing to note is that the name of
+the library does not change when you enable BTI protection</p>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-how-can-i-build-gcc-with-bti-enabled">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Q: How can I build GCC with BTI enabled?"></a><span id="faq-gcc-bti"></span><h3><a class="toc-backref" href="#id24">Q: How can I build GCC with BTI enabled?</a><a class="headerlink" href="#q-how-can-i-build-gcc-with-bti-enabled" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul>
+<li><p>A GCC toolchain with BTI enabled can easily be built using Crosstool-NG:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/crosstool-ng/crosstool-ng
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>crosstool-ng
+$<span class="w"> </span>./bootstrap<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./configure<span class="w"> </span>--enable-local<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make
+$<span class="w"> </span>./ct-ng<span class="w"> </span>aarch64-unknown-linux-gnu
+$<span class="w"> </span>cat<span class="w"> </span>&gt;&gt;.config<span class="w"> </span><span class="s">&lt;&lt;_EOF_</span>
+<span class="s">CT_CC_GCC_EXTRA_CONFIG_ARRAY="--enable-standard-branch-protection"</span>
+<span class="s">CT_CC_GCC_CORE_EXTRA_CONFIG_ARRAY="--enable-standard-branch-protection"</span>
+<span class="s">_EOF_</span>
+$<span class="w"> </span>./ct-ng<span class="w"> </span>build.<span class="k">$(</span>nproc<span class="k">)</span>
+</pre></div>
+</div>
+<p>The above commands will install the new toolchain in
+<code class="docutils literal notranslate"><span class="pre">~/x-tools/aarch64-unknown-linux-gnu</span></code>. You can then use this toolchain
+to build and run OP-TEE for <a class="reference internal" href="../building/devices/qemu.html#qemu-v8"><span class="std std-ref">QEMU v8</span></a> with full BTI support by adding
+a few arguments to the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">run</span></code> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nv">CFG_CORE_BTI</span><span class="o">=</span>y<span class="w"> </span><span class="nv">CFG_TA_BTI</span><span class="o">=</span>y<span class="w"> </span><span class="nv">CFG_USER_TA_TARGETS</span><span class="o">=</span>ta_arm64<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="nv">AARCH64_CROSS_COMPILE</span><span class="o">=</span>~/x-tools/aarch64-unknown-linux-gnu/bin/aarch64-linux-gnu-<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>run
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-what-is-the-quickest-and-easiest-way-to-try-op-tee">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Q: What is the quickest and easiest way to try OP-TEE?"></a><span id="faq-try-optee"></span><h3><a class="toc-backref" href="#id25">Q: What is the quickest and easiest way to try OP-TEE?</a><a class="headerlink" href="#q-what-is-the-quickest-and-easiest-way-to-try-op-tee" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul>
+<li><p>That would be running it on QEMU on a local PC. To do that you would need to:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Install the OP-TEE <a class="reference internal" href="../building/prerequisites.html#prerequisites"><span class="std std-ref">Prerequisites</span></a>.</p></li>
+<li><p>Build for QEMU according to the instructions at <a class="reference internal" href="../building/devices/qemu.html#qemu-v7"><span class="std std-ref">QEMU v7</span></a>.</p></li>
+<li><p>And <a class="reference internal" href="../building/gits/optee_test.html#optee-test-run-xtest"><span class="std std-ref">Run xtest</span></a>.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><dl>
+<dt>By summarizing the above, you would need to:</dt><dd><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span><span class="o">[</span>pre-reqs<span class="o">]</span>
+$<span class="w"> </span>mkdir<span class="w"> </span>optee-qemu<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>optee-qemu
+$<span class="w"> </span>repo<span class="w"> </span>init<span class="w"> </span>-u<span class="w"> </span>https://github.com/OP-TEE/manifest.git
+$<span class="w"> </span>repo<span class="w"> </span>sync
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+$<span class="w"> </span>make<span class="w"> </span>toolchains<span class="w"> </span>-j2
+$<span class="w"> </span>make<span class="w"> </span>run
+QEMU<span class="w"> </span>console:<span class="w">         </span><span class="o">(</span>qemu<span class="o">)</span><span class="w"> </span>c
+Normal<span class="w"> </span>world<span class="w"> </span>shell:<span class="w">   </span><span class="c1"># xtest</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="certification-and-security-reviews">
+<h2><a class="toc-backref" href="#id26">Certification and security reviews</a><a class="headerlink" href="#certification-and-security-reviews" title="Permalink to this heading"></a></h2>
+<section id="q-will-trustedfirmware-org-be-involved-in-globalplatform-certification-qualification">
+<h3><a class="toc-backref" href="#id27">Q: Will TrustedFirmware.org be involved in GlobalPlatform certification/qualification?</a><a class="headerlink" href="#q-will-trustedfirmware-org-be-involved-in-globalplatform-certification-qualification" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>No, not as of now. Most often certification is performed using a certain
+software version and on a unique device. I.e., it is the combination
+software + hardware that gets certified. This is typically something that
+the SoC or OEM needs to do on their own.</p></li>
+<li><p>But it is worth mentioning that since OP-TEE is coming from a proprietary
+TEE solution that was GlobalPlatform certified on some products in the
+past and we regularly have people from some member companies running the
+extended test suite from GlobalPlatform we know that the gap to become
+GlobalPlatform certified/qualified isn’t that big.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Q: Has any test lab been testing OP-TEE?"></a><section id="q-has-any-test-lab-been-testing-op-tee">
+<span id="id1"></span><h3><a class="toc-backref" href="#id28">Q: Has any test lab been testing OP-TEE?</a><a class="headerlink" href="#q-has-any-test-lab-been-testing-op-tee" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="http://www.appluslaboratories.com/en/">Applus Laboratories</a> have done some side-channel attack testing and
+fault injection testing on OP-TEE using the <a class="reference internal" href="../building/devices/hikey620.html#hikey"><span class="std std-ref">HiKey 620</span></a> device. Their
+findings and fixes can be found at the <a class="reference external" href="https://www.op-tee.org/security-advisories/">Security Advisories</a> page at
+optee.org.</p></li>
+<li><p><a class="reference external" href="https://www.riscure.com">Riscure</a> did a mini-audit of OP-TEE which generated a couple of patches
+(see <cite>PR#2745</cite>). The <a class="reference external" href="https://github.com/OP-TEE/optee_os/security/advisories">OP-TEE OS Security Advisories</a> page on Github will be
+updated with more information regarding that in the future.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-where-are-listed-security-vulnerabilities-addressed-in-op-tee">
+<h3><a class="toc-backref" href="#id29">Q: Where are listed security vulnerabilities addressed in OP-TEE</a><a class="headerlink" href="#q-where-are-listed-security-vulnerabilities-addressed-in-op-tee" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Please see <a class="reference external" href="https://github.com/OP-TEE/optee_os/security/advisories">OP-TEE OS Security Advisories</a> page.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-have-there-been-any-code-audit-code-review-done">
+<h3><a class="toc-backref" href="#id30">Q: Have there been any code audit / code review done?</a><a class="headerlink" href="#q-have-there-been-any-code-audit-code-review-done" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Full audit? No! But in the past Linaro have been collaborating with
+Riscure trying to identify and fix potential security issues. There has
+also been some companies that have done audits internally and they have
+then shared the result with us and where relevant, we have created patches
+resolving the issues reported to us (see
+<a class="reference internal" href="#q-has-any-test-lab-been-testing-op-tee"><span class="std std-ref">Q: Has any test lab been testing OP-TEE?</span></a>).</p></li>
+<li><p>Code review, yes! Every single patch going into OP-TEE has been reviewed
+in a pull request on GitHub. We more or less have a requirement that every
+patch going into OP-TEE shall at least have one “Reviewed-by” tag in the
+patch.</p></li>
+<li><p>Third party / test lab code review, no! Again some companies have reviewed
+internally and shared the result with us, but other than that no (see
+related <a class="reference internal" href="#q-has-any-test-lab-been-testing-op-tee"><span class="std std-ref">Q: Has any test lab been testing OP-TEE?</span></a>)</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<section id="contribution">
+<h2><a class="toc-backref" href="#id31">Contribution</a><a class="headerlink" href="#contribution" title="Permalink to this heading"></a></h2>
+<section id="q-how-do-i-contribute">
+<h3><a class="toc-backref" href="#id32">Q: How do I contribute?</a><a class="headerlink" href="#q-how-do-i-contribute" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Please see the <a class="reference internal" href="../general/contribute.html#contribute"><span class="std std-ref">Contribute</span></a> page.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-where-can-i-get-help">
+<h3><a class="toc-backref" href="#id33">Q: Where can I get help?</a><a class="headerlink" href="#q-where-can-i-get-help" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Please see the <a class="reference internal" href="../general/contact.html#contact"><span class="std std-ref">Contact</span></a> page.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-i-m-new-to-op-tee-but-i-would-like-to-help-out-what-can-i-do">
+<h3><a class="toc-backref" href="#id34">Q: I’m new to OP-TEE but I would like to help out, what can I do?</a><a class="headerlink" href="#q-i-m-new-to-op-tee-but-i-would-like-to-help-out-what-can-i-do" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>We always need help with code reviews, feel free to review any of the open
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/pulls">OP-TEE OS Pull Requests</a>. Please also note that there could be open pull
+request in the other <a class="reference internal" href="../building/gits/index.html#optee-gits"><span class="std std-ref">OP-TEE gits</span></a> that needs reviews too.</p></li>
+<li><p>We always need help answering all the questions asked at <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues">OP-TEE OS
+Issues</a>.</p></li>
+<li><p>If you want to try to solve a bug, please have a look at the <a class="reference external" href="https://github.com/OP-TEE/optee_os/labels/bug">OP-TEE OS
+Bugs</a> or the <a class="reference external" href="https://github.com/OP-TEE/optee_os/labels/enhancement">OP-TEE OS Enhancements</a>.</p></li>
+<li><p>Documentation tends to become obsolete if not maintained on regular basis.
+We try to do our best, but we’re not perfect. Please have a look at
+<a class="reference internal" href="../building/gits/optee_docs.html#optee-docs"><span class="std std-ref">optee_docs</span></a> and try to update where you find gaps.</p></li>
+<li><p>Enable <cite>repo</cite> for the device in <a class="reference internal" href="../building/gits/manifest.html#manifest"><span class="std std-ref">manifest</span></a> and <a class="reference internal" href="../building/gits/build.html#build"><span class="std std-ref">build</span></a> (and also
+<a class="reference internal" href="../general/platforms.html#platforms-supported"><span class="std std-ref">Platforms supported</span></a>) currently not using repo.</p></li>
+<li><p>If you would like to implement a bigger feature, please reach out to us
+(see <a class="reference internal" href="../general/contact.html#contact"><span class="std std-ref">Contact</span></a>) and we can discuss what is most relevant to look into
+for the moment. If you already have an idea, feel free to send the
+proposal to us.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="interfaces">
+<h2><a class="toc-backref" href="#id35">Interfaces</a><a class="headerlink" href="#interfaces" title="Permalink to this heading"></a></h2>
+<section id="q-which-apis-have-been-implemented-in-op-tee">
+<h3><a class="toc-backref" href="#id36">Q: Which API’s have been implemented in OP-TEE?</a><a class="headerlink" href="#q-which-apis-have-been-implemented-in-op-tee" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>GlobalPlatform (see <a class="reference internal" href="../architecture/globalplatform_api.html#globalplatform-api"><span class="std std-ref">GlobalPlatform API</span></a> for more details).</dt><dd><ul>
+<li><p>GlobalPlatform’s TEE Client API v1.0 (Errata and Precisions 2.0)
+specification</p></li>
+<li><p>GlobalPlatform’s TEE Internal Core API v1.3.1 specification.</p></li>
+<li><p>GlobalPlatform’s Secure Elements v1.0 (<strong>now deprecated</strong>, see <code class="docutils literal notranslate"><span class="pre">git</span>
+<span class="pre">log</span></code>).</p></li>
+<li><p>GlobalPlatform’s Socket API v1.0 (TCP and UDP, but not TLS).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>AOSP <a class="reference external" href="https://source.android.com/security/keystore">Keymaster</a> (v3) and AOSP <a class="reference external" href="https://source.android.com/security/authentication/gatekeeper">Gatekeeper</a> (see <a class="reference internal" href="../building/aosp/aosp.html#aosp"><span class="std std-ref">AOSP</span></a> for more
+details).</p></li>
+<li><p><a class="reference external" href="https://android.googlesource.com/platform/external/avb/+/master/README.md">Android Verified Boot 2.0</a> (AVB 2.0)</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-which-linux-kernel-version-supports-some-op-tee-feature">
+<h3><a class="toc-backref" href="#id37">Q: Which Linux kernel version supports &lt;some OP-TEE feature&gt;?</a><a class="headerlink" href="#q-which-linux-kernel-version-supports-some-op-tee-feature" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul>
+<li><p>The OP-TEE Linux driver is maintained in the official Linux tree at
+<a class="reference external" href="https://kernel.org/">kernel.org</a> under <cite>drivers/tee</cite>. This is normally where you find the
+latest code. That being said, some platforms need minor customizations,
+such as device tree updates, in order to be used in the OP-TEE developer
+builds (<a class="reference internal" href="../building/gits/manifest.html#manifest"><span class="std std-ref">manifest</span></a> files). That is why the <a class="reference external" href="https://github.com/linaro-swg/linux">linaro-swg kernel</a>
+branch <code class="docutils literal notranslate"><span class="pre">optee</span></code> is used in the manifest files. It is rebased onto
+upstream on a regular basis.</p></li>
+<li><p>Older kernels may lack support for newer OP-TEE features. In order to
+assess in which kernel version some commit has been introduced, you may
+use the following shell command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>linux
+$<span class="w"> </span>git<span class="w"> </span>log<span class="w"> </span>--no-merges<span class="w"> </span>--oneline<span class="w"> </span>drivers/tee<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="nb">hash</span><span class="w"> </span>sub<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">name</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>name-rev<span class="w"> </span>--tags<span class="w"> </span>--name-only<span class="w"> </span><span class="nv">$hash</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/\([^~]*\)~.*/[\1]/'</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%-20s %s %s\n"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$hash</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$sub</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="k">done</span>
+</pre></div>
+</div>
+<p>The output looks like this:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[v5.12-rc4]          6417f03132a6 module: remove never implemented MODULE_SUPPORTED_DEVICE
+[v5.12-rc1-dontuse]  67bc80975279 optee: simplify i2c access
+[v5.12-rc1-dontuse]  958567600517 tee: optee: remove need_resched() before cond_resched()
+[v5.12-rc1-dontuse]  617d8e8b347e optee: sync OP-TEE headers
+[v5.12-rc1-dontuse]  bed13b5fc4f3 tee: optee: fix 'physical' typos
+[v5.12-rc1-dontuse]  fda90b29e271 drivers: optee: use flexible-array member instead of zero-length array
+[v5.11-rc6]          dcb3b06d9c34 tee: optee: replace might_sleep with cond_resched
+[v5.10-rc6]          853735e40424 optee: add writeback to valid memory type
+[v5.11-rc1]          a24d22b225ce crypto: sha - split sha.h into sha1.h and sha2.h
+[v5.10-rc5]          be353be27874 tee: amdtee: synchronize access to shm list
+...
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="hardware-and-peripherals">
+<h2><a class="toc-backref" href="#id38">Hardware and peripherals</a><a class="headerlink" href="#hardware-and-peripherals" title="Permalink to this heading"></a></h2>
+<section id="q-can-i-use-my-own-hardware-ip-for-crypto-acceleration">
+<h3><a class="toc-backref" href="#id39">Q: Can I use my own hardware IP for crypto acceleration?</a><a class="headerlink" href="#q-can-i-use-my-own-hardware-ip-for-crypto-acceleration" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Yes, OP-TEE has a Crypto Abstraction Layer (see
+<a class="reference internal" href="../architecture/crypto.html#cryptographic-implementation"><span class="std std-ref">Cryptographic implementation</span></a> that was designed mainly to make it
+easy to add support for hardware crypto acceleration. There you will find
+information about the abstraction layer itself and what you need to do to
+be able to support new software/hardware “drivers” in OP-TEE.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="license">
+<h2><a class="toc-backref" href="#id40">License</a><a class="headerlink" href="#license" title="Permalink to this heading"></a></h2>
+<section id="q-under-what-license-is-op-tee-released">
+<h3><a class="toc-backref" href="#id41">Q: Under what license is OP-TEE released?</a><a class="headerlink" href="#q-under-what-license-is-op-tee-released" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>The software is mostly provided under the <a class="reference external" href="http://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause</a> license.</p></li>
+<li><p>The TEE kernel driver is released under GPLv2 for obvious reasons.</p></li>
+<li><p>xtest (<a class="reference internal" href="../building/gits/optee_test.html#optee-test"><span class="std std-ref">optee_test</span></a>) uses BSD 2-Clause for code running in secure
+world (Trusted Applications etc) and GPLv2 for code running in normal
+world (client code).</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-globalplatform-click-through-license">
+<h3><a class="toc-backref" href="#id42">Q: GlobalPlatform click-through license</a><a class="headerlink" href="#q-globalplatform-click-through-license" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Since OP-TEE is a GlobalPlatform based TEE which implements the APIs as
+specified by GlobalPlatform one has to accept, the click-through license
+which is presented when trying to download the <a class="reference internal" href="../architecture/globalplatform_api.html#globalplatform-api"><span class="std std-ref">GlobalPlatform API</span></a>
+specifications before start using OP-TEE.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-i-ve-modified-op-tee-by-using-code-with-non-bsd-2-clause-license-will-you-accept-it">
+<h3><a class="toc-backref" href="#id43">Q: I’ve modified OP-TEE by using code with non BSD 2-Clause license, will you accept it?</a><a class="headerlink" href="#q-i-ve-modified-op-tee-by-using-code-with-non-bsd-2-clause-license-will-you-accept-it" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>That is something we deal with case by case. But as a general answer, if
+it does not contaminate the BSD 2-Clause license we will accept it. Reach
+out to us (see <a class="reference internal" href="../general/contact.html#contact"><span class="std std-ref">Contact</span></a>) and we will take it from there.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="promotion">
+<h2><a class="toc-backref" href="#id44">Promotion</a><a class="headerlink" href="#promotion" title="Permalink to this heading"></a></h2>
+<section id="q-i-want-to-get-my-company-logo-on-op-tee-org-how">
+<h3><a class="toc-backref" href="#id45">Q: I want to get my company logo on op-tee.org, how?</a><a class="headerlink" href="#q-i-want-to-get-my-company-logo-on-op-tee-org-how" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>If your company has done significant contributions to OP-TEE, then please
+<a class="reference internal" href="../general/contact.html#contact"><span class="std std-ref">Contact</span></a> us and we will do our best to include your company. Pay
+attention to that we will review this on regular basis and inactive
+supporting companies might be removed in the future again.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="security-vulnerabilities">
+<h2><a class="toc-backref" href="#id46">Security vulnerabilities</a><a class="headerlink" href="#security-vulnerabilities" title="Permalink to this heading"></a></h2>
+<section id="q-i-have-a-found-a-security-flaw-in-op-tee-how-can-i-disclose-it-with-you">
+<h3><a class="toc-backref" href="#id47">Q: I have a found a security flaw in OP-TEE, how can I disclose it with you?</a><a class="headerlink" href="#q-i-have-a-found-a-security-flaw-in-op-tee-how-can-i-disclose-it-with-you" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Please see the <a class="reference internal" href="../general/contact.html#contact"><span class="std std-ref">Contact</span></a> page.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="source-code">
+<h2><a class="toc-backref" href="#id48">Source code</a><a class="headerlink" href="#source-code" title="Permalink to this heading"></a></h2>
+<section id="q-where-is-the-source-code">
+<h3><a class="toc-backref" href="#id49">Q: Where is the source code?</a><a class="headerlink" href="#q-where-is-the-source-code" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>It is located on GitHub under the project <a class="reference external" href="https://github.com/OP-TEE">OP-TEE</a> and <a class="reference external" href="https://github.com/linaro-swg">linaro-swg</a>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-where-do-i-download-the-test-suite-called-xtest">
+<h3><a class="toc-backref" href="#id50">Q: Where do I download the test suite called xtest?</a><a class="headerlink" href="#q-where-do-i-download-the-test-suite-called-xtest" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>All the source code for that can be found in the git called
+<a class="reference internal" href="../building/gits/optee_test.html#optee-test"><span class="std std-ref">optee_test</span></a>.</p></li>
+<li><p>The <a class="reference internal" href="../building/gits/optee_test.html#globalplatform-tests"><span class="std std-ref">Extended test (GlobalPlatform tests)</span></a> can be purchased separately.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-where-is-the-linux-kernel-tee-driver">
+<h3><a class="toc-backref" href="#id51">Q: Where is the Linux kernel TEE driver?</a><a class="headerlink" href="#q-where-is-the-linux-kernel-tee-driver" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>You can find both the generic TEE framework including the OP-TEE driver
+included in the official Linux kernel project since v4.12. Having that
+said, we “buffer up” pending patches on a our <a class="reference internal" href="../building/linux/tee_framework.html#linux-kernel"><span class="std std-ref">Linux kernel TEE framework</span></a> branch.
+I.e., that is where we keep new features being developed for OP-TEE. In
+the long run we aim to completely stop using our own branch and just send
+all patches to the official Linux kernel tree directly. But as of now we
+cannot do that.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="testing">
+<h2><a class="toc-backref" href="#id52">Testing</a><a class="headerlink" href="#testing" title="Permalink to this heading"></a></h2>
+<section id="q-how-are-you-testing-op-tee">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Q: How are you testing OP-TEE?"></a><span id="how-are-you-testing-optee"></span><h3><a class="toc-backref" href="#id53">Q: How are you testing OP-TEE?</a><a class="headerlink" href="#q-how-are-you-testing-op-tee" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>There is a test suite called xtest that tests the complete TEE-solution to
+ensure that the communication between all architectural layers is working
+as it should. The test suite also tests the majority of the GlobalPlatform
+TEE Internal Core API. It has close to 50,000 and ever increasing test
+cases, and is also extendable to include the official GlobalPlatform test
+suite (see <a class="reference internal" href="../building/gits/optee_test.html#globalplatform-tests"><span class="std std-ref">Extended test (GlobalPlatform tests)</span></a>).</p></li>
+<li><p>Every pull request in OP-TEE are built for a multitude of different
+platforms automatically using <a class="reference external" href="https://dev.azure.com/OPTEE/optee_os">Azure DevOps pipelines</a> and <a class="reference external" href="https://optee.mooo.com:5000">IBART</a>.
+Please have a look there to see whether it failed building on the platform
+you’re using before submitting any issue about build errors.</p></li>
+<li><p>For more information see <a class="reference internal" href="../building/gits/optee_test.html#optee-test"><span class="std std-ref">optee_test</span></a>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils"/>
+<section id="trusted-applications">
+<h2><a class="toc-backref" href="#id54">Trusted Applications</a><a class="headerlink" href="#trusted-applications" title="Permalink to this heading"></a></h2>
+<section id="q-how-do-i-write-a-trusted-application-ta">
+<h3><a class="toc-backref" href="#id55">Q: How do I write a Trusted Application (TA)?</a><a class="headerlink" href="#q-how-do-i-write-a-trusted-application-ta" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Have a look at the <a class="reference internal" href="../building/trusted_applications.html#build-trusted-applications"><span class="std std-ref">Trusted Applications</span></a> page as well as the
+<a class="reference internal" href="../building/gits/optee_examples/optee_examples.html#optee-examples"><span class="std std-ref">optee_examples</span></a> page. Those provides guidelines and examples on how
+to implement basic Trusted Applications.</p></li>
+<li><p>If you want to see more advanced uses cases of Trusted Applications, then
+we encourage that you have a look at the Trusted Applications
+<a class="reference internal" href="../building/gits/optee_test.html#optee-test"><span class="std std-ref">optee_test</span></a>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-how-do-i-link-a-library-into-a-trusted-application">
+<h3><a class="toc-backref" href="#id56">Q: How do I link a library into a Trusted Application?</a><a class="headerlink" href="#q-how-do-i-link-a-library-into-a-trusted-application" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>See the example in <a class="reference internal" href="../building/trusted_applications.html#build-trusted-applications-submk"><span class="std std-ref">sub.mk directives</span></a>.</p></li>
+<li><p>Also see <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/280">Issue#280</a>, <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/601">Issue#601</a>, <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/901">Issue#901</a>, <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/1003">Issue#1003</a>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-where-should-i-put-my-compiled-trusted-application-on-the-device">
+<h3><a class="toc-backref" href="#id57">Q: Where should I put my compiled Trusted Application on the device?</a><a class="headerlink" href="#q-where-should-i-put-my-compiled-trusted-application-on-the-device" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/lib/optee_armtz</span></code>, that is the default location where tee-supplicant
+will look for Trusted Applications.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-what-is-a-pseudo-ta-and-how-do-i-write-one">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Q: What is a Pseudo TA and how do I write one?"></a><span id="what-is-a-pseudo-ta-and-how-do-i-write-one"></span><h3><a class="toc-backref" href="#id58">Q: What is a Pseudo TA and how do I write one?</a><a class="headerlink" href="#q-what-is-a-pseudo-ta-and-how-do-i-write-one" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>A Pseudo TA is an OP-TEE firmware service offered through the generic API
+used to invoke Trusted Applications. Pseudo TA interface and services all
+runs in TEE kernel / core context. I.e., it will have access to the same
+functions, memory and hardware etc as the TEE core itself. If we’re
+talking ARMv8-A it is running in <code class="docutils literal notranslate"><span class="pre">S-EL1</span></code>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-are-pseudo-user-space-tas-supported">
+<h3><a class="toc-backref" href="#id59">Q: Are Pseudo <strong>user space</strong> TAs supported?</a><a class="headerlink" href="#q-are-pseudo-user-space-tas-supported" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>No!</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-can-a-static-ta-open-invoke-dynamic-ta">
+<h3><a class="toc-backref" href="#id60">Q: Can a static TA Open/Invoke dynamic TA?</a><a class="headerlink" href="#q-can-a-static-ta-open-invoke-dynamic-ta" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Yes, for a longer discussion see <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/967">Issue#967</a>, <a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/1085">Issue#1085</a>,
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/1132">Issue#1132</a>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-how-can-i-extend-the-globalplatform-internal-core-api">
+<h3><a class="toc-backref" href="#id61">Q: How can I extend the GlobalPlatform Internal Core API?</a><a class="headerlink" href="#q-how-can-i-extend-the-globalplatform-internal-core-api" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>You may develop your own “Pseudo TA”, which is part of the core (see
+<a class="reference internal" href="#what-is-a-pseudo-ta-and-how-do-i-write-one"><span class="std std-ref">Q: What is a Pseudo TA and how do I write one?</span></a> for more information
+about the Pseudo TA).</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-how-are-trusted-applications-verified">
+<h3><a class="toc-backref" href="#id62">Q: How are Trusted Applications verified?</a><a class="headerlink" href="#q-how-are-trusted-applications-verified" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Please see the section <a class="reference internal" href="../architecture/porting_guidelines.html#core-pub-priv-keypair"><span class="std std-ref">Trusted Application private/public keypair</span></a> in the
+<a class="reference internal" href="../architecture/porting_guidelines.html#porting-guidelines"><span class="std std-ref">Porting guidelines</span></a>.</p></li>
+<li><p>Alternatively one can also build a Trusted Application and embed its raw
+binary content into the OP-TEE firmware binary. At runtime, if invoked,
+the Trusted Application will be loaded from the OP-TEE firmware image
+instead of being fetched from the normal world and authenticated in the
+secure world (see <a class="reference internal" href="../architecture/trusted_applications.html#early-ta"><span class="std std-ref">Early TA</span></a> for more information).</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-is-multi-core-ta-supported">
+<h3><a class="toc-backref" href="#id63">Q: Is multi-core TA supported?</a><a class="headerlink" href="#q-is-multi-core-ta-supported" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Yes, you can have two or more TAs running simultaneously. Please see also
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/1194">Issue#1194</a>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-is-multi-threading-supported-in-a-ta">
+<h3><a class="toc-backref" href="#id64">Q: Is multi-threading supported in a TA?</a><a class="headerlink" href="#q-is-multi-threading-supported-in-a-ta" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>No, there is no such concept as <code class="docutils literal notranslate"><span class="pre">pthreads</span></code> or similar. I.e, you cannot
+spawn thread from a TA. If you need to run tasks in parallel, then you
+should probably look into running two TAs or more simultaneously and then
+let them communicate with each other using the <code class="docutils literal notranslate"><span class="pre">TA2TA</span></code> interface.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-how-can-i-use-or-call-op-tee-from-native-android-apk-applications">
+<h3><a class="toc-backref" href="#id65">Q: How can I use or call OP-TEE from native Android (apk) applications?</a><a class="headerlink" href="#q-how-can-i-use-or-call-op-tee-from-native-android-apk-applications" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul>
+<li><p>Use the <a class="reference external" href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/jniTOC.html">Java Native Interface</a> (JNI).</p></li>
+<li><p>First get familiar with <a class="reference external" href="https://developer.android.com/ndk/samples/sample_hellojni.html">sample_hellojni.html</a> and make sure you can run
+the sample. After that, replace the C-side Implementation with for example
+<a class="reference internal" href="../building/gits/optee_examples/optee_examples.html#hello-world"><span class="std std-ref">hello_world</span></a> or one of the other examples in <a class="reference internal" href="../building/gits/optee_examples/optee_examples.html#optee-examples"><span class="std std-ref">optee_examples</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that <a class="reference internal" href="../building/gits/optee_examples/optee_examples.html#hello-world"><span class="std std-ref">hello_world</span></a> and other binaries in optee_examples are built
+as executables, and have to be modified to be built as a .so shared library
+instead so that it can be loaded by the Java-side Implementation.</p>
+</div>
+</li>
+<li><p>Note that <code class="docutils literal notranslate"><span class="pre">*.apk</span></code> apps by default have no access to the TEE driver. See
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/issues/903">Issue#903</a> for details. The workaround is to disable SELinux before
+launching any <code class="docutils literal notranslate"><span class="pre">*.apk</span></code> app that calls into OP-TEE. The solution is to
+create/write SELinux domains/rules to allow any required access, but since
+this is not a TEE-related issue, it is left as an exercise for the users.</p></li>
+<li><p>For a reference implementation contributed by one of our community users,
+see <a class="reference external" href="https://github.com/rafagameiro/optee_android_hello_world_example">optee_android_hello_world_example</a>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="q-i-ve-heard-that-there-is-a-widevine-and-playready-ta-how-do-i-get-access">
+<h3><a class="toc-backref" href="#id66">Q: I’ve heard that there is a Widevine and PlayReady TA, how do I get access?</a><a class="headerlink" href="#q-i-ve-heard-that-there-is-a-widevine-and-playready-ta-how-do-i-get-access" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>TrustedFirmware have no such implementation, but Linaro do have reference
+implementations for that that they share with their members who have
+signed the WMLA and NDA/MLA with Google and Microsoft. So the advice is to
+reach out to Linaro if you have questions about that.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="../debug/gprof.html" rel="prev" title="Gprof"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

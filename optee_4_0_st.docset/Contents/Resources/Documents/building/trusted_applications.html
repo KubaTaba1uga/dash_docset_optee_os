@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trusted Applications — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="efi_vars/stmm.html" rel="next" title="StandAloneMM"/>
+<link href="toolchains.html" rel="prev" title="Toolchains"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/index.html">Device specific information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolchains.html">Toolchains</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Trusted Applications</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ta-mandatory-files">TA Mandatory files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ta-file-layout-example">TA file layout example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ta-makefile-basics">TA Makefile Basics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#required-variables">Required variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#optional-variables">Optional variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-makefile">Example Makefile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sub-mk-directives">sub.mk directives</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#android-build-environment">Android Build Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ta-mandatory-entry-points">TA Mandatory Entry Points</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ta-properties">TA Properties</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-of-a-property-header-file">Example of a property header file</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#checking-ta-parameters">Checking TA parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#signing-of-tas">Signing of TAs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#offline-signing-of-tas">Offline Signing of TAs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Build and run</a></li>
+<li class="breadcrumb-item active">Trusted Applications</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/building/trusted_applications.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="trusted-applications">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Trusted Applications"></a><span id="build-trusted-applications"></span><h1>Trusted Applications<a class="headerlink" href="#trusted-applications" title="Permalink to this heading"></a></h1>
+<p>This document tells how to implement a Trusted Application for OP-TEE, using
+OP-TEE’s so called <cite>TA-devkit</cite> to both build and sign the Trusted Application
+binary. In this document, a <cite>Trusted Application</cite> running in the OP-TEE os is
+referred to as a <cite>TA</cite>. Note that in the default setup a private test key is
+distributed along with the <a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> source is used for signing Trusted
+Applications. See <a class="reference internal" href="#tasign">TASign</a> for more details, including offline signing of TAs.</p>
+<section id="ta-mandatory-files">
+<h2>TA Mandatory files<a class="headerlink" href="#ta-mandatory-files" title="Permalink to this heading"></a></h2>
+<p>The Makefile for a Trusted Application must be written to rely on OP-TEE
+TA-devkit resources in order to successfully build the target application.
+TA-devkit is built when one builds <a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a>.</p>
+<p>To build a TA, one must provide:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Makefile</strong>, a make file that should set some configuration variables and
+include the TA-devkit make file.</p></li>
+<li><p><strong>sub.mk</strong>, a make file that lists the sources to build (local source
+files, subdirectories to parse, source file specific build directives).</p></li>
+<li><p><strong>user_ta_header_defines.h</strong>, a specific ANSI-C header file to define most
+of the TA properties.</p></li>
+<li><p>An implementation of at least the TA entry points, as extern functions:
+<code class="docutils literal notranslate"><span class="pre">TA_CreateEntryPoint()</span></code>, <code class="docutils literal notranslate"><span class="pre">TA_DestroyEntryPoint()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TA_OpenSessionEntryPoint()</span></code>, <code class="docutils literal notranslate"><span class="pre">TA_CloseSessionEntryPoint()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TA_InvokeCommandEntryPoint()</span></code></p></li>
+</ul>
+</div></blockquote>
+<section id="ta-file-layout-example">
+<h3>TA file layout example<a class="headerlink" href="#ta-file-layout-example" title="Permalink to this heading"></a></h3>
+<p>As an example, <a class="reference internal" href="gits/optee_examples/optee_examples.html#hello-world"><span class="std std-ref">hello_world</span></a> looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>hello_world/
+├── ...
+└── ta
+    ├── Makefile                  BINARY=&lt;uuid&gt;
+    ├── Android.mk                Android way to invoke the Makefile
+    ├── sub.mk                    srcs-y += hello_world_ta.c
+    ├── include
+    │   └── hello_world_ta.h      Header exported to non-secure: TA commands API
+    ├── hello_world_ta.c          Implementation of TA entry points
+    └── user_ta_header_defines.h  TA_UUID, TA_FLAGS, TA_DATA/STACK_SIZE, ...
+</pre></div>
+</div>
+</section>
+</section>
+<section id="ta-makefile-basics">
+<h2>TA Makefile Basics<a class="headerlink" href="#ta-makefile-basics" title="Permalink to this heading"></a></h2>
+<section id="required-variables">
+<h3>Required variables<a class="headerlink" href="#required-variables" title="Permalink to this heading"></a></h3>
+<p>The main TA-devkit make file is located in <a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> at
+<code class="docutils literal notranslate"><span class="pre">ta/mk/ta_dev_kit.mk</span></code>. The make file supports make targets such as <code class="docutils literal notranslate"><span class="pre">all</span></code> and
+<code class="docutils literal notranslate"><span class="pre">clean</span></code> to build a TA or a library and clean the built objects.</p>
+<p>The make file expects a couple of configuration variables:</p>
+<dl class="simple">
+<dt>TA_DEV_KIT_DIR</dt><dd><p>Base directory of the TA-devkit. Used by the TA-devkit itself to locate its tools.</p>
+</dd>
+<dt>BINARY and LIBNAME</dt><dd><p>These are exclusive, meaning that you cannot use both at the same time. If
+building a TA, <code class="docutils literal notranslate"><span class="pre">BINARY</span></code> shall provide the TA filename used to load the TA.
+The built and signed TA binary file will be named <code class="docutils literal notranslate"><span class="pre">${BINARY}.ta</span></code>. In
+native OP-TEE, it is the TA UUID, used by tee-supplicant to identify TAs. If
+one is building a static library (that will be later linked by a TA), then
+<code class="docutils literal notranslate"><span class="pre">LIBNAME</span></code> shall provide the name of the library. The generated library
+binary file will be named <code class="docutils literal notranslate"><span class="pre">lib${LIBNAME}.a</span></code></p>
+</dd>
+<dt>CROSS_COMPILE and CROSS_COMPILE32</dt><dd><p>Cross compiler for the TA or the library source files. <code class="docutils literal notranslate"><span class="pre">CROSS_COMPILE32</span></code>
+is optional. It allows to target AArch32 builds on AArch64 capable systems.
+On AArch32 systems, <code class="docutils literal notranslate"><span class="pre">CROSS_COMPILE32</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">CROSS_COMPILE</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="optional-variables">
+<h3>Optional variables<a class="headerlink" href="#optional-variables" title="Permalink to this heading"></a></h3>
+<p>Some optional configuration variables can be supported, for example:</p>
+<dl class="simple">
+<dt>O</dt><dd><p>Base directory for build objects filetree. If not set, TA-devkit defaults to
+<strong>./out</strong> from the TA source tree base directory.</p>
+</dd>
+</dl>
+</section>
+<section id="example-makefile">
+<h3>Example Makefile<a class="headerlink" href="#example-makefile" title="Permalink to this heading"></a></h3>
+<p>A typical Makefile for a TA looks something like this</p>
+<div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="c"># Append specific configuration to the C source build (here log=info)</span>
+<span class="c"># The UUID for the Trusted Application</span>
+<span class="nv">BINARY</span><span class="o">=</span>8aaaf200-2450-11e4-abe2-0002a5d5c51b
+
+<span class="c"># Source the TA-devkit make file</span>
+<span class="cp">include $(TA_DEV_KIT_DIR)/mk/ta_dev_kit.mk</span>
+</pre></div>
+</div>
+</section>
+<section id="sub-mk-directives">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/sub.mk directives"></a><span id="build-trusted-applications-submk"></span><h3>sub.mk directives<a class="headerlink" href="#sub-mk-directives" title="Permalink to this heading"></a></h3>
+<p>The make file expects that current directory contains a file <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code> that is
+the entry point for listing the source files to build and other specific build
+directives. Here are a couple of examples of directives one can implement in a
+sub.mk make file:</p>
+<div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="c"># Adds /hello_world_ta.c from current directory to the list of the source</span>
+<span class="c"># file to build and link.</span>
+<span class="nv">srcs-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>hello_world_ta.c
+
+<span class="c"># Includes path **./include/** from the current directory to the include</span>
+<span class="c"># path.</span>
+<span class="nv">global-incdirs-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>include/
+
+<span class="c"># Adds directive -Wno-strict-prototypes only to the file hello_world_ta.c</span>
+<span class="nv">cflags-hello_world_ta.c-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-Wno-strict-prototypes
+
+<span class="c"># Removes directive -Wno-strict-prototypes from the build directives for</span>
+<span class="c"># hello_world_ta.c only.</span>
+<span class="nv">cflags-remove-hello_world_ta.c-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-Wno-strict-prototypes
+
+<span class="c"># Adds the static library foo to the list of the linker directive -lfoo.</span>
+<span class="nv">libnames</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>foo
+
+<span class="c"># Adds the directory path to the libraries pathes list. Archive file</span>
+<span class="c"># libfoo.a is expected in this directory.</span>
+<span class="nv">libdirs</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>path/to/libfoo/install/directory
+
+<span class="c"># Adds the static library binary to the TA build dependencies.</span>
+<span class="nv">libdeps</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>path/to/greatlib/libgreatlib.a
+</pre></div>
+</div>
+</section>
+</section>
+<section id="android-build-environment">
+<h2>Android Build Environment<a class="headerlink" href="#android-build-environment" title="Permalink to this heading"></a></h2>
+<p>OP-TEE’s TA-devkit supports building in an Android build environment. One can
+write an <code class="docutils literal notranslate"><span class="pre">Android.mk</span></code> file for the TA (stored side by side with the Makefile).
+Android’s build system will parse the <code class="docutils literal notranslate"><span class="pre">Android.mk</span></code> file for the TA which in
+turn will parse a TA-devkit Android make file to locate TA build resources. Then
+the Android build will execute a <code class="docutils literal notranslate"><span class="pre">make</span></code> command to built the TA through its
+generic Makefile file.</p>
+<p>A typical <code class="docutils literal notranslate"><span class="pre">Android.mk</span></code> file for a TA looks like this (<code class="docutils literal notranslate"><span class="pre">Android.mk</span></code> for
+<a class="reference internal" href="gits/optee_examples/optee_examples.html#hello-world"><span class="std std-ref">hello_world</span></a> is used as an example here).</p>
+<div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="c"># Define base path for the TA sources filetree</span>
+<span class="nv">LOCAL_PATH</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>call<span class="w"> </span>my-dir<span class="k">)</span>
+
+<span class="c"># Define the module name as the signed TA binary filename.</span>
+<span class="nv">local_module</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>8aaaf200-2450-11e4-abe2-0002a5d5c51b.ta
+
+<span class="c"># Include the devkit Android make script</span>
+<span class="cp">include $(OPTEE_OS_DIR)/mk/aosp_optee.mk</span>
+</pre></div>
+</div>
+</section>
+<section id="ta-mandatory-entry-points">
+<h2>TA Mandatory Entry Points<a class="headerlink" href="#ta-mandatory-entry-points" title="Permalink to this heading"></a></h2>
+<p>A TA must implement a couple of mandatory entry points, these are:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">TEE_Result</span><span class="w"> </span><span class="nf">TA_CreateEntryPoint</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Allocate some resources, init something, ... */</span>
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="cm">/* Return with a status */</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">TEE_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">TA_DestroyEntryPoint</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Release resources if required before TA destruction */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+
+<span class="n">TEE_Result</span><span class="w"> </span><span class="nf">TA_OpenSessionEntryPoint</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ptype</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">TEE_Param</span><span class="w"> </span><span class="n">param</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+<span class="w">                                    </span><span class="kt">void</span><span class="w"> </span><span class="o">**</span><span class="n">session_id_ptr</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Check client identity, and alloc/init some session resources if any */</span>
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="cm">/* Return with a status */</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">TEE_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">TA_CloseSessionEntryPoint</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sess_ptr</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* check client and handle session resource release, if any */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+
+<span class="n">TEE_Result</span><span class="w"> </span><span class="nf">TA_InvokeCommandEntryPoint</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">session_id</span><span class="p">,</span>
+<span class="w">                                      </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">command_id</span><span class="p">,</span>
+<span class="w">                                      </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">parameters_type</span><span class="p">,</span>
+<span class="w">                                      </span><span class="n">TEE_Param</span><span class="w"> </span><span class="n">parameters</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Decode the command and process execution of the target service */</span>
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="cm">/* Return with a status */</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">TEE_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="ta-properties">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/TA Properties"></a><span id="build-ta-properties"></span><h2>TA Properties<a class="headerlink" href="#ta-properties" title="Permalink to this heading"></a></h2>
+<p>Trusted Application properties shall be defined in a header file named
+<code class="docutils literal notranslate"><span class="pre">user_ta_header_defines.h</span></code>, which should contain:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TA_UUID</span></code> defines the TA uuid value</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TA_FLAGS</span></code> define some of the TA properties</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TA_STACK_SIZE</span></code> defines the RAM size to be reserved for TA stack</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TA_DATA_SIZE</span></code> defines the RAM size to be reserved for TA heap (TEE_Malloc()
+pool)</p></li>
+</ul>
+</div></blockquote>
+<p>Refer to <a class="reference internal" href="../architecture/trusted_applications.html#ta-properties"><span class="std std-ref">TA Properties</span></a> to understand how to configure these macros.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>UUIDs can be generated using python</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s1">'import uuid; print(uuid.uuid4())'</span>
+</pre></div>
+</div>
+<p>or in most Linux systems using either</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>/proc/sys/kernel/random/uuid<span class="w"> </span><span class="c1"># Linux only</span>
+uuidgen<span class="w"> </span><span class="c1"># available from the util-linux package in most distributions</span>
+</pre></div>
+</div>
+</div>
+<section id="example-of-a-property-header-file">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Example of a property header file"></a><span id="user-ta-header-defines-h"></span><h3>Example of a property header file<a class="headerlink" href="#example-of-a-property-header-file" title="Permalink to this heading"></a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef USER_TA_HEADER_DEFINES_H</span>
+<span class="cp">#define USER_TA_HEADER_DEFINES_H</span>
+
+<span class="cp">#define TA_UUID</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="mh">0x8aaaf200</span><span class="p">,</span><span class="w"> </span><span class="mh">0x2450</span><span class="p">,</span><span class="w"> </span><span class="mh">0x11e4</span><span class="p">,</span><span class="w"> </span>\
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="mh">0xab</span><span class="p">,</span><span class="w"> </span><span class="mh">0xe2</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x02</span><span class="p">,</span><span class="w"> </span><span class="mh">0xa5</span><span class="p">,</span><span class="w"> </span><span class="mh">0xd5</span><span class="p">,</span><span class="w"> </span><span class="mh">0xc5</span><span class="p">,</span><span class="w"> </span><span class="mh">0x1b</span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+
+<span class="cp">#define TA_FLAGS                    (TA_FLAG_EXEC_DDR | \</span>
+<span class="cp">                        TA_FLAG_SINGLE_INSTANCE | \</span>
+<span class="cp">                        TA_FLAG_MULTI_SESSION)</span>
+<span class="cp">#define TA_STACK_SIZE                       (2 * 1024)</span>
+<span class="cp">#define TA_DATA_SIZE                        (32 * 1024)</span>
+
+<span class="cp">#define TA_CURRENT_TA_EXT_PROPERTIES \</span>
+<span class="cp">    { "gp.ta.description", USER_TA_PROP_TYPE_STRING, "Foo TA for some purpose." }, \</span>
+<span class="cp">    { "gp.ta.version", USER_TA_PROP_TYPE_U32, &amp;(const uint32_t){ 0x0100 } }</span>
+
+<span class="cp">#endif </span><span class="cm">/* USER_TA_HEADER_DEFINES_H */</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is recommended to use the <code class="docutils literal notranslate"><span class="pre">TA_CURRENT_TA_EXT_PROPERTIES</span></code> as above to
+define extra properties of the TA.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Generating a fresh UUID with suitable formatting for the header file can be
+done using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s2">"import uuid; u=uuid.uuid4(); print(u); </span><span class="se">\</span>
+<span class="s2">   n = [', 0x'] * 11; </span><span class="se">\</span>
+<span class="s2">   n[::2] = ['</span><span class="si">{:12x}</span><span class="s2">'.format(u.node)[i:i + 2] for i in range(0, 12, 2)]; </span><span class="se">\</span>
+<span class="s2">   print('</span><span class="se">\n</span><span class="s2">' + '#define TA_UUID</span><span class="se">\n\t</span><span class="s2">{ ' + </span><span class="se">\</span>
+<span class="s2">         '0x</span><span class="si">{:08x}</span><span class="s2">'.format(u.time_low) + ', ' + </span><span class="se">\</span>
+<span class="s2">         '0x</span><span class="si">{:04x}</span><span class="s2">'.format(u.time_mid) + ', ' + </span><span class="se">\</span>
+<span class="s2">         '0x</span><span class="si">{:04x}</span><span class="s2">'.format(u.time_hi_version) + ', </span><span class="se">\x5c\n\t\t</span><span class="s2">{ ' + </span><span class="se">\</span>
+<span class="s2">         '0x</span><span class="si">{:02x}</span><span class="s2">'.format(u.clock_seq_hi_variant) + ', ' + </span><span class="se">\</span>
+<span class="s2">         '0x</span><span class="si">{:02x}</span><span class="s2">'.format(u.clock_seq_low) + ', ' + </span><span class="se">\</span>
+<span class="s2">         '0x' + ''.join(n) + '} }')"</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="checking-ta-parameters">
+<h2>Checking TA parameters<a class="headerlink" href="#checking-ta-parameters" title="Permalink to this heading"></a></h2>
+<p>GlobalPlatforms TEE Client APIs <code class="docutils literal notranslate"><span class="pre">TEEC_InvokeCommand()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">TEE_OpenSession()</span></code> allow clients to invoke a TA with some invocation
+parameters: values or references to memory buffers. It is mandatory that TA’s
+verify the parameters types before using the parameters themselves. For this a
+TA can rely on the macro <code class="docutils literal notranslate"><span class="pre">TEE_PARAM_TYPE_GET(param_type,</span> <span class="pre">param_index)</span></code> to get
+the type of a parameter and check its value according to the expected parameter.</p>
+<p>For example, if a TA expects that command ID 0 comes with <code class="docutils literal notranslate"><span class="pre">params[0]</span></code> being a
+input value, <code class="docutils literal notranslate"><span class="pre">params[1]</span></code> being a output value, and <code class="docutils literal notranslate"><span class="pre">params[2]</span></code> being a
+in/out memory reference (buffer), then the TA should implemented the following
+sequence:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">TEE_Result</span><span class="w"> </span><span class="nf">handle_command_0</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">cmd_id</span><span class="p">,</span>
+<span class="w">                            </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">param_types</span><span class="p">,</span><span class="w"> </span><span class="n">TEE_Param</span><span class="w"> </span><span class="n">params</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">TEE_PARAM_TYPE_GET</span><span class="p">(</span><span class="n">param_types</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">TEE_PARAM_TYPE_VALUE_IN</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
+<span class="w">        </span><span class="p">(</span><span class="n">TEE_PARAM_TYPE_GET</span><span class="p">(</span><span class="n">param_types</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">TEE_PARAM_TYPE_VALUE_OUT</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
+<span class="w">        </span><span class="p">(</span><span class="n">TEE_PARAM_TYPE_GET</span><span class="p">(</span><span class="n">param_types</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">TEE_PARAM_TYPE_MEMREF_INOUT</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
+<span class="w">        </span><span class="p">(</span><span class="n">TEE_PARAM_TYPE_GET</span><span class="p">(</span><span class="n">param_types</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">TEE_PARAM_TYPE_NONE</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">TEE_ERROR_BAD_PARAMETERS</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* process command */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+
+<span class="n">TEE_Result</span><span class="w"> </span><span class="nf">TA_InvokeCommandEntryPoint</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">command_id</span><span class="p">,</span>
+<span class="w">                      </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">param_types</span><span class="p">,</span><span class="w"> </span><span class="n">TEE_Param</span><span class="w"> </span><span class="n">params</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">command_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">handle_command_0</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">param_types</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">default</span><span class="o">:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">TEE_ERROR_NOT_SUPPORTED</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="signing-of-tas">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Signing of TAs"></a><span id="tasign"></span><h2>Signing of TAs<a class="headerlink" href="#signing-of-tas" title="Permalink to this heading"></a></h2>
+<p>All <a class="reference internal" href="../architecture/trusted_applications.html#ree-fs-ta"><span class="std std-ref">REE Filesystem Trusted Applications</span></a> need to be signed. The
+signature is verified by <a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> upon loading of the TA. Within the
+<a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> source is a directory <code class="docutils literal notranslate"><span class="pre">keys</span></code>. The public part of
+<code class="docutils literal notranslate"><span class="pre">keys/default_ta.pem</span></code> will be compiled into the <a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> binary and the
+signature of each TA will be verified against this key upon loading. Currently
+<code class="docutils literal notranslate"><span class="pre">keys/default_ta.pem</span></code> must contain an RSA key.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> comes with a default <strong>private</strong> key in its source to
+facilitate easy development, testing, debugging and QA. Never deploy an
+<a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> binary with this key in production. Instead replace this key
+as soon as possible with a public key and keep the private part of the key
+offline, preferably on an HSM.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently only a single key for signing TAs is supported by <a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a>.</p>
+</div>
+<p>TAs are signed using the <code class="docutils literal notranslate"><span class="pre">sign_encrypt.py</span></code> script referenced from
+<code class="docutils literal notranslate"><span class="pre">ta/mk/ta_dev_kit.mk</span></code> in <a class="reference internal" href="gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a>. Its default behaviour is to sign a
+compiled TA binary and attach the signature to form a complete TA for
+deployment. For <strong>offline</strong> signing, a three-step process is required: In a
+first step a digest of the compiled binary has to be generated, in the second
+step this digest is signed offline using the private key and finally in the
+third step the binary and its signature are stitched together into the full TA.</p>
+<section id="offline-signing-of-tas">
+<h3>Offline Signing of TAs<a class="headerlink" href="#offline-signing-of-tas" title="Permalink to this heading"></a></h3>
+<p>There are two types of TAs that can be signed offline. The in-tree TAs, which come with the OP-TEE
+OS (for example the <code class="docutils literal notranslate"><span class="pre">pkcs11</span></code> TA) and are generated during the compilation of the TA DEV KIT. The
+second type are any external TAs coming from the user. In both cases however, the signing process
+is the same.</p>
+<p>Offline signing is done with the following sequence of steps:</p>
+<p>0. (Preparation) Generate a 2048 or 4096 bit RSA key for signing in a secure environment and extract
+the public key. For example</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>rsa2048.pem<span class="w"> </span><span class="m">2048</span>
+openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>rsa2048.pem<span class="w"> </span>-pubout<span class="w"> </span>-out<span class="w"> </span>rsa2048_pub.pem
+</pre></div>
+</div>
+<p>1. Build the OP-TEE OS with the variable <code class="docutils literal notranslate"><span class="pre">TA_PUBLIC_KEY</span></code> set to the public
+key generated above</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">TA_PUBLIC_KEY</span><span class="o">=</span>/path/to/public_key.pem<span class="w"> </span>make<span class="w"> </span>all
+</pre></div>
+</div>
+<p>The build script will do two things:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">It will embed the <code class="docutils literal notranslate"><span class="pre">TA_PUBLIC_KEY</span></code> key into the OP-TEE core image, which will be used to</div>
+<div class="line">authenticate the TAs.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">It will generate <cite>.stripped.elf</cite> files of the in-tree TAs and sign them with the dummy key</div>
+<div class="line">pointed to by <code class="docutils literal notranslate"><span class="pre">TA_SIGN_KEY</span></code>, thus creating <cite>.ta</cite> files. Note that the generated <cite>.ta</cite> files are</div>
+<div class="line">not to be used as they are not compatible with the public key embedded into the OP-TEE core image.</div>
+</div>
+</li>
+</ul>
+<p>2. Build any external TA. Same as with the in-tree TAs, the building procedure can use the dummy key
+pointed to by <code class="docutils literal notranslate"><span class="pre">TA_SIGN_KEY</span></code>, however they are not to be used due to the incompatibility reasons
+mentioned in the paragraph above.</p>
+<p>There are now two ways to generate the final <cite>.ta</cite> files. Either re-sign the <cite>.ta</cite> files with a
+customized <cite>sign_encrypt.py</cite> script (left to the user to implement) or stitch the <cite>.stripped.elf</cite>
+files and their signatures together (explained in steps 3-5). In both cases however, note that the
+private key used must be the one generated in step 0.</p>
+<ol class="arabic simple" start="3">
+<li><p>Manually generate a digest of the generated <cite>.stripped.elf</cite> files using</p></li>
+</ol>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sign_encrypt.py<span class="w"> </span>digest<span class="w"> </span>--key<span class="w"> </span><span class="k">$(</span>TA_SIGN_KEY<span class="k">)</span><span class="w"> </span>--uuid<span class="w"> </span><span class="k">$(</span>user-ta-uuid<span class="k">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Sign this digest offline, for example with OpenSSL</p></li>
+</ol>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>base64<span class="w"> </span>--decode<span class="w"> </span>digestfile<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+openssl<span class="w"> </span>pkeyutl<span class="w"> </span>-sign<span class="w"> </span>-inkey<span class="w"> </span><span class="nv">$TA_SIGN_KEY</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-pkeyopt<span class="w"> </span>digest:sha256<span class="w"> </span>-pkeyopt<span class="w"> </span>rsa_padding_mode:pss<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-pkeyopt<span class="w"> </span>rsa_pss_saltlen:digest<span class="w"> </span>-pkeyopt<span class="w"> </span>rsa_mgf1_md:sha256<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+base64<span class="w"> </span>&gt;<span class="w"> </span>sigfile
+</pre></div>
+</div>
+<p>or with pkcs11-tool using a Nitrokey HSM</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s2">"0000: 3031300D 06096086 48016503 04020105 000420"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>xxd<span class="w"> </span>-c<span class="w"> </span><span class="m">19</span><span class="w"> </span>-r<span class="w"> </span>&gt;<span class="w"> </span>/tmp/sighdr
+cat<span class="w"> </span>/tmp/sighdr<span class="w"> </span><span class="k">$(</span>base64<span class="w"> </span>--decode<span class="w"> </span>digestfile<span class="k">)</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/hashtosign
+pkcs11-tool<span class="w"> </span>--id<span class="w"> </span><span class="nv">$key_id</span><span class="w"> </span>-s<span class="w"> </span>--login<span class="w"> </span>-m<span class="w"> </span>RSA-PKCS-PSS<span class="w"> </span>--hash-algorithm<span class="w"> </span>SHA256<span class="w"> </span>--mgf<span class="w"> </span>MGF1-SHA256<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--input-file<span class="w"> </span>/tmp/hashtosign<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>base64<span class="w"> </span>&gt;<span class="w"> </span>sigfile
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Manually stitch the TA and signature together</p></li>
+</ol>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sign_encrypt.py<span class="w"> </span>stitch<span class="w"> </span>--key<span class="w"> </span><span class="k">$(</span>TA_SIGN_KEY<span class="k">)</span><span class="w"> </span>--uuid<span class="w"> </span><span class="k">$(</span>user-ta-uuid<span class="k">)</span>
+</pre></div>
+</div>
+<p>By default, the UUID is taken as the base file name for all files. Different file
+names and paths can be set through additional options to <code class="docutils literal notranslate"><span class="pre">sign_encrypt.py</span></code>. Consult
+<code class="docutils literal notranslate"><span class="pre">sign_encrypt.py</span> <span class="pre">--help</span></code> for a full list of options and parameters.</p>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="toolchains.html" rel="prev" title="Toolchains"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="efi_vars/stmm.html" rel="next" title="StandAloneMM">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

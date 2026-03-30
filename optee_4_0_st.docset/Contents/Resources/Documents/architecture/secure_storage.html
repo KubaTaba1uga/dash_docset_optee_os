@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Secure storage — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="subkeys.html" rel="next" title="Subkeys"/>
+<link href="secure_boot.html" rel="prev" title="Secure boot"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Secure storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ree-fs-secure-storage">REE FS Secure Storage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#basic-file-operation-flow">Basic File Operation Flow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#globalplatform-trusted-storage-requirement">GlobalPlatform Trusted Storage Requirement</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tee-file-structure-in-linux-file-system">TEE File Structure in Linux File System</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#key-manager">Key Manager</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#secure-storage-key-ssk">Secure Storage Key (SSK)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trusted-application-storage-key-tsk">Trusted Application Storage Key (TSK)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#file-encryption-key-fek">File Encryption Key (FEK)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hash-tree">Hash Tree</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#meta-data-encryption-flow">Meta Data Encryption Flow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#block-data-encryption-flow">Block Data Encryption Flow</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#atomic-operation">Atomic Operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rpmb-secure-storage">RPMB Secure Storage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#the-secure-storage-api">The Secure Storage API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-rpmb-filesystem">The RPMB filesystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#device-access">Device access</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#security-considerations">Security considerations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#encryption">Encryption</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ree-fs-hash-state">REE FS hash state</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#important-caveats">Important caveats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+<li class="breadcrumb-item active">Secure storage</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/architecture/secure_storage.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Secure storage"></a><section id="secure-storage">
+<span id="id1"></span><h1>Secure storage<a class="headerlink" href="#secure-storage" title="Permalink to this heading"></a></h1>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this heading"></a></h2>
+<p>Secure Storage in OP-TEE is implemented according to what has been defined in
+GlobalPlatform’s <a class="reference internal" href="globalplatform_api.html#tee-internal-core-api"><span class="std std-ref">TEE Internal Core API</span></a> (here called Trusted Storage).
+This specification mandates that it should be possible to store general-purpose
+data and key material that guarantees confidentiality and integrity of the data
+stored and the atomicity of the operations that modifies the storage (atomicity
+here means that either the entire operation completes successfully or no write
+is done).</p>
+<p>There are currently two secure storage implementations in OP-TEE:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The first one relies on the normal world (REE) file system. It is
+described in this document and is the default implementation. It is
+enabled at compile time by <code class="docutils literal notranslate"><span class="pre">CFG_REE_FS=y</span></code>.</p></li>
+<li><p>The second one makes use of the Replay Protected Memory Block (RPMB)
+partition of an eMMC device, and is enabled by setting <code class="docutils literal notranslate"><span class="pre">CFG_RPMB_FS=y</span></code>.
+It is described in <a class="reference internal" href="#rpmb"><span class="std std-ref">RPMB Secure Storage</span></a>.</p></li>
+</ul>
+</div></blockquote>
+<p>It is possible to use the normal world file systems and the RPMB implementations
+simultaneously. For this, two OP-TEE specific storage identifiers have been
+defined: <code class="docutils literal notranslate"><span class="pre">TEE_STORAGE_PRIVATE_REE</span></code> and <code class="docutils literal notranslate"><span class="pre">TEE_STORAGE_PRIVATE_RPMB</span></code>. Depending
+on the compile-time configuration, one or several values may be used. The value
+<code class="docutils literal notranslate"><span class="pre">TEE_STORAGE_PRIVATE</span></code> selects the REE FS when available, otherwise the RPMB FS
+(in this order).</p>
+</section>
+<section id="ree-fs-secure-storage">
+<h2>REE FS Secure Storage<a class="headerlink" href="#ree-fs-secure-storage" title="Permalink to this heading"></a></h2>
+<figure class="align-center align-default" id="id2">
+<img alt="../_images/secure_storage_system_architecture.png" src="../_images/secure_storage_system_architecture.png"/>
+<figcaption>
+<p><span class="caption-text">Secure Storage System Architecture</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Source Files in OP-TEE OS</strong></p>
+<table class="colwidths-given docutils align-default" id="id3">
+<caption><span class="caption-text">Secure storage files</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 14%"/>
+<col style="width: 86%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source file</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_svc_storage.c">core/tee/tee_svc_storage.c</a></p></td>
+<td><p>TEE trusted storage service calls</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_ree_fs.c">core/tee/tee_ree_fs.c</a></p></td>
+<td><p>TEE file system &amp; REE file operation interface</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/tee/fs_htree.c">core/tee/fs_htree.c</a></p></td>
+<td><p>Hash tree</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_fs_key_manager.c">core/tee/tee_fs_key_manager.c</a></p></td>
+<td><p>Key manager</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/lib/libutee/">lib/libutee/</a></p></td>
+<td><p>GlobalPlatform Internal API library</p></td>
+</tr>
+</tbody>
+</table>
+<section id="basic-file-operation-flow">
+<h3>Basic File Operation Flow<a class="headerlink" href="#basic-file-operation-flow" title="Permalink to this heading"></a></h3>
+<p>When a TA is calling the write function provided by GP Trusted Storage API to
+write data to a persistent object, a corresponding syscall implemented in TEE
+Trusted Storage Service will be called, which in turn will invoke a series of
+TEE file operations to store the data. TEE file system will then encrypt the
+data and send REE file operation commands and the encrypted data to TEE
+supplicant by a series of RPC messages. TEE supplicant will receive the messages
+and store the encrypted data accordingly to the Linux file system. Reading files
+are handled in a similar manner.</p>
+</section>
+<section id="globalplatform-trusted-storage-requirement">
+<h3>GlobalPlatform Trusted Storage Requirement<a class="headerlink" href="#globalplatform-trusted-storage-requirement" title="Permalink to this heading"></a></h3>
+<p>Below is an excerpt from the specification, listing the most vital requirements:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. The Trusted Storage may be backed by non-secure resources as long as
+   suitable cryptographic protection is applied, which MUST be as strong as
+   the means used to protect the TEE code and data itself.
+
+2. The Trusted Storage MUST be bound to a particular device, which means
+   that it MUST be accessible or modifiable only by authorized TAs
+   running in the same TEE and on the same device as when the data was
+   created.
+
+3. Ability to hide sensitive key material from the TA itself.
+
+4. Each TA has access to its own storage space that is shared among all the
+   instances of that TA but separated from the other TAs.
+
+5. The Trusted Storage must provide a minimum level of protection against
+   rollback attacks. It is accepted that the actually physical storage
+   may be in an insecure area and so is vulnerable to actions from
+   outside of the TEE. Typically, an implementation may rely on the REE
+   for that purpose (protection level 100) or on hardware assets
+   controlled by the TEE (protection level 1000).
+
+(see GP TEE Internal Core API section 2.5 and 5.2)
+</pre></div>
+</div>
+<p>If configured with <code class="docutils literal notranslate"><span class="pre">CFG_RPMB_FS=y</span></code> the protection against rollback is
+controlled by the TEE and is set to 1000. If <code class="docutils literal notranslate"><span class="pre">CFG_RPMB_FS=n</span></code>, there’s no
+protection against rollback, and the protection level is set to 0.</p>
+</section>
+<section id="tee-file-structure-in-linux-file-system">
+<h3>TEE File Structure in Linux File System<a class="headerlink" href="#tee-file-structure-in-linux-file-system" title="Permalink to this heading"></a></h3>
+<p>OP-TEE by default uses <code class="docutils literal notranslate"><span class="pre">/data/tee/</span></code> as the secure storage space in the Linux
+file system. Each persistent object is assigned an internal identifier. It is an
+integer which is visible in the Linux file system as <code class="docutils literal notranslate"><span class="pre">/data/tee/&lt;file</span>
+<span class="pre">number&gt;</span></code>.</p>
+<p>A directory file, <code class="docutils literal notranslate"><span class="pre">/data/tee/dirf.db</span></code>, lists all the objects that are in the
+secure storage. All normal world files are integrity protected and encrypted, as
+described below.</p>
+</section>
+</section>
+<section id="key-manager">
+<h2>Key Manager<a class="headerlink" href="#key-manager" title="Permalink to this heading"></a></h2>
+<p>Key manager is a component in TEE file system, and is responsible for handling
+data encryption and decryption and also management of the sensitive key
+materials. There are three types of keys used by the key manager: the Secure
+Storage Key (<cite>SSK</cite>), the TA Storage Key (<cite>TSK</cite>) and the File Encryption Key
+(<cite>FEK</cite>).</p>
+<section id="secure-storage-key-ssk">
+<h3>Secure Storage Key (SSK)<a class="headerlink" href="#secure-storage-key-ssk" title="Permalink to this heading"></a></h3>
+<p>SSK is a per-device key and is generated and stored in secure memory when OP-TEE
+is booting. SSK is used to derive the TA Storage Key (TSK).</p>
+<p>SSK is derived by</p>
+<blockquote>
+<div><p>SSK = HMAC<sub>SHA256</sub> (HUK, Chip ID || “static string”)</p>
+</div></blockquote>
+<p>The functions to get <a class="reference internal" href="porting_guidelines.html#hardware-unique-key"><span class="std std-ref">Hardware Unique Key</span></a> (HUK) and chip ID depends on the
+platform implementation. Currently, in OP-TEE OS we only have a per-device key,
+SSK, which is used for secure storage subsystem, but, for the future we might
+need to create different per-device keys for different subsystems using the same
+algorithm as we generate the SSK; An easy way to generate different per-device
+keys for different subsystems is using different static strings to generate the
+keys.</p>
+</section>
+<section id="trusted-application-storage-key-tsk">
+<h3>Trusted Application Storage Key (TSK)<a class="headerlink" href="#trusted-application-storage-key-tsk" title="Permalink to this heading"></a></h3>
+<p>The TSK is a per-Trusted Application key, which is generated from the SSK and
+the TA’s identifier (UUID). It is used to protect the FEK, in other words, to
+encrypt/decrypt the FEK.</p>
+<p>TSK is derived by:</p>
+<blockquote>
+<div><p>TSK = HMAC<sub>SHA256</sub> (SSK, TA_UUID)</p>
+</div></blockquote>
+</section>
+<section id="file-encryption-key-fek">
+<h3>File Encryption Key (FEK)<a class="headerlink" href="#file-encryption-key-fek" title="Permalink to this heading"></a></h3>
+<p>When a new TEE file is created, key manager will generate a new FEK by PRNG
+(pesudo random number generator) for the TEE file and store the encrypted FEK in
+meta file. FEK is used for encrypting/decrypting the TEE file information stored
+in meta file or the data stored in block file.</p>
+</section>
+</section>
+<section id="hash-tree">
+<h2>Hash Tree<a class="headerlink" href="#hash-tree" title="Permalink to this heading"></a></h2>
+<p>The hash tree is responsible for handling data encryption and decryption of a
+secure storage file. The hash tree is implemented as a binary tree where each
+node (<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tee_fs_htree_node_image</span></code> below) in the tree protects its two
+child nodes and a data block. The meta data is stored in a header (<code class="docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">tee_fs_htree_image</span></code> below) which also protects the top node.</p>
+<p>All fields (header, nodes, and blocks) are duplicated with two versions, 0 and
+1, to ensure atomic updates. See <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/tee/fs_htree.c">core/tee/fs_htree.c</a> for details.</p>
+<section id="meta-data-encryption-flow">
+<h3>Meta Data Encryption Flow<a class="headerlink" href="#meta-data-encryption-flow" title="Permalink to this heading"></a></h3>
+<figure class="align-center align-default" id="id4">
+<img alt="../_images/meta_data_encryption.png" src="../_images/meta_data_encryption.png"/>
+<figcaption>
+<p><span class="caption-text">Meta data encryption</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>A new meta IV will be generated by PRNG when a meta data needs to be updated.
+The size of meta IV is defined in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/include/tee/fs_htree.h">core/include/tee/fs_htree.h</a>, likewise are
+the data structures of meta data and node data are defined in fs_htree.h as
+follows:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">tee_fs_htree_node_image</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">hash</span><span class="p">[</span><span class="n">TEE_FS_HTREE_HASH_SIZE</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">iv</span><span class="p">[</span><span class="n">TEE_FS_HTREE_IV_SIZE</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">tag</span><span class="p">[</span><span class="n">TEE_FS_HTREE_TAG_SIZE</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">flags</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">tee_fs_htree_meta</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">length</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">tee_fs_htree_imeta</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">tee_fs_htree_meta</span><span class="w"> </span><span class="n">meta</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">max_node_id</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">tee_fs_htree_image</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">iv</span><span class="p">[</span><span class="n">TEE_FS_HTREE_IV_SIZE</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">tag</span><span class="p">[</span><span class="n">TEE_FS_HTREE_TAG_SIZE</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">enc_fek</span><span class="p">[</span><span class="n">TEE_FS_HTREE_FEK_SIZE</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">imeta</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">tee_fs_htree_imeta</span><span class="p">)];</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">counter</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="block-data-encryption-flow">
+<h3>Block Data Encryption Flow<a class="headerlink" href="#block-data-encryption-flow" title="Permalink to this heading"></a></h3>
+<figure class="align-center align-default" id="id5">
+<img alt="../_images/block_data_encryption.png" src="../_images/block_data_encryption.png"/>
+<figcaption>
+<p><span class="caption-text">Block data encryption</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>A new block IV will be generated by PRNG when a block data needs to be updated.
+The size of block IV is defined in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/include/tee/fs_htree.h">core/include/tee/fs_htree.h</a>.</p>
+</section>
+</section>
+<section id="atomic-operation">
+<h2>Atomic Operation<a class="headerlink" href="#atomic-operation" title="Permalink to this heading"></a></h2>
+<p>According to GlobalPlatform Trusted Storage requirement of the atomicity, the
+following operations should support atomic update:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Write</span><span class="p">,</span> <span class="n">Truncate</span><span class="p">,</span> <span class="n">Rename</span><span class="p">,</span> <span class="n">Create</span> <span class="ow">and</span> <span class="n">Delete</span>
+</pre></div>
+</div>
+<p>The strategy used in OP-TEE secure storage to guarantee the atomicity is
+out-of-place update.</p>
+</section>
+<section id="rpmb-secure-storage">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/RPMB Secure Storage"></a><span id="rpmb"></span><h2>RPMB Secure Storage<a class="headerlink" href="#rpmb-secure-storage" title="Permalink to this heading"></a></h2>
+<p>This document describes the RPMB secure storage implementation in OP-TEE, which
+is enabled by setting <code class="docutils literal notranslate"><span class="pre">CFG_RPMB_FS=y</span></code>. Trusted Applications may use this
+implementation by passing a storage ID equal to <code class="docutils literal notranslate"><span class="pre">TEE_STORAGE_PRIVATE_RPMB</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">TEE_STORAGE_PRIVATE</span></code> if <code class="docutils literal notranslate"><span class="pre">CFG_REE_FS</span></code> is disabled. For details about RPMB,
+please refer to the JEDEC eMMC specification (JESD84-B51).</p>
+<p>The architecture is depicted below.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>|          NORMAL WORLD           :            SECURE WORLD              |
+                                  :
+U        tee-supplicant           :        Trusted application
+S           (rpmb.c)              :        (secure storage API)
+E         ^          ^            :                  ^
+R         |          |            :                  |
+~~~~~~~ ioctl ~~~~~~~|~~~~~~~~~~~~:~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~
+K         |          |            :               OP-TEE
+E         v          v            :         (tee_svc_storage.c)
+R  MMC/SD subsys.  OP-TEE driver  : (tee_rpmb_fs.c, tee_fs_key_manager.c)
+N         ^                 ^     :                  ^
+E         |                 |     :                  |
+L         v                 |     :                  |
+    Controller driver       |     :                  |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~~~~~|~~~~~~~~~~~~~~~~~~~~
+                            v                        v
+                          Secure monitor / EL3 firmware
+</pre></div>
+</div>
+<p>For information about the <code class="docutils literal notranslate"><span class="pre">ioctl()</span></code> interface to the MMC/SD subsystem in the
+Linux kernel, see the Linux core MMC header file <a class="reference external" href="https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/include/linux/mmc/core.h">linux/mmc/core.h</a> and the
+<a class="reference external" href="http://git.kernel.org/cgit/linux/kernel/git/cjb/mmc-utils.git">mmc-utils</a> repository.</p>
+<section id="the-secure-storage-api">
+<h3>The Secure Storage API<a class="headerlink" href="#the-secure-storage-api" title="Permalink to this heading"></a></h3>
+<p>This part is common with the REE-based filesystem. The interface between the
+system calls in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_svc_storage.c">core/tee/tee_svc_storage.c</a> and the RPMB filesystem is the
+<cite>tee_file_operations</cite>, namely <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tee_file_ops</span></code>.</p>
+</section>
+<section id="the-rpmb-filesystem">
+<h3>The RPMB filesystem<a class="headerlink" href="#the-rpmb-filesystem" title="Permalink to this heading"></a></h3>
+<p>The FS implementation is entirely in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_rpmb_fs.c">core/tee/tee_rpmb_fs.c</a> and the RPMB
+partition is divided in three parts:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The first 128 bytes are reserved for partition data (<code class="docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">rpmb_fs_partition</span></code>).</p></li>
+<li><p>At offset 512 is the File Allocation Table (FAT). It is an array of
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rpmb_fat_entry</span></code> elements, one per file. The FAT grows
+dynamically as files are added to the filesystem. Among other things, each
+entry has the start address for the file data, its size, and the filename.</p></li>
+<li><p>Starting from the end of the RPMB partition and extending downwards is the
+file data area.</p></li>
+</ul>
+</div></blockquote>
+<p>Space in the partition is allocated by the general-purpose allocator functions,
+<code class="docutils literal notranslate"><span class="pre">tee_mm_alloc(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">tee_mm_alloc2(...)</span></code>.</p>
+<p>All file operations are atomic. This is achieved thanks to the following
+properties:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Writing one single block of data to the RPMB partition is guaranteed to be
+atomic by the eMMC specification.</p></li>
+<li><p>The FAT block for the modified file is always updated last, after data
+have been written successfully.</p></li>
+<li><p>Updates to file content is done in-place only if the data do not span more
+than the “reliable write block count” blocks. Otherwise, or if the file
+needs to be extended, a new file is created.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="device-access">
+<h3>Device access<a class="headerlink" href="#device-access" title="Permalink to this heading"></a></h3>
+<p>There is no eMMC controller driver in OP-TEE. The device operations all have to
+go through the normal world. They are handled by the <code class="docutils literal notranslate"><span class="pre">tee-supplicant</span></code> process
+which further relies on the kernel’s <code class="docutils literal notranslate"><span class="pre">ioctl()</span></code> interface to access the device.
+<code class="docutils literal notranslate"><span class="pre">tee-supplicant</span></code> also has an emulation mode which implements a virtual RPMB
+device for test purposes.</p>
+<dl class="simple">
+<dt>RPMB operations are the following:</dt><dd><ul class="simple">
+<li><p>Reading device information (partition size, reliable write block count).</p></li>
+<li><p>Programming the security key. This key is used for authentication
+purposes. Note that it is different from the Secure Storage Key (SSK)
+defined below, which is used for encryption. Like the SSK however, the
+security key is also derived from a hardware unique key or identifier.
+Currently, the function <code class="docutils literal notranslate"><span class="pre">tee_otp_get_hw_unique_key()</span></code> is used to
+generate the RPMB security key.</p></li>
+<li><p>Reading the write counter value. The write counter is used in the HMAC
+computation during read and write requests. The value is read at
+initialization time, and stored in <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tee_rpmb_ctx</span></code>, i.e.,
+<code class="docutils literal notranslate"><span class="pre">rpmb_ctx-&gt;wr_cnt</span></code>.</p></li>
+<li><p>Reading or writing blocks of data.</p></li>
+</ul>
+</dd>
+</dl>
+<p>RPMB operations are initiated on request from the FS layer. Memory buffers for
+requests and responses are allocated in shared memory using
+<code class="docutils literal notranslate"><span class="pre">thread_rpc_alloc_payload(...)</span></code>. Buffers are passed to the normal world in
+a <code class="docutils literal notranslate"><span class="pre">TEE_RPC_RPMB_CMD</span></code> message, thanks to the <code class="docutils literal notranslate"><span class="pre">thread_rpc_cmd()</span></code> function.
+Most RPMB requests and responses use the data frame format defined by the JEDEC
+eMMC specification. HMAC authentication is implemented here also.</p>
+</section>
+<section id="security-considerations">
+<h3>Security considerations<a class="headerlink" href="#security-considerations" title="Permalink to this heading"></a></h3>
+<p>The RPMB partition in eMMC can not be accessed until a key has been programmed
+on the device: this is a one time action for the lifetime of the device. Once
+the key has been written on the eMMC controller, the controller uses it to
+authenticate requests.</p>
+<p>This key can be programmed in a number of ways. If you want OP-TEE to do it,
+OP-TEE must be configured with <code class="docutils literal notranslate"><span class="pre">CFG_RPMB_WRITE_KEY=y</span></code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Be aware that this configuration will send the RPMB key in clear to the
+non-secure side that relays the RPMB key programming request to the eMMC
+hardware device.</p>
+</div>
+<p>OP-TEE can either embed a built-in RPMB key (<code class="docutils literal notranslate"><span class="pre">CFG_RPMB_TESTKEY=y</span></code>) or derive
+it from platform specific secrets (<code class="docutils literal notranslate"><span class="pre">CFG_RPMB_TESTKEY=n</span></code>). The former case
+might be useful during development while the later is recommended for production
+devices.</p>
+<p>Deriving the key from secrets avoids OP-TEE from having to store it in memory
+therefore reducing the attack surface; OP-TEE derives the RPMB key from an
+internal set that includes the eMMC serial number and more importantly the
+Hardware Unique Key (HUK).</p>
+<p>For this configuration to be effective, the <a class="reference external" href="https://optee.readthedocs.io/en/latest/architecture/porting_guidelines.html#hardware-unique-key">Hardware Unique Key</a> - a unique
+identifier for the particular instantiation of the SoC - must not be publicly
+accessible (please notice that not all platforms might be enforcing this
+requirement).</p>
+<p>The need to keep the HUK secret is the reason why on security aware systems, the
+hardware will generate different HUK values depending on the security state of
+the platform: said differently, the SoC will generate different HUK depending if
+the BOOT ROM it is configured to boot signed images or not.</p>
+<p>However notice that, since the RPMB key can only be written once on the
+controller, it follows that accessing RPMB before securing the board will cause
+future RPMB accesses to be denied once the board has been secured.
+To prevent this situation from happening, OP-TEE provides a software hook which
+platforms shall use to implement its security logic
+<code class="docutils literal notranslate"><span class="pre">plat_rpmb_key_is_ready()</span></code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For OP-TEE to be able to write the RPMB key, <code class="docutils literal notranslate"><span class="pre">CFG_RPMB_WRITE_KEY=y</span></code> must be
+configured and <code class="docutils literal notranslate"><span class="pre">plat_rpmb_key_is_ready()</span></code> must allow it at runtime.</p>
+</div>
+</section>
+<section id="encryption">
+<h3>Encryption<a class="headerlink" href="#encryption" title="Permalink to this heading"></a></h3>
+<p>The FS encryption routines are in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/tee/tee_fs_key_manager.c">core/tee/tee_fs_key_manager.c</a>. Block
+encryption protects file data. The algorithm is 128-bit AES in Cipher Block
+Chaining (CBC) mode with Encrypted Salt-Sector Initialization Vector (ESSIV),
+see <a class="reference external" href="https://en.wikipedia.org/wiki/Disk_encryption_theory#Cipher-block_chaining_(CBC)">CBC-ESSIV</a> for details.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>During OP-TEE initialization, a 128-bit AES Secure Storage Key (SSK) is
+derived from a <a class="reference internal" href="porting_guidelines.html#hardware-unique-key"><span class="std std-ref">Hardware Unique Key</span></a> (HUK). It is kept in secure
+memory and never written to disk. A Trusted Application Storage Key is
+derived from the SSK and the TA UUID.</p></li>
+<li><p>For each file, a 128-bit encrypted File Encryption Key (FEK) is randomly
+generated when the file is created, encrypted with the TSK and stored in
+the FAT entry for the file.</p></li>
+<li><p>Each 256-byte block of data is then encrypted in CBC mode. The
+initialization vector is obtained by the ESSIV algorithm, that is, by
+encrypting the block number with a hash of the FEK. This allows direct
+access to any block in the file, as follows:</p></li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>FEK = AES-Decrypt(TSK, encrypted FEK);
+k = SHA256(FEK);
+IV = AES-Encrypt(128 bits of k, block index padded to 16 bytes)
+Encrypted block = AES-CBC-Encrypt(FEK, IV, block data);
+Decrypted block = AES-CBC-Decrypt(FEK, IV, encrypted block data);
+</pre></div>
+</div>
+</div></blockquote>
+<p>SSK, TSK and FEK handling is common with the REE-based secure storage, while the
+AES CBC block encryption is used only for RPMB (the REE implementation uses
+GCM). The FAT is not encrypted.</p>
+</section>
+<section id="ree-fs-hash-state">
+<h3>REE FS hash state<a class="headerlink" href="#ree-fs-hash-state" title="Permalink to this heading"></a></h3>
+<p>If configured with both <code class="docutils literal notranslate"><span class="pre">CFG_REE_FS=y</span></code> and <code class="docutils literal notranslate"><span class="pre">CFG_RPMB_FS=y</span></code> the REE FS will
+create a special file, <code class="docutils literal notranslate"><span class="pre">dirfile.db.hash</span></code> in RPMB which hold a hash
+representing the state of REE FS.</p>
+</section>
+</section>
+<section id="important-caveats">
+<h2>Important caveats<a class="headerlink" href="#important-caveats" title="Permalink to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Currently some OP-TEE platform are not able to support retrieval of the
+Hardware Unique Key or Chip ID required for secure operation. For those
+platforms, a constant key is used, resulting in no protection against
+decryption, or Secure Storage duplication to other devices. This is because
+information about how to retrieve key data from the SoC is considered
+sensitive by some vendors and it is not publicly available.</p>
+</div>
+<p>To allow Secure Storage to operate securely on your platform, you must define
+implementations in your platform code for:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">tee_otp_get_hw_unique_key</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">tee_hw_unique_key</span><span class="w"> </span><span class="o">*</span><span class="n">hwkey</span><span class="p">);</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">tee_otp_get_die_id</span><span class="p">(</span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>These implementations should fetch the key data from your SoC-specific e-fuses,
+or crypto unit according to the method defined by your SoC vendor.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<p>For more information about secure storage, please see SFO15-503, LAS16-504,
+SFO17-309 at <a class="reference internal" href="../general/presentations.html#presentations"><span class="std std-ref">Presentations</span></a> and the <a class="reference internal" href="globalplatform_api.html#tee-internal-core-api"><span class="std std-ref">TEE Internal Core API</span></a>
+specification.</p>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="secure_boot.html" rel="prev" title="Secure boot"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="subkeys.html" rel="next" title="Subkeys">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

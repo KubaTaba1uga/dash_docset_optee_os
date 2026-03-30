@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>build — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="build_legacy.html" rel="next" title="Build stable releases v1.0.0 to v3.0.0"/>
+<link href="index.html" rel="prev" title="OP-TEE gits"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/index.html">Device specific information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">OP-TEE gits</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">build</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#git-location">git location</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#why-repo">Why repo?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#root-filesystem">Root filesystem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-do-i-build-using-aosp-openembedded">How do I build using AOSP / OpenEmbedded?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#platforms-supported-by-build-git">Platforms supported by build.git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#manifests">Manifests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#get-and-build-the-solution">Get and build the solution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips-and-tricks">Tips and Tricks</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="build_legacy.html">Build stable releases v1.0.0 to v3.0.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build_legacy_3_1_0-3_8_0.html">Build stable releases 3.1.0 to 3.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest.html">manifest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_benchmark.html">optee_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_client.html">optee_client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_docs.html">optee_docs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_examples/optee_examples.html">optee_examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_os.html">optee_os</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_test.html">optee_test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="index.html">OP-TEE gits</a></li>
+<li class="breadcrumb-item active">build</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/gits/build.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/build"></a><section id="build">
+<span id="id1"></span><h1>build<a class="headerlink" href="#build" title="Permalink to this heading"></a></h1>
+<p>Why this particular git? As it turns out it’s totally possible to put together
+everything on your own. You can build all the individual components, os, client,
+xtest, Linux kernel, TF-A, TianoCore, QEMU, <a class="reference external" href="https://buildroot.org">Buildroot</a> etc and put all the
+binaries at correct locations and write your own command lines, Makefiles,
+shell-scripts etc that will work nicely on the devices you are interested in. If
+you know how to do that, fine, please go a head. But for newcomers it’s way to
+much behind the scenes to be able to setup a working environment. Also, if you
+for some reason want to run something in an automated way, then you need
+something else wrapping it up for you.</p>
+<p>With this particular git <strong>built.git</strong> our goal is to simply to make it easy for
+newcomers to get started with OP-TEE using the devices we’ve listed in this
+document.</p>
+<section id="git-location">
+<h2>git location<a class="headerlink" href="#git-location" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/OP-TEE/build">https://github.com/OP-TEE/build</a></p>
+</section>
+<section id="why-repo">
+<h2>Why repo?<a class="headerlink" href="#why-repo" title="Permalink to this heading"></a></h2>
+<p>We discussed alternatives, initially we started out with having a simple
+shell-script, that worked to start with, but after getting more gits in use and
+support for more devices it started to be difficult to maintain. In the end we
+ended up choosing between <a class="reference external" href="https://source.android.com/source/downloading.html">repo</a> from the Google AOSP project and <a class="reference external" href="https://git-scm.com/book/en/v2/Git-Tools-Submodules">git
+submodules</a>. No matter which you choose, there will always be some person
+arguing that one is better than the other. For us we decided to use repo. Not
+directly for the features itself from repo, but for the ability to simply work
+with different manifests containing both stable and non-stable release. Using
+some tips and tricks you can also speed up setup time significantly. For day to
+day work with commits, branches etc we tend to use git commands directly.</p>
+</section>
+<section id="root-filesystem">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Root filesystem"></a><span id="root-fs"></span><h2>Root filesystem<a class="headerlink" href="#root-filesystem" title="Permalink to this heading"></a></h2>
+<p>The rootfs in the builds that we cover here are as small as possible and is
+based on a stripped down <a class="reference external" href="https://buildroot.org">Buildroot</a> configuration adding just enough in the
+rootfs such that one can:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Boot OP-TEE.</p></li>
+<li><p>Run xtest with no regressions.</p></li>
+<li><p>Easily add additional developer tools like, strace, valgrind etc.</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a consequence of enabling “just enough”, it is likely that <strong>non-UART</strong>
+based enviroments won’t work out of the box. I.e., if you try to boot up an
+enviroment using HDMI and connect keyboards and other devices it is likely
+that things will not work. To make them work, you probably need to rebuild
+Linux kernel with correct drivers/frameworks enabled and in addition to that
+enable binaries/daemons in Buildroot that might be necessary (user space
+tools and drivers).</p>
+</div>
+</section>
+<section id="how-do-i-build-using-aosp-openembedded">
+<h2>How do I build using AOSP / OpenEmbedded?<a class="headerlink" href="#how-do-i-build-using-aosp-openembedded" title="Permalink to this heading"></a></h2>
+<p>For guides how to build AOSP, please refer to our <a class="reference internal" href="../aosp/aosp.html#aosp"><span class="std std-ref">AOSP</span></a> page. For
+OpenEmbedded we have no guide ready.</p>
+</section>
+<section id="platforms-supported-by-build-git">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Platforms supported by build.git"></a><span id="optee-developer-setup"></span><h2>Platforms supported by build.git<a class="headerlink" href="#platforms-supported-by-build-git" title="Permalink to this heading"></a></h2>
+<p>Below is a table showing the platforms supported by build.git. OP-TEE as such
+supports many more platforms. To find out how to run OP-TEE on those, please
+reach out to the maintainer of that platform directly if you have build related
+questions etc. Please see the <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/MAINTAINERS">MAINTAINERS</a> file for contact information.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Platform</p></th>
+<th class="head"><p>Composite flag</p></th>
+<th class="head"><p>Publicly available?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.xilinx.com/products/boards-and-kits/vck190.html">AMD/Xilinx Versal ACAP VCK190</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=versal</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.arm.com/products/tools/development-boards/versatile-express/juno-arm-development-platform.php">ARM Juno Board</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=vexpress-juno</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.arm.com/fvp">ARM Foundation FVP</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=vexpress-fvp</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.96boards.org/product/developerbox">DeveloperBox</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=synquacer</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.96boards.org/products/hikey">HiKey Kirin 620</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=hikey</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.96boards.org/product/hikey960">HiKey 960</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=hikey-hikey960</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.mediatek.com/en/products/mobile-communications/tablet/mt8173">MediaTek MT8173 EVB Board</a> (deprecated)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=mediatek-mt8173</span></code></p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.96boards.org/product/poplar/">Poplar</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=poplar</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://wiki.qemu.org/Main_Page">QEMU</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=vexpress-qemu_virt</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://wiki.qemu.org/Main_Page">QEMUv8</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=vexpress-qemu_armv8a</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b">Raspberry Pi 3</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=rpi3</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://wiki.radxa.com/Rockpi4">ROCK Pi 4</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=rockchip-rk3399</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp157a-dk1.html">STM32MP157A-DK1</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=stm32mp1-157A_DK1</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp157c-dk2.html">STM32MP157C-DK2</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=stm32mp1-157C_DK2</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://www.st.com/en/evaluation-tools/stm32mp157c-ev1.html">STM32MP157C-EV1</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=stm32mp1-157C_EV1</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.ti.com/product/DRA746">Texas Instruments DRA7xx</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ti-dra7xx</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="http://www.ti.com/product/AM5728">Texas Instruments AM57xx</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ti-am57xx</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="http://www.ti.com/product/AM4379">Texas Instruments AM43xx</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PLATFORM=ti-am43xx</span></code></p></td>
+<td><p>Yes</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="manifests">
+<h2>Manifests<a class="headerlink" href="#manifests" title="Permalink to this heading"></a></h2>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Current version"></a><section id="current-version">
+<span id="id2"></span><h3>Current version<a class="headerlink" href="#current-version" title="Permalink to this heading"></a></h3>
+<p>Here is a list of manifests for the devices currently supported in
+<code class="docutils literal notranslate"><span class="pre">build.git</span></code>. With these you will get a setup containing the all necessary
+software components to run OP-TEE on the chosen device. Beware that this will
+run latest available on OP-TEE gits meaning that if you re-sync then you will
+most likely get new commits. If you need a stable/tagged version with non-moving
+gits, then please refer to the next section instead.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%"/>
+<col style="width: 33%"/>
+<col style="width: 39%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Target</p></th>
+<th class="head"><p>Manifest xml</p></th>
+<th class="head"><p>Device documentation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>AM43xx</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">am43xx.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/ti.html#ti"><span class="std std-ref">Texas Instruments SoCs</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>AM57xx</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">am57xx.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/ti.html#ti"><span class="std std-ref">Texas Instruments SoCs</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>DeveloperBox</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">synquacer.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/devbox.html#devbox"><span class="std std-ref">DeveloperBox</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>ARM Juno board</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">juno.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/juno.html#juno"><span class="std std-ref">Juno</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>DRA7xx</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dra7xx.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/ti.html#ti"><span class="std std-ref">Texas Instruments SoCs</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>FVP</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fvp.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/fvp.html#fvp"><span class="std std-ref">FVP</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>HiKey 960</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hikey960.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/hikey960.html#hikey960"><span class="std std-ref">HiKey 960</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>HiKey</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hikey.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/hikey620.html#hikey"><span class="std std-ref">HiKey 620</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>Poplar Debian</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">poplar.xml</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>QEMU</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">default.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/qemu.html#qemu-v7"><span class="std std-ref">QEMU v7</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>QEMUv8</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">qemu_v8.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/qemu.html#qemu-v8"><span class="std std-ref">QEMU v8</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Raspberry Pi 3</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rpi3.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/rpi3.html#rpi3"><span class="std std-ref">Raspberry Pi 3</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>STM32MP1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">stm32mp1.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/stm32mp1.html#stm32mp1"><span class="std std-ref">STM32MP1</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>VCK190</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">versal.xml</span></code></p></td>
+<td><p><a class="reference internal" href="../devices/versal.html#versal"><span class="std std-ref">AMD-Xilinx Versal ACAP VCK190</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="stable-releases">
+<h3>Stable releases<a class="headerlink" href="#stable-releases" title="Permalink to this heading"></a></h3>
+<p>Starting from OP-TEE <code class="docutils literal notranslate"><span class="pre">v3.1</span></code> you can check out stable releases by using the
+same manifests as for current version above, but with the difference that <strong>you
+also need to specify a branch</strong> where the name corresponds to the release
+version. I.e., when we are doing releases we are creating a branch with a name
+corresponding to the release version. So, let’s for example say that you want to
+checkout a stable OP-TEE <code class="docutils literal notranslate"><span class="pre">v3.12</span></code> for Raspberry Pi 3, then you do like this
+instead of what is mentioned further down in section
+“<a class="reference internal" href="#build-get-the-source"><span class="std std-ref">Step 3 - Get the source code</span></a>” (note the <code class="docutils literal notranslate"><span class="pre">-b</span> <span class="pre">3.12.0</span></code>):</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>If there is no strong need for an older version, then we always recommend to
+use the most recent release. I.e., in the example here we do say <code class="docutils literal notranslate"><span class="pre">3.12.0</span></code>,
+but there may very well be more recent version when you are reading this. To
+find out, please have a look at the “<a class="reference internal" href="../../general/releases.html#release-dates"><span class="std std-ref">Release dates</span></a>” page.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>...
+$<span class="w"> </span>repo<span class="w"> </span>init<span class="w"> </span>-u<span class="w"> </span>https://github.com/OP-TEE/manifest.git<span class="w"> </span>-m<span class="w"> </span>rpi3.xml<span class="w"> </span>-b<span class="w"> </span><span class="m">3</span>.12.0
+...
+</pre></div>
+</div>
+</section>
+<section id="stable-releases-prior-to-op-tee-v3-1-v1-0-0-to-v3-0-0">
+<h3>Stable releases prior to OP-TEE v3.1 (v1.0.0 to v3.0.0)<a class="headerlink" href="#stable-releases-prior-to-op-tee-v3-1-v1-0-0-to-v3-0-0" title="Permalink to this heading"></a></h3>
+<p>Before OP-TEE <code class="docutils literal notranslate"><span class="pre">v3.1</span></code> we used to have separate xml-manifest files for the
+stable builds. If you for some reason need an older stable release, please
+refer to “<a class="reference internal" href="build_legacy.html#build-legacy"><span class="std std-ref">Build stable releases v1.0.0 to v3.0.0</span></a>”.</p>
+</section>
+<section id="stable-releases-prior-to-op-tee-v3-9-3-1-0-to-3-8-0">
+<h3>Stable releases prior to OP-TEE v3.9 (3.1.0 to 3.8.0)<a class="headerlink" href="#stable-releases-prior-to-op-tee-v3-9-3-1-0-to-3-8-0" title="Permalink to this heading"></a></h3>
+<p>Due to a change in the Google repo tool, you might get an error when cloning
+OP-TEE repositories before version <code class="docutils literal notranslate"><span class="pre">3.9.0</span></code>. In this case please refer to
+“<a class="reference internal" href="build_legacy_3_1_0-3_8_0.html#build-legacy-3-1-0-3-8-0"><span class="std std-ref">Build stable releases 3.1.0 to 3.8.0</span></a>”.</p>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Get and build the solution"></a><section id="get-and-build-the-solution">
+<span id="id3"></span><h2>Get and build the solution<a class="headerlink" href="#get-and-build-the-solution" title="Permalink to this heading"></a></h2>
+<p>Below we will describe the general way of how to get the source, build the
+solution and how to run xtest on the device. For device specific instructions,
+please see the links in the table in the “<a class="reference internal" href="#current-version"><span class="std std-ref">Current version</span></a>” section.</p>
+<section id="step-1-prerequisites">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Step 1 - Prerequisites"></a><span id="build-prerequisites"></span><h3>Step 1 - Prerequisites<a class="headerlink" href="#step-1-prerequisites" title="Permalink to this heading"></a></h3>
+<p>Install prerequisites according to the <a class="reference internal" href="../prerequisites.html#prerequisites"><span class="std std-ref">Prerequisites</span></a> page.</p>
+</section>
+<section id="step-2-install-android-repo">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Step 2 - Install Android repo"></a><span id="build-install-repo"></span><h3>Step 2 - Install Android repo<a class="headerlink" href="#step-2-install-android-repo" title="Permalink to this heading"></a></h3>
+<p>Note that here you don’t install a huge SDK, it’s simply a Python script that
+you download and put in your <code class="docutils literal notranslate"><span class="pre">$PATH</span></code>, that’s it. Exactly how to “install”
+repo, can be found at the Google <a class="reference external" href="https://source.android.com/source/downloading.html">repo</a> pages, so follow those instructions
+before continuing.</p>
+</section>
+<section id="step-3-get-the-source-code">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Step 3 - Get the source code"></a><span id="build-get-the-source"></span><h3>Step 3 - Get the source code<a class="headerlink" href="#step-3-get-the-source-code" title="Permalink to this heading"></a></h3>
+<p>Choose the manifest corresponding to the platform you intend to use (see the
+table in section “<a class="reference internal" href="#current-version"><span class="std std-ref">Current version</span></a>”. For example, if you intend to use
+Raspberry Pi3, then at line 3 below, <code class="docutils literal notranslate"><span class="pre">${TARGET}.xml</span></code> shall be <code class="docutils literal notranslate"><span class="pre">rpi3.xml</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">&lt;optee-project&gt;</span></code> is whatever location where you want to store the entire
+OP-TEE developer setup.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>&lt;optee-project&gt;
+<span class="linenos">2</span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>&lt;optee-project&gt;
+<span class="hll"><span class="linenos">3</span>$<span class="w"> </span>repo<span class="w"> </span>init<span class="w"> </span>-u<span class="w"> </span>https://github.com/OP-TEE/manifest.git<span class="w"> </span>-m<span class="w"> </span><span class="si">${</span><span class="nv">TARGET</span><span class="si">}</span>.xml<span class="w"> </span><span class="o">[</span>-b<span class="w"> </span><span class="si">${</span><span class="nv">BRANCH</span><span class="si">}</span><span class="o">]</span>
+</span><span class="linenos">4</span>$<span class="w"> </span>repo<span class="w"> </span>sync<span class="w"> </span>-j4<span class="w"> </span>--no-clone-bundle
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>By referencing an existing and locally saved repo forest you can save lots
+of time. We are talking about doing repo sync in 30 seconds instead of 15-30
+minutes (see the <a class="reference internal" href="#tips-and-tricks"><span class="std std-ref">Tips and Tricks</span></a> section for more details).</p>
+</div>
+</section>
+<section id="step-4-get-the-toolchains">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Step 4 - Get the toolchains"></a><span id="build-get-toolchains"></span><h3>Step 4 - Get the toolchains<a class="headerlink" href="#step-4-get-the-toolchains" title="Permalink to this heading"></a></h3>
+<p>In OP-TEE we’re using different toolchains for different targets (depends on
+ARMv7-A ARMv8-A 64/32bit solutions). In any case start by downloading the
+toolchains by:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>&lt;optee-project&gt;/build
+$<span class="w"> </span>make<span class="w"> </span>-j2<span class="w"> </span>toolchains
+</pre></div>
+</div>
+</section>
+<section id="step-5-build-the-solution">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Step 5 - Build the solution"></a><span id="build-make"></span><h3>Step 5 - Build the solution<a class="headerlink" href="#step-5-build-the-solution" title="Permalink to this heading"></a></h3>
+<p>We’ve configured our repo manifests, so that repo will always automatically
+symlink the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> to the correct device specific makefile, that means
+that you simply start the build by running (still in <code class="docutils literal notranslate"><span class="pre">&lt;optee-project&gt;/build</span></code>)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>-j<span class="w"> </span><span class="sb">`</span>nproc<span class="sb">`</span>
+</pre></div>
+</div>
+<p>This step will also take some time, but you can speed up subsequent builds by
+enabling <a class="reference external" href="https://ccache.samba.org">ccache</a> (again see <a class="reference internal" href="#tips-and-tricks"><span class="std std-ref">Tips and Tricks</span></a>).</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p><strong>If you’re having build issues</strong>, then you can pipe the entire build log to
+a file, which makes it easier to search for the issue using a regular
+editor. In that case also avoid the <code class="docutils literal notranslate"><span class="pre">-j</span></code> flag so it’s easier to see in what
+order things are happening. To create a <code class="docutils literal notranslate"><span class="pre">build.log</span></code> file do: <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">make</span> <span class="pre">2&gt;&amp;1</span>
+<span class="pre">|</span> <span class="pre">tee</span> <span class="pre">build.log</span></code></p>
+</div>
+</section>
+<section id="step-6-flash-the-device">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Step 6 - Flash the device"></a><span id="build-flash"></span><h3>Step 6 - Flash the device<a class="headerlink" href="#step-6-flash-the-device" title="Permalink to this heading"></a></h3>
+<p>On <strong>non-emulated</strong> solutions (this means that you shouldn’t do this step when
+you are running QEMU-v7/v8 and FVP), you will need to flash the software in some
+way. We’ve tried to “hide” that under the following make target:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>flash
+</pre></div>
+</div>
+<p>But, since some devices are trickier to flash than others, please see the
+<a class="reference internal" href="../devices/index.html#device-specific"><span class="std std-ref">Device specific information</span></a>. See this just as a general instruction.</p>
+</section>
+<section id="step-7-boot-up-the-device">
+<h3>Step 7 - Boot up the device<a class="headerlink" href="#step-7-boot-up-the-device" title="Permalink to this heading"></a></h3>
+<p>This is device specific (see <a class="reference internal" href="../devices/index.html#device-specific"><span class="std std-ref">Device specific information</span></a>).</p>
+</section>
+<section id="step-8-load-tee-supplicant">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Step 8 - Load tee-supplicant"></a><span id="build-tee-supplicant"></span><h3>Step 8 - Load tee-supplicant<a class="headerlink" href="#step-8-load-tee-supplicant" title="Permalink to this heading"></a></h3>
+<p>On <strong>most</strong> solutions tee-supplicant is already running (check by running <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">ps</span>
+<span class="pre">aux</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">tee-supplicant</span></code>) on others not. If it’s <strong>not</strong> running, then start
+it by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tee-supplicant<span class="w"> </span>-d
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you’ve built using our manifest you should not need to modprobe any
+OP-TEE/TEE kernel driver since it’s built into the kernel in all our setups.</p>
+</div>
+</section>
+<section id="step-9-run-xtest">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Step 9 - Run xtest"></a><span id="build-run-xtest"></span><h3>Step 9 - Run xtest<a class="headerlink" href="#step-9-run-xtest" title="Permalink to this heading"></a></h3>
+<p>The entire xtest test suite has been deployed when you we’re making the builds
+in previous steps, i.e, in general there is no need to copy any binaries
+manually. Everything has been put into the <a class="reference internal" href="#root-fs"><span class="std std-ref">Root filesystem</span></a> automatically. So, to
+run xtest, you simply type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest
+</pre></div>
+</div>
+<p>If there are no regressions / issues found, xtest should end with something like
+this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>...
++-----------------------------------------------------
+23476 subtests of which 0 failed
+67 test cases of which 0 failed
+0 test case was skipped
+TEE test application done!
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>For other ways to run xtest, please refer to the “<a class="reference internal" href="optee_test.html#optee-test-run-xtest"><span class="std std-ref">Run xtest</span></a>”
+page at <a class="reference internal" href="optee_test.html#optee-test"><span class="std std-ref">optee_test</span></a>.</p>
+</div>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Tips and Tricks"></a><section id="tips-and-tricks">
+<span id="id4"></span><h2>Tips and Tricks<a class="headerlink" href="#tips-and-tricks" title="Permalink to this heading"></a></h2>
+<section id="reference-existing-project-to-speed-up-repo-sync">
+<h3>Reference existing project to speed up repo sync<a class="headerlink" href="#reference-existing-project-to-speed-up-repo-sync" title="Permalink to this heading"></a></h3>
+<p>Doing a <code class="docutils literal notranslate"><span class="pre">repo</span> <span class="pre">init</span></code>, <code class="docutils literal notranslate"><span class="pre">repo</span> <span class="pre">sync</span></code> from scratch can take a fair amount of
+time. The main reason for that is simply because of the size of some of the gits
+we are using, like for the Linux kernel and EDK2. With repo you can reference an
+existing forest and by doing so you can speed up repo sync to taking 30 seconds
+instead of 15-30 minutes. The way to do this are as follows.</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Start by setup a clean forest that you will not touch, in this example,
+let us call that <code class="docutils literal notranslate"><span class="pre">optee-ref</span></code> and put that under for
+<code class="docutils literal notranslate"><span class="pre">$HOME/devel/optee-ref</span></code>. This step will take somewhere between 15- to
+45 minutes, depending on your connection speed to internet.</p></li>
+<li><p>Then setup a cronjob (<code class="docutils literal notranslate"><span class="pre">crontab</span> <span class="pre">-e</span></code>) that does a <code class="docutils literal notranslate"><span class="pre">repo</span> <span class="pre">sync</span></code> in this
+folder particular folder once a night (that is more than enough).</p></li>
+<li><p>Now you should setup your actual tree which you are going to use as your
+working tree. The way to do this is almost the same as stated in the
+instructions above (see the “<a class="reference internal" href="#build-get-the-source"><span class="std std-ref">Step 3 - Get the source code</span></a>” section) , the
+only difference is that you <strong>also</strong> reference the other local forest
+when running <code class="docutils literal notranslate"><span class="pre">repo</span> <span class="pre">init</span></code>, like this</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>repo<span class="w"> </span>init<span class="w"> </span>-u<span class="w"> </span>https://github.com/OP-TEE/manifest.git<span class="w"> </span>--reference<span class="w"> </span><span class="nv">$HOME</span>/devel/optee-ref
+</pre></div>
+</div>
+</li>
+<li><p>The rest is the same above, but now it will only take a couple of seconds
+to clone a forest.</p></li>
+</ol>
+</div></blockquote>
+<p>Normally ‘1’ and ‘2’ above is something you will only do once. Also if you
+ignore step ‘2’, then you will <strong>still</strong> get the latest from official git trees,
+since repo will also check for updates that aren’t at the local reference.</p>
+</section>
+<section id="use-ccache">
+<h3>Use ccache<a class="headerlink" href="#use-ccache" title="Permalink to this heading"></a></h3>
+<p><a class="reference external" href="https://ccache.samba.org">ccache</a> is a tool that caches build object-files etc locally on the disc and can
+speed up build time significantly in subsequent builds. On Debian-based systems
+(Ubuntu, Mint etc) you simply install it by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ccache
+</pre></div>
+</div>
+<p>The makefiles in build.git are configured to automatically find and use ccache
+if ccache is installed on your system, so other than having it installed you
+don’t have to think about anything.</p>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="index.html" rel="prev" title="OP-TEE gits"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="build_legacy.html" rel="next" title="Build stable releases v1.0.0 to v3.0.0">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

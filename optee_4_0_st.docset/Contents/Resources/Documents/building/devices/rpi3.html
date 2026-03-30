@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Raspberry Pi 3 — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="stm32mp1.html" rel="next" title="STM32MP1"/>
+<link href="rockpi4.html" rel="prev" title="ROCK Pi 4"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Device specific information</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="versal.html">AMD-Xilinx Versal ACAP VCK190</a></li>
+<li class="toctree-l3"><a class="reference internal" href="devbox.html">DeveloperBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fvp.html">FVP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey620.html">HiKey 620</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hikey960.html">HiKey 960</a></li>
+<li class="toctree-l3"><a class="reference internal" href="juno.html">Juno</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nuvoton.html">NUVOTON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html">QEMU v7</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qemu.html#qemu-v8">QEMU v8</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rockpi4.html">ROCK Pi 4</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Raspberry Pi 3</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#disclaimer">Disclaimer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#what-is-expected-to-work">What is expected to work?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#what-versions-of-raspberry-pi-will-work">What versions of Raspberry Pi will work?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boot-sequence">Boot sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-instructions">Build instructions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nfs-boot">NFS boot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#jtag">JTAG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uart-rpi3-cable">UART/RPi3 cable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#openocd">OpenOCD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="stm32mp1.html">STM32MP1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ti.html">Texas Instruments SoCs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zynqmp.html">Zynq MPSoC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="index.html">Device specific information</a></li>
+<li class="breadcrumb-item active">Raspberry Pi 3</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/devices/rpi3.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="raspberry-pi-3">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Raspberry Pi 3"></a><span id="rpi3"></span><h1>Raspberry Pi 3<a class="headerlink" href="#raspberry-pi-3" title="Permalink to this heading"></a></h1>
+<p><a class="reference external" href="http://www.sequiturlabs.com">Sequitur Labs</a> did the initial OP-TEE port which at the time also came with
+modifications in U-Boot, Trusted Firmware A and Linux kernel. Since that initial
+port more and more patches have found mainline trees and today the OP-TEE setup
+for Raspberry Pi 3 uses only upstream tree’s with the exception of Linux kernel.</p>
+<section id="disclaimer">
+<h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Permalink to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This port of Trusted Firmware A and OP-TEE to Raspberry Pi 3 <strong>IS NOT
+SECURE!</strong> Although the Raspberry Pi3 processor provides ARM TrustZone
+exception states, the mechanisms and hardware required to implement secure
+boot, memory, peripherals or other secure functions are not available. Use
+of OP-TEE or TrustZone capabilities within this package <strong>does not result</strong>
+in a secure implementation. This package is provided solely for
+<strong>educational purposes</strong> and <strong>prototyping</strong>.</p>
+</div>
+</section>
+<section id="what-is-expected-to-work">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/What is expected to work?"></a><span id="rpi3-software"></span><h2>What is expected to work?<a class="headerlink" href="#what-is-expected-to-work" title="Permalink to this heading"></a></h2>
+<p>First, note that all OP-TEE developer builds (ref, <a class="reference internal" href="../gits/build.html#build"><span class="std std-ref">build</span></a>) have rather
+simple overall goals:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Successfully build OP-TEE for certain devices.</p></li>
+<li><p>Run xtest and optee_example binaries successfully with no regressions
+using UART(s).</p></li>
+</ul>
+</div></blockquote>
+<p>I.e., it is important to understand that our “<cite>OP-TEE developer builds</cite>” shall
+not be compared with full Linux distributions which supports “everything”. As a
+couple of examples, we don’t enable any particular drivers in Linux kernel, we
+don’t include all sorts of daemons, we do not include an X-environment etc. At
+the same time this doesn’t mean that you cannot use OP-TEE in real environments.
+It is usually perfectly fine to run on all sorts of devices, environments etc.
+It’s just that for the OP-TEE developer builds we have intentionally stripped
+down the environment to make it rather fast to get all the source code, build it
+all and run xtest.</p>
+<p>We are highlighting this here, since over the years we have had many questions
+at GitHub about things that people usually find working on their Raspberry Pi
+devices when they are using Raspbian (which this is not). The table below
+describes what is <cite>officially</cite> supported in the Raspberry Pi 3 OP-TEE developer
+builds and right after that follows sections for each of giving a bit more
+context to it.</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 59%"/>
+<col style="width: 41%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Supported?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Buildroot</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>HDMI</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>NFS</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Random packages</p></td>
+<td><p>Maybe</p></td>
+</tr>
+<tr class="row-even"><td><p>Raspbian</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>Secure boot</p></td>
+<td><p>Maybe</p></td>
+</tr>
+<tr class="row-even"><td><p>TFTP</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>UART</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>Wi-Fi</p></td>
+<td><p>No</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<section id="buildroot">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Buildroot"></a><span id="rpi3-support-buildroot"></span><h3>Buildroot<a class="headerlink" href="#buildroot" title="Permalink to this heading"></a></h3>
+<p>We are using Buildroot as the tool to create a stripped down filesystem for
+Linux where we also put OP-TEE binaries like Trusted Applications, client
+libraries and TEE supplicant. If a user wants to add/enable additional packages,
+then that is also possible by adding new lines in <code class="docutils literal notranslate"><span class="pre">common.mk</span></code> in <a class="reference internal" href="../gits/build.html#build"><span class="std std-ref">build</span></a>
+(search for <code class="docutils literal notranslate"><span class="pre">BR2_PACKAGE_</span></code> in the git to see how it’s done).</p>
+</section>
+<section id="hdmi">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/HDMI"></a><span id="rpi3-support-hdmi"></span><h3>HDMI<a class="headerlink" href="#hdmi" title="Permalink to this heading"></a></h3>
+<p>X isn’t enabled and we have not built nor enabled any drivers for graphics.</p>
+</section>
+<section id="nfs">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/NFS"></a><span id="rpi3-support-nfs"></span><h3>NFS<a class="headerlink" href="#nfs" title="Permalink to this heading"></a></h3>
+<p>Works to boot up a Linux root filesystem, more on that further down.</p>
+</section>
+<section id="random-packages">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Random packages"></a><span id="rpi3-support-random-package"></span><h3>Random packages<a class="headerlink" href="#random-packages" title="Permalink to this heading"></a></h3>
+<p>See the <a class="reference internal" href="#rpi3-support-buildroot"><span class="std std-ref">Buildroot</span></a> section above. You can enable packages
+supported by Buildroot, but as mentioned initially in this section, lack of
+drivers and other daemons etc might make it impossible to run.</p>
+</section>
+<section id="raspbian">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Raspbian"></a><span id="rpi3-support-raspbian"></span><h3>Raspbian<a class="headerlink" href="#raspbian" title="Permalink to this heading"></a></h3>
+<p>We are not using it. However, people (from <a class="reference external" href="http://www.sequiturlabs.com">Sequitur Labs</a>) have successfully
+been able to add OP-TEE to Raspbian builds. But since we’re not using it and
+haven’t tried, we simply don’t support it.</p>
+</section>
+<section id="secure-boot">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Secure boot"></a><span id="rpi3-support-secure-boot"></span><h3>Secure boot<a class="headerlink" href="#secure-boot" title="Permalink to this heading"></a></h3>
+<p>First pay attention to the initial warning on this page. I.e., no matter what
+you are doing with Raspberry Pi and TrustZone / OP-TEE you <strong>cannot</strong> make it
+secure. But that doesn’t mean that you cannot “enable” secure features as such
+for prototyping and to learn how to build and use those. That kind of knowledge
+can later on be transferred and used on other devices which have all the
+necessary secure capabilities needed to make a secure system. We haven’t tested
+to enable secure boot on Raspberry Pi 3. But we believe that a good starting
+point would be Trusted Firmware A’s documentation about the “<a class="reference external" href="https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/auth-framework.rst">Authentication
+Framework</a>” and <a class="reference external" href="https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/plat/rpi3.rst">RPi3 in TF-A</a>.</p>
+</section>
+<section id="tftp">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/TFTP"></a><span id="rpi3-support-tftp"></span><h3>TFTP<a class="headerlink" href="#tftp" title="Permalink to this heading"></a></h3>
+<p>When you reach U-Boot (see <a class="reference internal" href="#rpi3-boot-sequence"><span class="std std-ref">Boot sequence</span></a>), then you can start using
+TFTP to load boot firmware etc. Note that if you overwrite <code class="docutils literal notranslate"><span class="pre">armstub8.bin</span></code> for
+example and that happens to be faulty, then you will need to re-mount the BOOT
+partition on the SD-card and put a new working version of it. Also note that
+changing early boot binaries (TF-A, OP-TEE core etc) will require you to reboot
+the device see the changes.</p>
+</section>
+<section id="uart">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/UART"></a><span id="rpi3-support-uart"></span><h3>UART<a class="headerlink" href="#uart" title="Permalink to this heading"></a></h3>
+<p>Fully supported, for more details look at the UART section further down.</p>
+</section>
+<section id="wi-fi">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Wi-Fi"></a><span id="rpi3-support-wifi"></span><h3>Wi-Fi<a class="headerlink" href="#wi-fi" title="Permalink to this heading"></a></h3>
+<p>Even though Raspberry Pi 3 has a Wi-Fi chip, we do not support it in our
+stripped down builds.</p>
+</section>
+</section>
+<section id="what-versions-of-raspberry-pi-will-work">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/What versions of Raspberry Pi will work?"></a><span id="rpi-hardware"></span><h2>What versions of Raspberry Pi will work?<a class="headerlink" href="#what-versions-of-raspberry-pi-will-work" title="Permalink to this heading"></a></h2>
+<p>Below is a table of supported hardware in our OP-TEE developer builds. We have
+only used the Raspberry Pi 3 Model B, i.e., the first RPi 3 device that was
+released. But we know that people have successfully been able to use it with
+both RPi 2’s as well as the newer RPi 3 B+. But as long as we in the <a class="reference external" href="https://github.com/orgs/OP-TEE/teams/linaro/members">core
+team</a> doesn’t have those at hands we cannot guarantee anything, therefore we
+simply say “No” below.</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 72%"/>
+<col style="width: 28%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Hardware</p></th>
+<th class="head"><p>Supported?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Raspberry Pi 1 Model A</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raspberry Pi 1 Model B</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>Raspberry Pi 1+ Model A</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raspberry Pi 1+ Model B</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>Raspberry Pi 2 Model B</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raspberry Pi 2 Model B v1.2</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>Raspberry Pi 3+ Model A</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raspberry Pi 3 Model B</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>Raspberry Pi 3+ Model B</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raspberry Pi 4</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>Zero - all versions</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p>Compute module - all versions</p></td>
+<td><p>No</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</section>
+<section id="boot-sequence">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Boot sequence"></a><span id="rpi3-boot-sequence"></span><h2>Boot sequence<a class="headerlink" href="#boot-sequence" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>The <strong>GPU</strong> starts executing the first stage bootloader, which is stored
+in ROM on the SoC. The first stage bootloader reads the SD-card, and loads
+the second stage bootloader (<code class="docutils literal notranslate"><span class="pre">bootcode.bin</span></code>) into the L2 cache, and runs
+it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bootcode.bin</span></code> enables SDRAM, and reads the third stage bootloader
+<code class="docutils literal notranslate"><span class="pre">loader.bin</span></code> from the SD-card into RAM, and runs it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loader.bin</span></code> reads the GPU firmware (<code class="docutils literal notranslate"><span class="pre">start.elf</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start.elf</span></code> reads <code class="docutils literal notranslate"><span class="pre">config.txt</span></code>, pre-loads <code class="docutils literal notranslate"><span class="pre">armstub8.bin</span></code> (which
+contains: BL1/TF-A + BL2/TF-A + BL31/TF-A + BL32/OP-TEE + BL33/U-boot) to
+<code class="docutils literal notranslate"><span class="pre">0x0</span></code> and jumps to the first instruction.</p></li>
+<li><p>A traditional boot sequence of TF-A -&gt; OP-TEE -&gt; U-boot is performed,
+i.e.,  BL1 loads BL2, then BL2 loads and run BL31(SM), BL32(OP-TEE),
+BL33(U-boot) (one after another)</p></li>
+<li><p>U-Boot runs <code class="docutils literal notranslate"><span class="pre">fatload/booti</span></code> sequence  to load from eMMC to RAM both
+<code class="docutils literal notranslate"><span class="pre">zImage</span></code> and then <code class="docutils literal notranslate"><span class="pre">DTB</span></code> and boot.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="build-instructions">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Build instructions"></a><span id="rpi3-build-instructions"></span><h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Start by following the <a class="reference internal" href="../gits/build.html#get-and-build-the-solution"><span class="std std-ref">Get and build the solution</span></a> as described in
+<a class="reference internal" href="../gits/build.html#build"><span class="std std-ref">build</span></a>, but stop at the “<a class="reference internal" href="../gits/build.html#build-flash"><span class="std std-ref">Step 6 - Flash the device</span></a>” step (i.e., <strong>don’t</strong> run
+the make flash command!).</p></li>
+<li><p>Next step is to partition and format the memory card and to put the files
+onto the same. That is something we don’t want to automate, since if anything
+goes wrong, in worst case it might wipe one of your regular hard disks.
+Instead what we have done, is that we have created another makefile target
+that will tell you exactly what to do. Run that command and follow the
+instructions there.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>img-help
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The mention of <code class="docutils literal notranslate"><span class="pre">/dev/sdx1</span></code> and <code class="docutils literal notranslate"><span class="pre">/dev/sdx2</span></code> when running the command
+above are just examples. You need to figure out and replace that with the
+correct name(s) for your computer and SD-card (typically run <code class="docutils literal notranslate"><span class="pre">dmesg</span></code>
+and look for the device name matching your SD-card).</p>
+</div>
+</li>
+<li><p>Put the SD-card back into the Raspberry Pi 3.</p></li>
+<li><p>Plug in the UART cable and attach to the UART</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>picocom<span class="w"> </span>-b<span class="w"> </span><span class="m">115200</span><span class="w"> </span>/dev/ttyUSB0
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Install picocom if not already installed <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">picocom</span></code>.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p>Power up the Raspberry Pi 3 and the system shall start booting which you will
+see on the UART (not <a class="reference internal" href="#rpi3-support-hdmi"><span class="std std-ref">HDMI</span></a>).</p></li>
+<li><p>When you have a shell, then it’s simply just to follow the
+“<a class="reference internal" href="../gits/build.html#build-run-xtest"><span class="std std-ref">Step 9 - Run xtest</span></a>” instructions.</p></li>
+</ol>
+</section>
+<section id="nfs-boot">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/NFS boot"></a><span id="rpi3-nfs"></span><h2>NFS boot<a class="headerlink" href="#nfs-boot" title="Permalink to this heading"></a></h2>
+<p>Booting via NFS is quite useful for several reasons, but the obvious reason when
+working with Raspberry Pi is that you don’t have to move the SD-card back and
+forth between the host machine and the Raspberry Pi 3 itself when working with
+<strong>Normal World</strong> files, like Linux kernel and user space programs. Here we will
+describe how to setup NFS server, so the rootfs can be mounted via NFS.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This guide doesn’t focus on any desktop security, so eventually you would
+need to harden your setup.</p>
+</div>
+<p>In the description below we will use the following terminology, IP addresses and
+paths. The reader of this guide is supposed to update this to match his own
+environment.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>192.168.1.100   &lt;--- This is your desktop computer (NFS server)
+192.168.1.200   &lt;--- This is the Raspberry Pi
+/srv/nfs/rpi    &lt;--- Location for the NFS share
+</pre></div>
+</div>
+<section id="configure-nfs">
+<h3>Configure NFS<a class="headerlink" href="#configure-nfs" title="Permalink to this heading"></a></h3>
+<p>Start by installing the NFS server</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>nfs-kernel-server
+</pre></div>
+</div>
+<p>Then edit the exports file,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/exports
+</pre></div>
+</div>
+<p>In this file you shall tell where your files/folder are and the IP’s allowed to
+access the files. The way it’s written below will make it available to every
+machine on the same subnet (again, be careful about security here). Let’s add
+this line to the file (it’s the only line necessary in the file, but if you have
+several different filesystems available, then you should of course add them
+too, one line for each share).</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/srv/nfs/rpi 192.168.1.0/24(rw,sync,no_root_squash,no_subtree_check)
+</pre></div>
+</div>
+<p>Next create the folder where you are going to put the root filesystem</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ sudo mkdir /srv/nfs/rpi
+</pre></div>
+</div>
+<p>After this, restart the NFS kernel server</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ service nfs-kernel-server restart
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>To see that your shares are correctly setup and that the NFS server is
+running, you can run: <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">showmount</span> <span class="pre">--all</span> <span class="pre">localhost</span></code> and you should get a
+list of <code class="docutils literal notranslate"><span class="pre">IP:&lt;path&gt;'s</span></code> based on what you have added in your exports file.
+If you get nothing there, then your NFS server hasn’t been setup correctly.</p>
+</div>
+</section>
+<section id="prepare-files-to-be-shared">
+<h3>Prepare files to be shared<a class="headerlink" href="#prepare-files-to-be-shared" title="Permalink to this heading"></a></h3>
+<p>We are now going to put the root filesystem on the location we prepared in the
+previous section.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The path to the <code class="docutils literal notranslate"><span class="pre">rootfs.cpio.gz</span></code> refers to &lt;rpi3-project&gt;, replace this so
+it matches your setup.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/srv/nfs/rpi
+$<span class="w"> </span>sudo<span class="w"> </span>gunzip<span class="w"> </span>-cd<span class="w"> </span>&lt;rpi3-project&gt;/out-br/images/rootfs.cpio.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>cpio<span class="w"> </span>-idmv
+$<span class="w"> </span>sudo<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/srv/nfs/rpi/boot/*
+</pre></div>
+</div>
+</section>
+<section id="uboot-env-configuration">
+<h3>uboot.env configuration<a class="headerlink" href="#uboot-env-configuration" title="Permalink to this heading"></a></h3>
+<p>The file <code class="docutils literal notranslate"><span class="pre">uboot.env</span></code> contains boot configurations that tells what binaries to
+load and at what addresses. When using NFS you need to tell U-Boot where the NFS
+server is located (IP and path). Since the exact IP and path varies for each
+user, we must update <code class="docutils literal notranslate"><span class="pre">uboot.env</span></code> accordingly.</p>
+<p>There are two ways to update <code class="docutils literal notranslate"><span class="pre">uboot.env</span></code>, one is to update
+<code class="docutils literal notranslate"><span class="pre">uboot.env.txt</span></code> (in <a class="reference internal" href="../gits/build.html#build"><span class="std std-ref">build</span></a>) and the other is to update directly from
+the U-Boot console. Pick the one that you suits your needs. We will cover each
+of them separately here.</p>
+</section>
+<section id="change-uboot-env-txt">
+<h3>Change uboot.env.txt<a class="headerlink" href="#change-uboot-env-txt" title="Permalink to this heading"></a></h3>
+<p>In an editor open: <code class="docutils literal notranslate"><span class="pre">&lt;rpi3-project&gt;/build/rpi3/firmware/uboot.env.txt</span></code> and
+change:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nfsserverip</span></code> to match the IP address of your NFS server.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gatewayip</span></code> to the IP address of your router.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nfspath</span></code> to the exported filesystem in your NFS share.</p></li>
+</ul>
+</div></blockquote>
+<p>As an example a section of <code class="docutils literal notranslate"><span class="pre">uboot.env.txt</span></code> could look like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp"># NFS/TFTP boot configuraton</span>
+<span class="hll"><span class="n">gatewayip</span><span class="o">=</span><span class="mf">192.168.1.1</span>
+</span><span class="n">netmask</span><span class="o">=</span><span class="mf">255.255.255.0</span>
+<span class="hll"><span class="n">nfsserverip</span><span class="o">=</span><span class="mf">192.168.1.100</span>
+</span><span class="hll"><span class="n">nfspath</span><span class="o">=/</span><span class="n">srv</span><span class="o">/</span><span class="n">nfs</span><span class="o">/</span><span class="n">rpi</span>
+</span></pre></div>
+</div>
+<p>Next, you need to re-generate <code class="docutils literal notranslate"><span class="pre">uboot.env</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>&lt;rpi3-project&gt;/build
+$<span class="w"> </span>make<span class="w"> </span>u-boot-env-clean
+$<span class="w"> </span>make<span class="w"> </span>u-boot-env
+</pre></div>
+</div>
+<p>Finally, you need to copy the updated <code class="docutils literal notranslate"><span class="pre">&lt;rpi3-project&gt;/out/uboot.env</span></code> to the
+<strong>BOOT</strong> partition of your SD-card (mount it as described in
+<a class="reference internal" href="#rpi3-build-instructions"><span class="std std-ref">Build instructions</span></a> and then just overwrite (<code class="docutils literal notranslate"><span class="pre">cp</span></code>) the file on the
+<strong>BOOT</strong> partition of your SD-card).</p>
+</section>
+<section id="update-u-boot-env-from-u-boot-console">
+<h3>Update u-boot.env from U-Boot console<a class="headerlink" href="#update-u-boot-env-from-u-boot-console" title="Permalink to this heading"></a></h3>
+<p>Boot up the device until you see U-Boot running and counting down, then hit any
+key and will see the <code class="docutils literal notranslate"><span class="pre">U-Boot&gt;</span></code> prompt. You can then update the
+<code class="docutils literal notranslate"><span class="pre">nfsserverip</span></code>, <code class="docutils literal notranslate"><span class="pre">gatewayip</span></code> and <code class="docutils literal notranslate"><span class="pre">nfspath</span></code> by writing</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>U-Boot&gt;<span class="w"> </span>setenv<span class="w"> </span>nfsserverip<span class="w"> </span><span class="s1">'192.168.1.100'</span>
+U-Boot&gt;<span class="w"> </span>setenv<span class="w"> </span>gatewayip<span class="w"> </span><span class="s1">'192.168.1.1'</span>
+U-Boot&gt;<span class="w"> </span>setenv<span class="w"> </span>nfspath<span class="w"> </span><span class="s1">'/srv/nfs/rpi'</span>
+</pre></div>
+</div>
+<p>If you want those environment variables to persist between boots, then type.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>U-Boot&gt;<span class="w"> </span>saveenv
+</pre></div>
+</div>
+</section>
+<section id="boot-up-with-nfs">
+<h3>Boot up with NFS<a class="headerlink" href="#boot-up-with-nfs" title="Permalink to this heading"></a></h3>
+<p>With all preparations above done correctly, you should now be able to boot up
+the device and kernel, secure side OP-TEE and the entire root filesystem should
+be loaded from the network shares (NFS). Power up the Raspberry, halt in U-Boot and
+then type.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>U-Boot&gt;<span class="w"> </span>run<span class="w"> </span>nfsboot
+</pre></div>
+</div>
+<p>If everything works, you can simply copy paste files like <code class="docutils literal notranslate"><span class="pre">xtest</span></code>, Trusted
+Applications and other things that usually resides on the host PC’s filesystem,
+i.e., directly from your build folders to the <code class="docutils literal notranslate"><span class="pre">/srv/nfs/rpi/...</span></code> folders. By
+doing so you don’t have to reboot the device when doing development and testing.
+Just rebuild and copy is sufficient.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You <strong>cannot</strong> make symlinks in the NFS share to the built files, i.e., you
+must copy them!</p>
+</div>
+</section>
+</section>
+<section id="jtag">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/JTAG"></a><span id="rpi3-jtag"></span><h2>JTAG<a class="headerlink" href="#jtag" title="Permalink to this heading"></a></h2>
+<p>To enable JTAG you need to add a line saying <code class="docutils literal notranslate"><span class="pre">enable_jtag_gpio=1</span></code> in
+<code class="docutils literal notranslate"><span class="pre">config.txt</span></code>. There are two ways you can do this, both requires that you to
+mount the <strong>BOOT</strong> partition on the SD-card at your computer (see the <code class="docutils literal notranslate"><span class="pre">make</span>
+<span class="pre">img-help</span></code> step under <a class="reference internal" href="#rpi3-build-instructions"><span class="std std-ref">Build instructions</span></a>). <strong>After</strong> you have
+mounted the BOOT partition continue with whichever way is most suitable for you.</p>
+<section id="change-config-txt-directly">
+<h3>Change config.txt directly<a class="headerlink" href="#change-config-txt-directly" title="Permalink to this heading"></a></h3>
+<p>With your editor, open <code class="docutils literal notranslate"><span class="pre">/media/boot/config.txt</span></code> and add a line
+<code class="docutils literal notranslate"><span class="pre">enable_jtag_gpio=1</span></code>, save the file, unmount the BOOT partition and you’re
+good to go after rebooting the device.</p>
+</section>
+<section id="rebuild-and-untar">
+<h3>Rebuild and untar<a class="headerlink" href="#rebuild-and-untar" title="Permalink to this heading"></a></h3>
+<ol class="arabic">
+<li><p>With your editor, open <code class="docutils literal notranslate"><span class="pre">&lt;rpi3-project&gt;/build/rpi3/firmware/config.txt</span></code> and
+add a line <code class="docutils literal notranslate"><span class="pre">enable_jtag_gpio=1</span></code>, save the file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">cd</span> <span class="pre">&lt;rpi3-project&gt;/build</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">cd</span> <span class="pre">/media</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">sudo</span> <span class="pre">gunzip</span> <span class="pre">-cd</span> <span class="pre">&lt;rpi3-project&gt;/out-br/images/rootfs.cpio.gz</span> <span class="pre">|</span> <span class="pre">sudo</span> <span class="pre">cpio</span> <span class="pre">-idmv</span> <span class="pre">"boot/*"</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You didn’t forget to mount the BOOT partition before trying this step?</p>
+</div>
+</li>
+<li><p>Unmount the BOOT partition and you’re good to go after rebooting the device.</p></li>
+</ol>
+</section>
+<section id="jtag-rpi3-cable">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/JTAG/RPi3 cable"></a><span id="rpi3-jtag-cable"></span><h3>JTAG/RPi3 cable<a class="headerlink" href="#jtag-rpi3-cable" title="Permalink to this heading"></a></h3>
+<p>We have created our own cables that consists of a standard 20-pin JTAG
+connector and a 22-pin connector for the Raspberry Pi 3 itself. Then using a
+ribbon cable we have connected the cables according to the table below (JTAG pin
+&lt;-&gt; Raspberry Pi 3 Header pin).</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 12%"/>
+<col style="width: 35%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>JTAG pin</p></th>
+<th class="head"><p>Signal</p></th>
+<th class="head"><p>GPIO</p></th>
+<th class="head"><p>Mode</p></th>
+<th class="head"><p>RPi3 Header pin</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>3v3</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>nTRST</p></td>
+<td><p>GPIO22</p></td>
+<td><p>ALT4</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>TDI</p></td>
+<td><p>GPIO26</p></td>
+<td><p>ALT4</p></td>
+<td><p>37</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>TMS</p></td>
+<td><p>GPIO27</p></td>
+<td><p>ALT4</p></td>
+<td><p>13</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>TCK</p></td>
+<td><p>GPIO25</p></td>
+<td><p>ALT4</p></td>
+<td><p>22</p></td>
+</tr>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>RTCK</p></td>
+<td><p>GPIO23</p></td>
+<td><p>ALT4</p></td>
+<td><p>16</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>TDO</p></td>
+<td><p>GPIO24</p></td>
+<td><p>ALT4</p></td>
+<td><p>18</p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p>GND</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>20</p></td>
+<td><p>GND</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+<td><p>20</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Be careful and cross check the wiring as incorrect wiring might <strong>damage</strong>
+your device! Also be careful to connect the cable correctly at both ends
+(don’t flip it and don’t put it at the wrong pins in the Raspberry Pi 3
+side).</p>
+</div>
+</section>
+</section>
+<section id="uart-rpi3-cable">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/UART/RPi3 cable"></a><span id="rpi3-uart-cable"></span><h2>UART/RPi3 cable<a class="headerlink" href="#uart-rpi3-cable" title="Permalink to this heading"></a></h2>
+<p>In addition to the JTAG connections we have also wired up the RX/TX to be able
+to use the UART. Note, for this you don’t need to do JTAG wirings, i.e., it’s
+perfectly fine to just wire up the UART only. There are many ready made cables
+for this on the net (<a class="reference external" href="https://www.ebay.com/sch/i.html?&amp;_nkw=UART+cable">eBay</a>) and cost almost nothing. Get one of those if you
+<strong>don’t</strong> intend to use JTAG.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 26%"/>
+<col style="width: 14%"/>
+<col style="width: 16%"/>
+<col style="width: 12%"/>
+<col style="width: 32%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>UART pin</p></th>
+<th class="head"><p>Signal</p></th>
+<th class="head"><p>GPIO</p></th>
+<th class="head"><p>Mode</p></th>
+<th class="head"><p>RPi3 Header pin</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Black (GND)</p></td>
+<td><p>GND</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-odd"><td><p>White (RXD)</p></td>
+<td><p>TXD</p></td>
+<td><p>GPIO14</p></td>
+<td><p>ALT0</p></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-even"><td><p>Green (TXD)</p></td>
+<td><p>RXD</p></td>
+<td><p>GPIO15</p></td>
+<td><p>ALT0</p></td>
+<td><p>10</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Be careful and cross check the wiring as incorrect wiring might <strong>damage</strong>
+your device!</p>
+</div>
+</section>
+<section id="openocd">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/OpenOCD"></a><span id="rpi3-openocd"></span><h2>OpenOCD<a class="headerlink" href="#openocd" title="Permalink to this heading"></a></h2>
+<section id="build-openocd">
+<h3>Build OpenOCD<a class="headerlink" href="#build-openocd" title="Permalink to this heading"></a></h3>
+<p>Before building OpenOCD, ensure that you have the <code class="docutils literal notranslate"><span class="pre">libusb-dev</span></code> installed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libusb-1.0-0-dev
+</pre></div>
+</div>
+<p>We are using the <a class="reference external" href="http://openocd.org">official OpenOCD</a> release, simply clone that to your computer
+and then building is like a lot of other software, i.e.,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>http://repo.or.cz/openocd.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>openocd
+$<span class="w"> </span>./bootstrap
+$<span class="w"> </span>./configure
+$<span class="w"> </span>make
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In recent versions of OpenOCD, the legacy ft2332 support has been depracted.
+All these devices now uses libftdi instead. From OpenOCD release notes:
+<cite>“GPL-incompatible FTDI D2XX library support dropped (Presto, OpenJTAG and
+USB-Blaster I are using libftdi only now)”</cite>.</p>
+</div>
+<p>We leave it up to the reader of this guide to decide if he wants to install it
+properly (<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code>) or if he will just run it from the tree directly.
+The rest of this guide will just run it from the tree.</p>
+</section>
+<section id="openocd-rpi3-configuration-file">
+<h3>OpenOCD RPi3 configuration file<a class="headerlink" href="#openocd-rpi3-configuration-file" title="Permalink to this heading"></a></h3>
+<p>Unfortunately, the necessary <a class="reference external" href="https://github.com/OP-TEE/build/blob/master/rpi3/debugger/pi3.cfg">RPi3 OpenOCD config</a> isn’t upstreamed yet into
+the <a class="reference external" href="http://openocd.org">official OpenOCD</a> repository, so you should use the one stored here
+<code class="docutils literal notranslate"><span class="pre">&lt;rpi3-project/build/rpi3/debugger/pi3.cfg</span></code>.</p>
+</section>
+<section id="running-openocd">
+<h3>Running OpenOCD<a class="headerlink" href="#running-openocd" title="Permalink to this heading"></a></h3>
+<p>Depending on the JTAG debugger you are using you’ll need to find and use the
+interface file for that particular debugger. We’ve been using <a class="reference external" href="https://www.segger.com/jlink_base.html">J-Link
+debuggers</a> and <a class="reference external" href="http://dangerousprototypes.com/docs/Bus_Blaster">Bus Blaster</a> successfully. To start an OpenOCD session using a
+J-Link device you type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>&lt;openocd&gt;
+$<span class="w"> </span>./src/openocd<span class="w"> </span>-f<span class="w"> </span>./tcl/interface/jlink.cfg<span class="w"> </span>-f<span class="w"> </span>&lt;rpi3-project&gt;/build/rpi3/debugger/pi3.cfg
+</pre></div>
+</div>
+<p>For Bus Blaster type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./src/openocd<span class="w"> </span>-f<span class="w"> </span>./tcl/interface/ftdi/dp_busblaster.cfg<span class="w"> </span><span class="se">\ </span>-f<span class="w"> </span>&lt;rpi3_repo_dir&gt;/build/rpi3/debugger/pi3.cfg
+</pre></div>
+</div>
+<p>To be able to write commands directly to OpenOCD, you simply open up another
+shell and type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>nc<span class="w"> </span>localhost<span class="w"> </span><span class="m">4444</span>
+</pre></div>
+</div>
+<p>From there you can set breakpoints, examine memory etc (”<code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">help</span></code>” will give
+you a list of available commands). Having that said, if you connect to OpenOCD
+using GDB, then there is not much incentive connecting to OpenOCD directly,
+since you will be able to do the same in GDB by the <code class="docutils literal notranslate"><span class="pre">monitor</span></code> command.</p>
+</section>
+<section id="use-gdb">
+<h3>Use GDB<a class="headerlink" href="#use-gdb" title="Permalink to this heading"></a></h3>
+<p>OpenOCD will by default listen to GDB connections on port <code class="docutils literal notranslate"><span class="pre">3333</span></code>. So after
+starting OpenOCD, make a connection to GDB.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ensure that you have "gdb" in your $PATH</span>
+$<span class="w"> </span>aarch64-linux-gnu-gdb<span class="w"> </span>-q
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>target<span class="w"> </span>remote<span class="w"> </span>localhost:3333
+</pre></div>
+</div>
+<p>To load symbols you just use the <code class="docutils literal notranslate"><span class="pre">symbol-file</span> <span class="pre">&lt;path/to/my.elf</span></code> as usual. For
+convenience you can create an alias in the <code class="docutils literal notranslate"><span class="pre">~/.gdbinit</span></code> file. For TEE core
+debugging this works:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>define jtag_rpi3
+  target remote localhost:3333
+  symbol-file &lt;rpi3-project&gt;/optee_os/out/arm/core/tee.elf
+end
+</pre></div>
+</div>
+<p>So, when running GDB, you simply type: <code class="docutils literal notranslate"><span class="pre">(gdb)</span> <span class="pre">jtag_rpi3</span></code> and it will both
+connect and load the symbols for TEE core. For Linux kernel and other binaries
+you would do the same.</p>
+</section>
+<section id="debug-session-example">
+<h3>Debug session example<a class="headerlink" href="#debug-session-example" title="Permalink to this heading"></a></h3>
+<p>After making an initial Raspberry Pi 3 build for OP-TEE where you’ve enabled
+JTAG, installed and built OpenOCD, connected the JTAG cable, then you’re ready
+for debugging OP-TEE using JTAG on Raspberry 3. Boot up the Raspberry Pi 3 until
+you are in Linux and ready to run xtest. Start a new shell (on the host machine)
+where you run OpenOCD:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>&lt;openocd&gt;
+$<span class="w"> </span>./src/openocd<span class="w"> </span>-f<span class="w"> </span>./tcl/interface/jlink.cfg<span class="w"> </span>-f<span class="w"> </span>&lt;rpi3-project&gt;/build/rpi3/debugger/pi3.cfg
+</pre></div>
+</div>
+<p>Start another shell, where you run GDB</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>&lt;rpi3-project&gt;/toolchains/aarch64/bin/aarch64-linux-gnu-gdb<span class="w"> </span>-q
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>target<span class="w"> </span>remote<span class="w"> </span>localhost:3333
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>symbol-file<span class="w"> </span>&lt;rpi3-project&gt;/optee_os/out/arm/core/tee.elf
+</pre></div>
+</div>
+<p>Next, try to set a breakpoint for the function <code class="docutils literal notranslate"><span class="pre">hmac_init</span></code>, here use
+<strong>hardware</strong> breakpoints (i.e., <code class="docutils literal notranslate"><span class="pre">hb</span></code>)!</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>hb<span class="w"> </span>hmac_init
+Hardware<span class="w"> </span>assisted<span class="w"> </span>breakpoint<span class="w"> </span><span class="m">2</span><span class="w"> </span>at<span class="w"> </span>0x1012a178:<span class="w"> </span>file<span class="w"> </span>core/lib/libtomcrypt/src/mac/hmac/hmac_init.c,<span class="w"> </span>line<span class="w"> </span><span class="m">65</span>.
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>c
+Continuing.
+</pre></div>
+</div>
+<p>In the UART console (RPi3/Linux), run xtest.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># xtest</span>
+</pre></div>
+</div>
+<p>And shortly thereafter you will see GDB stops on your breakpoint and from there
+you can debug using normal GDB commands.</p>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="rockpi4.html" rel="prev" title="ROCK Pi 4"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="stm32mp1.html" rel="next" title="STM32MP1">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

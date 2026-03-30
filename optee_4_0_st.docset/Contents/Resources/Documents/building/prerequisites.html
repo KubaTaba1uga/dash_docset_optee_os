@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Prerequisites — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/tabs.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/tabs.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="devices/index.html" rel="next" title="Device specific information"/>
+<link href="index.html" rel="prev" title="Build and run"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Build and run</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="devices/index.html">Device specific information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gits/index.html">OP-TEE gits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Build and run</a></li>
+<li class="breadcrumb-item active">Prerequisites</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/building/prerequisites.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Prerequisites"></a><section id="prerequisites">
+<span id="id1"></span><h1>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h1>
+<p>We believe that you can use any Linux distribution to build OP-TEE, but as
+maintainers of OP-TEE we are mainly using Ubuntu-based distributions and to be
+able to build and run OP-TEE there are a few packages that needs to be
+available. Hereafter we provide Docker files which may be used as a reference.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Ubuntu 22.04</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Ubuntu 20.04</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">Older</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="code text highlight-default notranslate"><div class="highlight"><pre><span></span>FROM ubuntu:22.04
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt update &amp;&amp; apt upgrade -y
+RUN apt install -y \
+    adb \
+    acpica-tools \
+    autoconf \
+    automake \
+    bc \
+    bison \
+    build-essential \
+    ccache \
+    cpio \
+    cscope \
+    curl \
+    device-tree-compiler \
+    e2tools \
+    expect \
+    fastboot \
+    flex \
+    ftp-upload \
+    gdisk \
+    git \
+    libattr1-dev \
+    libcap-ng-dev \
+    libfdt-dev \
+    libftdi-dev \
+    libglib2.0-dev \
+    libgmp3-dev \
+    libhidapi-dev \
+    libmpc-dev \
+    libncurses5-dev \
+    libpixman-1-dev \
+    libslirp-dev \
+    libssl-dev \
+    libtool \
+    libusb-1.0-0-dev \
+    make \
+    mtools \
+    netcat \
+    ninja-build \
+    python3-cryptography \
+    python3-pip \
+    python3-pyelftools \
+    python3-serial \
+    python-is-python3 \
+    rsync \
+    swig \
+    unzip \
+    uuid-dev \
+    wget \
+    xdg-utils \
+    xterm \
+    xz-utils \
+    zlib1g-dev
+RUN curl https://storage.googleapis.com/git-repo-downloads/repo &gt; /bin/repo &amp;&amp; chmod a+x /bin/repo
+RUN mkdir /optee
+WORKDIR /optee
+RUN repo init -u https://github.com/OP-TEE/manifest.git -m qemu_v8.xml &amp;&amp; repo sync -j10
+WORKDIR /optee/build
+RUN make -j2 toolchains
+RUN make -j$(nproc) check
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="code text highlight-default notranslate"><div class="highlight"><pre><span></span>FROM ubuntu:20.04
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt update &amp;&amp; apt upgrade -y
+RUN apt install -y \
+    android-tools-adb \
+    android-tools-fastboot \
+    autoconf \
+    automake \
+    bc \
+    bison \
+    build-essential \
+    ccache \
+    cpio \
+    cscope \
+    curl \
+    device-tree-compiler \
+    expect \
+    flex \
+    ftp-upload \
+    gdisk \
+    git \
+    iasl \
+    libattr1-dev \
+    libcap-ng-dev \
+    libfdt-dev \
+    libftdi-dev \
+    libglib2.0-dev \
+    libgmp3-dev \
+    libhidapi-dev \
+    libmpc-dev \
+    libncurses5-dev \
+    libpixman-1-dev \
+    libslirp-dev \
+    libssl-dev \
+    libtool \
+    make \
+    mtools \
+    netcat \
+    ninja-build \
+    python-is-python3 \
+    python3-crypto \
+    python3-cryptography \
+    python3-pip \
+    python3-pyelftools \
+    python3-serial \
+    rsync \
+    unzip \
+    uuid-dev \
+    wget \
+    xdg-utils \
+    xterm \
+    xz-utils \
+    zlib1g-dev
+RUN curl https://storage.googleapis.com/git-repo-downloads/repo &gt; /bin/repo &amp;&amp; chmod a+x /bin/repo
+RUN mkdir /optee
+WORKDIR /optee
+RUN repo init -u https://github.com/OP-TEE/manifest.git -m qemu_v8.xml &amp;&amp; repo sync -j10
+WORKDIR /optee/build
+RUN make -j2 toolchains
+RUN make -j$(nproc) check
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>No longer supported by the OP-TEE community!</p>
+</div>
+<p>Due to all changes over the years with different names of Python
+packages and different requirement in time for Python2 and/or Python3
+packages, it’s not really possible to build more recent versions of
+OP-TEE with something that is older than Ubuntu 18.04. If you for some
+reason need to rebuild OP-TEE using a very old distro, then the best
+strategy for doing is is to check an earlier version of this
+documentation and start with the build instructions from there.</p>
+</div></div>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="index.html" rel="prev" title="Build and run"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="devices/index.html" rel="next" title="Device specific information">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

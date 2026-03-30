@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contribute — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="contact.html" rel="next" title="Contact"/>
+<link href="coding_standards.html" rel="prev" title="Coding standards"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Getting started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="about.html">About OP-TEE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coding_standards.html">Coding standards</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Contribute</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#developer-certificate-of-origin">Developer Certificate of Origin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#github">GitHub</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#setting-up-an-account">Setting up an account</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#forking">Forking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-pull-requests">Creating pull requests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#commit-messages">Commit messages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#review-feedback">Review feedback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#finalizing-your-contribution">Finalizing your contribution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license_headers.html">License headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms.html">Platforms supported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="presentations.html">Presentations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releases.html">Releases</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Getting started</a></li>
+<li class="breadcrumb-item active">Contribute</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/general/contribute.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Contribute"></a><section id="contribute">
+<span id="id1"></span><h1>Contribute<a class="headerlink" href="#contribute" title="Permalink to this heading"></a></h1>
+<p>Contributions to OP-TEE are managed by the OP-TEE <a class="reference internal" href="contact.html#core-team"><span class="std std-ref">Core Team</span></a> and anyone
+can contribute to OP-TEE as long as it is understood that it will require a
+<cite>Signed-off-by</cite> tag from the one submitting the patch(es). The Signed-off-by tag
+is a simple line at the end of the explanation for the patch, which certifies
+that you wrote it or otherwise have the right to pass it on as an open source
+patch (see below). You thereby assure that you have read and are following the
+rules stated in the <code class="docutils literal notranslate"><span class="pre">Developer</span> <span class="pre">Certificate</span> <span class="pre">of</span> <span class="pre">Origin</span></code> as stated below.</p>
+<section id="developer-certificate-of-origin">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Developer Certificate of Origin"></a><span id="dco"></span><h2>Developer Certificate of Origin<a class="headerlink" href="#developer-certificate-of-origin" title="Permalink to this heading"></a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Developer Certificate of Origin
+Version 1.1
+
+Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
+660 York Street, Suite 102,
+San Francisco, CA 94110 USA
+
+Everyone is permitted to copy and distribute verbatim copies of this
+license document, but changing it is not allowed.
+
+
+Developer's Certificate of Origin 1.1
+
+By making a contribution to this project, I certify that:
+
+(a) The contribution was created in whole or in part by me and I
+    have the right to submit it under the open source license
+    indicated in the file; or
+
+(b) The contribution is based upon previous work that, to the best
+    of my knowledge, is covered under an appropriate open source
+    license and I have the right under that license to submit that
+    work with modifications, whether created in whole or in part
+    by me, under the same open source license (unless I am
+    permitted to submit under a different license), as indicated
+    in the file; or
+
+(c) The contribution was provided directly to me by some other
+    person who certified (a), (b) or (c) and I have not modified
+    it.
+
+(d) I understand and agree that this project and the contribution
+    are public and that a record of the contribution (including all
+    personal information I submit with it, including my sign-off) is
+    maintained indefinitely and may be redistributed consistent with
+    this project or the open source license(s) involved.
+</pre></div>
+</div>
+<p>We have borrowed this procedure from the Linux kernel project to improve
+tracking of who did what, and for legal reasons.</p>
+<p>To sign-off a patch, just add a line in the commit message saying:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Signed-off-by: Random J Developer &lt;random@developer.example.org&gt;
+</pre></div>
+</div>
+<p>Use your real name or on some rare cases a company email address, but we
+disallow pseudonyms or anonymous contributions.</p>
+</section>
+<section id="github">
+<h2>GitHub<a class="headerlink" href="#github" title="Permalink to this heading"></a></h2>
+<p>This section describes how to use GitHub for OP-TEE development and
+contributions.</p>
+<section id="setting-up-an-account">
+<h3>Setting up an account<a class="headerlink" href="#setting-up-an-account" title="Permalink to this heading"></a></h3>
+<p>You do not need to own a GitHub account in order to clone a repository. But if
+you want to contribute, you need to create an account at <a class="reference external" href="https://github.com">GitHub</a>. Note that a
+free plan is sufficient to collaborate.</p>
+<p>SSH is recommended to access your GitHub repositories securely and without
+supplying your username and password each time you pull or push something.
+To configure SSH for GitHub, please refer to <a class="reference external" href="https://help.github.com/articles/connecting-to-github-with-ssh">Connecting to GitHub with SSH</a>.</p>
+</section>
+<section id="forking">
+<h3>Forking<a class="headerlink" href="#forking" title="Permalink to this heading"></a></h3>
+<p>Only owners of the OP-TEE projects have write permissions to the git
+repositories of those projects. Contributors <strong>should fork</strong> <code class="docutils literal notranslate"><span class="pre">OP-TEE/*.git</span></code>
+and/or <code class="docutils literal notranslate"><span class="pre">linaro-swg/*.git</span></code> into their own account, then work on this forked
+repository. The complete documentation about <strong>forking</strong> can be found at <a class="reference external" href="https://help.github.com/articles/fork-a-repo">fork a
+repo</a>.</p>
+</section>
+<section id="creating-pull-requests">
+<h3>Creating pull requests<a class="headerlink" href="#creating-pull-requests" title="Permalink to this heading"></a></h3>
+<p>When you want to submit a patch to the OP-TEE project, you are supposed to
+create a <a class="reference external" href="https://help.github.com/articles/creating-a-pull-request">pull request</a> to the git where you forked your git from. How that is
+done using GitHub is explained at the GitHub <a class="reference external" href="https://help.github.com/articles/creating-a-pull-request">pull request</a> page.</p>
+</section>
+<section id="commit-messages">
+<h3>Commit messages<a class="headerlink" href="#commit-messages" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><ul>
+<li><p>The <strong>subject line</strong> should explain <strong>what</strong> the patch does as precisely
+as possible. It is usually prefixed with keywords indicating which part of
+the code is affected, but not always. Avoid lines longer than 80
+characters.</p></li>
+<li><p>The <strong>commit description</strong> should give more details on <strong>what</strong> is
+changed, and explain <strong>why</strong> it is done. Indication on how to enable and
+use some particular feature can be useful, too. Try to limit line length
+to 72 characters, except when pasting some error message (compiler
+diagnostic etc.). Long lines are allowed to accommodate URLs, too
+(preferably use URLs in a Fixes: or Link: tag).</p></li>
+<li><p>The commit message <strong>must</strong> end with a blank line followed by some tags,
+including your <code class="docutils literal notranslate"><span class="pre">Signed-off-by:</span></code> tag. By applying such a tag to your
+commit, you are effectively declaring that your contribution follows the
+terms stated by <a class="reference internal" href="#dco"><span class="std std-ref">Developer Certificate of Origin</span></a> (in the DCO section there is also a complete
+example).</p></li>
+<li><p>Other tags may be used, such as:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Tested-by:</span> <span class="pre">Test</span> <span class="pre">R</span> <span class="pre">&lt;test@r.com&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Acked-by:</span> <span class="pre">Acke</span> <span class="pre">R</span> <span class="pre">&lt;acke@r.com&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Suggested-by:</span> <span class="pre">Suggeste</span> <span class="pre">R</span> <span class="pre">&lt;suggeste@r.com&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Reported-by:</span> <span class="pre">Reporte</span> <span class="pre">R</span> <span class="pre">&lt;reporte@r.com&gt;</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>When citing a previous commit, whether it is in the text body or in a
+Fixes: tag, always use the format shown above (12 hexadecimal digits
+prefix of the commit <code class="docutils literal notranslate"><span class="pre">SHA1</span></code>, followed by the commit subject in double
+quotes and parentheses).</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="review-feedback">
+<h3>Review feedback<a class="headerlink" href="#review-feedback" title="Permalink to this heading"></a></h3>
+<p>It is very likely that you will get review comments from other OP-TEE users
+asking you to fix certain things etc. When fixing review comments, do:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Add</strong> <cite>fixup</cite> patches on <strong>top</strong> of your existing branch. <strong>Do not</strong>
+squash and force push while fixing review comments.</p></li>
+<li><p>When all comments have been addressed, just write a simple messages in the
+comments field saying something like “All comments have been addressed”.
+By doing so you will notify the maintainers that the fix might be ready
+for review again.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="finalizing-your-contribution">
+<h3>Finalizing your contribution<a class="headerlink" href="#finalizing-your-contribution" title="Permalink to this heading"></a></h3>
+<p>Once you and reviewers have agreed on the patch set, which is when all the
+people who have commented on the pull request have given their <code class="docutils literal notranslate"><span class="pre">Acked-by:</span></code> or
+<code class="docutils literal notranslate"><span class="pre">Reviewed-by:</span></code>, you need to consolidate your commits:</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">rebase</span> <span class="pre">-i</span></code> to squash the fixup commits (if any) into the initial
+ones. For instance, suppose the <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">log</span> <span class="pre">--oneline</span></code> for you contribution looks
+as follows when the review process ends:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;sha1-commit4&gt; [Review] Do something
+&lt;sha1-commit3&gt; [Review] Do something
+&lt;sha1-commit2&gt; Do something else
+&lt;sha1-commit1&gt; Do something
+</pre></div>
+</div>
+<p>Then you would do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>&lt;sha1-commit1&gt;^
+</pre></div>
+</div>
+<p>Edit the commit script so it looks like so:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pick &lt;sha1-commit1&gt; Do something
+squash &lt;sha1-commit3&gt; [Review] Do something
+squash &lt;sha1-commit4&gt; [Review] Do something
+pick &lt;sha1-commit2&gt; Do something else
+</pre></div>
+</div>
+<p>Add the proper tags (<code class="docutils literal notranslate"><span class="pre">Acked-by:</span> <span class="pre">...</span></code>, <code class="docutils literal notranslate"><span class="pre">Reviewed-by:</span> <span class="pre">...</span></code>, <code class="docutils literal notranslate"><span class="pre">Tested-by:</span>
+<span class="pre">...</span></code>) to the commit message(s) for each and every commit as provided by the
+people who reviewed and/or tested the patches.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">--fixup=&lt;sha1-of-commit-to-fix&gt;</span></code> and later on <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">rebase</span> <span class="pre">-i</span>
+<span class="pre">--autosquash</span> <span class="pre">&lt;sha1-of-first-commit-in-patch-serie&gt;^1</span></code> is pretty convenient
+to use when adding review patches and doing the final squash operation.</p>
+</div>
+<p>Once <code class="docutils literal notranslate"><span class="pre">rebase</span> <span class="pre">-i</span></code> is done, you need to force-push (<code class="docutils literal notranslate"><span class="pre">-f</span></code>) to your GitHub
+branch in order to update the pull request page.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>-f<span class="w"> </span>&lt;my-remote&gt;<span class="w"> </span>&lt;my-branch&gt;
+</pre></div>
+</div>
+<p>After completing this it is the project maintainers job to apply your patches to
+the master branch.</p>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="coding_standards.html" rel="prev" title="Coding standards"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="contact.html" rel="next" title="Contact">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Core — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="crypto.html" rel="next" title="Cryptographic implementation"/>
+<link href="index.html" rel="prev" title="Architecture"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Core</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#interrupt-handling">Interrupt handling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#use-cases-of-world-context-switch">Use cases of world context switch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-exception-vectors">Core exception vectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#native-and-foreign-interrupts">Native and foreign interrupts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#normal-world-invokes-op-tee-os-using-smc">Normal World invokes OP-TEE OS using SMC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deliver-non-secure-interrupts-to-normal-world">Deliver non-secure interrupts to Normal World</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deliver-secure-interrupts-to-secure-world">Deliver secure interrupts to Secure World</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trusted-thread-scheduling">Trusted thread scheduling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-handlers-for-native-interrupts">Core handlers for native interrupts</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#notifications">Notifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#memory-objects">Memory objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mmu">MMU</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#translation-tables">Translation tables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#page-table-cache">Page table cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#switching-to-user-mode">Switching to user mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#switching-to-normal-world">Switching to normal world</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pager">Pager</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#secure-memory">Secure memory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backing-store">Backing store</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#partitioning-of-memory">Partitioning of memory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#partitioning-of-the-binary">Partitioning of the binary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initializing-the-pager">Initializing the pager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#invocation">Invocation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-structures">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#paging-of-user-ta">Paging of user TA</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#stacks">Stacks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#boot">Boot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#normal-entry">Normal entry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#normal-exit">Normal exit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpc-exit">RPC exit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#foreign-interrupt-exit">Foreign interrupt exit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resume-entry">Resume entry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#syscall">Syscall</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#shared-memory">Shared Memory</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#contiguous-shared-buffers">Contiguous shared buffers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#noncontiguous-shared-buffers">Noncontiguous shared buffers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#shared-memory-chunk-allocation">Shared Memory Chunk Allocation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#registering-shared-memory">Registering shared memory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-shared-memory">Using shared memory</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#smc">SMC</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#smc-interface">SMC Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#smc-communication">SMC communication</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#thread-handling">Thread handling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synchronization-primitives">Synchronization primitives</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+<li class="breadcrumb-item active">Core</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/architecture/core.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Core"></a><section id="core">
+<span id="id1"></span><h1>Core<a class="headerlink" href="#core" title="Permalink to this heading"></a></h1>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Interrupt handling"></a><section id="interrupt-handling">
+<span id="id2"></span><h2>Interrupt handling<a class="headerlink" href="#interrupt-handling" title="Permalink to this heading"></a></h2>
+<p>This section describes how <a class="reference internal" href="../building/gits/optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> handles switches of world execution
+context based on <a class="reference internal" href="#smc"><span class="std std-ref">SMC</span></a> exceptions and interrupt notifications. Interrupt
+notifications are IRQ/FIQ exceptions which may also imply switching of world
+execution context: normal world to secure world, or secure world to normal
+world.</p>
+<section id="use-cases-of-world-context-switch">
+<h3>Use cases of world context switch<a class="headerlink" href="#use-cases-of-world-context-switch" title="Permalink to this heading"></a></h3>
+<p>This section lists all the cases where OP-TEE OS is involved in world context
+switches. Optee_os executes in the secure world. World switch is done by the
+core’s secure monitor level/mode, referred below as the Monitor.</p>
+<p>When the normal world invokes the secure world, the normal world executes a SMC
+instruction. The SMC exception is always trapped by the Monitor. If the related
+service targets the trusted OS, the Monitor will switch to OP-TEE OS world
+execution. When the secure world returns to the normal world, OP-TEE OS executes
+a SMC that is caught by the Monitor which switches back to the normal world.</p>
+<p>When a secure interrupt is signaled by the Arm GIC, it shall reach the OP-TEE OS
+interrupt exception vector. If the secure world is executing, OP-TEE OS will
+handle interrupt straight from its exception vector. If the normal world is
+executing when the secure interrupt raises, the Monitor vector must handle the
+exception and invoke OP-TEE OS to serve the interrupt.</p>
+<p>When a non-secure interrupt is signaled by the Arm GIC, it shall reach the
+normal world interrupt exception vector. If the normal world is executing, it
+will handle straight the exception from its exception vector. If the secure
+world is executing when the non-secure interrupt raises, OP-TEE OS will
+temporarily return back to normal world via the Monitor to let normal world
+serve the interrupt.</p>
+</section>
+<section id="core-exception-vectors">
+<h3>Core exception vectors<a class="headerlink" href="#core-exception-vectors" title="Permalink to this heading"></a></h3>
+<p>Monitor vector is <code class="docutils literal notranslate"><span class="pre">VBAR_EL3</span></code> in AArch64 and <code class="docutils literal notranslate"><span class="pre">MVBAR</span></code> in Armv7-A/AArch32.
+Monitor can be reached while normal world or secure world is executing. The
+executing secure state is known to the Monitor through the <code class="docutils literal notranslate"><span class="pre">SCR_NS</span></code>.</p>
+<p>Monitor can be reached from a SMC exception, an IRQ or FIQ exception (so-called
+interrupts) and from asynchronous aborts. Obviously monitor aborts (data,
+prefetch, undef) are local to the Monitor execution.</p>
+<p>The Monitor can be external to OP-TEE OS (case <code class="docutils literal notranslate"><span class="pre">CFG_WITH_ARM_TRUSTED_FW=y</span></code>).
+If not, provides a local secure monitor <code class="docutils literal notranslate"><span class="pre">core/arch/arm/sm</span></code>. Armv7-A platforms
+should use the OP-TEE OS secure monitor. Armv8-A platforms are likely to rely on
+an <a class="reference external" href="https://github.com/ARM-software/arm-trusted-firmware">Trusted Firmware A</a>.</p>
+<p>When executing outside the Monitor, the system is executing either in the
+normal world (<code class="docutils literal notranslate"><span class="pre">SCR_NS=1</span></code>) or in the secure world (<code class="docutils literal notranslate"><span class="pre">SCR_NS=0</span></code>). Each world
+owns its own exception vector table (state vector):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VBAR_EL2</span></code> or <code class="docutils literal notranslate"><span class="pre">VBAR_EL1</span></code> non-secure or <code class="docutils literal notranslate"><span class="pre">VBAR_EL1</span></code> secure for
+AArch64.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HVBAR</span></code> or <code class="docutils literal notranslate"><span class="pre">VBAR</span></code> non-secure or <code class="docutils literal notranslate"><span class="pre">VBAR</span></code> secure for Armv7-A and
+AArch32.</p></li>
+</ul>
+</div></blockquote>
+<p>All SMC exceptions are trapped in the Monitor vector. IRQ/FIQ exceptions can be
+trapped either in the Monitor vector or in the state vector of the executing
+world.</p>
+<p>When the normal world is executing, the system is configured to route:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>secure interrupts to the Monitor that will forward to OP-TEE OS</p></li>
+<li><p>non-secure interrupts to the executing world exception vector.</p></li>
+</ul>
+</div></blockquote>
+<p>When the secure world is executing, the system is configured to route:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>secure and non-secure interrupts to the executing OP-TEE OS exception
+vector. OP-TEE OS shall forward the non-secure interrupts to the normal
+world.</p></li>
+</ul>
+</div></blockquote>
+<p>Optee_os non-secure interrupts are always trapped in the state vector of the
+executing world. This is reflected by a static value of <code class="docutils literal notranslate"><span class="pre">SCR_(IRQ|FIQ)</span></code>.</p>
+</section>
+<section id="native-and-foreign-interrupts">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Native and foreign interrupts"></a><span id="native-foreign-irqs"></span><h3>Native and foreign interrupts<a class="headerlink" href="#native-and-foreign-interrupts" title="Permalink to this heading"></a></h3>
+<p>Two types of interrupt are defined from OP-TEE OS point of view.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Native interrupt</strong> - The interrupt handled by OP-TEE OS, secure
+interrupts targetting S-EL1 or secure privileged mode</p></li>
+<li><p><strong>Foreign interrupt</strong> - The interrupt not handled by OP-TEE OS, non-secure
+interrupts targetting normal world or secure interrupts targetting EL3.</p></li>
+</ul>
+</div></blockquote>
+<p>For Arm <strong>GICv2</strong> mode, a native interrupt is signalled with a FIQ and a
+foreign interrupt is signalled with an IRQ. For Arm <strong>GICv3</strong> mode, a
+foreign interrupts is signalled as a FIQ which could be handled by either
+secure world (aarch32 Monitor mode or aarch64 EL3) or normal world.</p>
+<p>Arm GICv3 mode can be enabled by setting <code class="docutils literal notranslate"><span class="pre">CFG_ARM_GICV3=y</span></code>.
+Native interrupts must be securely routed to OP-TEE OS. Foreign interrupts, when
+trapped during secure world execution might need to be efficiently routed to
+the normal world.</p>
+<p>IRQ and FIQ keeps their meaning in normal world so for clarity we will keep
+using those names in the normal world context.</p>
+</section>
+<section id="normal-world-invokes-op-tee-os-using-smc">
+<h3>Normal World invokes OP-TEE OS using SMC<a class="headerlink" href="#normal-world-invokes-op-tee-os-using-smc" title="Permalink to this heading"></a></h3>
+<p><strong>Entering the Secure Monitor</strong></p>
+<p>The monitor manages all entries and exits of secure world. To enter secure
+world from normal world the monitor saves the state of normal world (general
+purpose registers and system registers which are not banked) and restores the
+previous state of secure world. Then a return from exception is performed and
+the restored secure state is resumed. Exit from secure world to normal world is
+the reverse.</p>
+<p>Some general purpose registers are not saved and restored on entry and exit,
+those are used to pass parameters between secure and normal world (see
+<a class="reference external" href="http://infocenter.arm.com/help/topic/com.arm.doc.den0028b/ARM_DEN0028B_SMC_Calling_Convention.pdf">ARM_DEN0028A_SMC_Calling_Convention</a> for details).</p>
+<p><strong>Entry and exit of Trusted OS</strong></p>
+<p>On entry and exit of Trusted OS each CPU is uses a separate entry stack and runs
+with IRQ and FIQ masked. SMCs are categorised in two flavors: <strong>fast</strong> and
+<strong>yielding</strong>.</p>
+<blockquote>
+<div><ul>
+<li><p>For <strong>fast</strong> SMCs, OP-TEE OS will execute on the entry stack with IRQ/FIQ
+masked until the execution returns to normal world.</p></li>
+<li><p>For <strong>yielding</strong> SMCs, OP-TEE OS will at some point execute the requested
+service with interrupts unmasked. In order to handle interrupts, mainly
+forwarding of foreign interrupts, OP-TEE OS assigns a trusted thread
+(<a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/kernel/thread.c">core/arch/arm/kernel/thread.c</a>) to the SMC request. The trusted thread
+stores the execution context of the requested service. This context can be
+suspended and resumed as the requested service executes and is
+interrupted. The trusted thread is released only once the service
+execution returns with a completion status.</p>
+<p>For <strong>yielding</strong> SMCs, OP-TEE OS allocates or resumes a trusted thread
+then unmasks the IRQ and FIQ lines. When the OP-TEE OS needs to invoke the
+normal world from a foreign interrupt or a remote service call, OP-TEE OS
+masks IRQ and FIQ and suspends the trusted thread. When suspending,
+OP-TEE OS gets back to the entry stack.</p>
+</li>
+<li><p><strong>Both</strong> fast and yielding SMCs end on the entry stack with IRQ and
+FIQ masked and OP-TEE OS invokes the Monitor through a SMC to return
+to the normal world.</p></li>
+</ul>
+</div></blockquote>
+<figure class="align-center" id="id11">
+<p class="plantuml">
+<img alt='participant "Normal World" as nwd
+participant "Secure Monitor" as smon
+participant "OP-TEE OS entry" as entry
+participant "OP-TEE OS" as optee
+== IRQ and FIQ unmasked ==
+nwd -&gt; smon : smc: TEE_FUNC_INVOKE
+smon -&gt; smon : Save non-secure context
+smon -&gt; smon : Restore secure context
+smon --&gt; entry : eret: TEE_FUNC_INVOKE
+entry -&gt; entry : assign thread
+entry -&gt; optee : TEE_FUNC_INVOKE
+== IRQ and FIQ unmasked ==
+optee -&gt; optee : process
+== IRQ and FIQ masked ==
+optee --&gt; entry : SMC_CALL_RETURN
+entry -&gt; smon : smc: SMC_CALL_RETURN
+smon -&gt; smon : Save secure context
+smon -&gt; smon : Restore non-secure context
+== IRQ and FIQ unmasked ==
+smon --&gt; nwd : eret: return' src="../_images/plantuml-5bee5229f56c37a1be37c0f13b2a6fafebda4477.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">SMC entry to secure world</span><a class="headerlink" href="#id11" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="deliver-non-secure-interrupts-to-normal-world">
+<h3>Deliver non-secure interrupts to Normal World<a class="headerlink" href="#deliver-non-secure-interrupts-to-normal-world" title="Permalink to this heading"></a></h3>
+<p><strong>Forward a Foreign Interrupt from Secure World to Normal World</strong></p>
+<p>When a foreign interrupt is received in secure world as an IRQ or FIQ
+exception then secure world:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Saves trusted thread context (entire state of all processor modes for
+Armv7-A)</p></li>
+<li><p>Masks all interrupts (IRQ and FIQ)</p></li>
+<li><p>Switches to entry stack</p></li>
+<li><p>Issues an SMC with a value to indicates to normal world that an IRQ has
+been detected and last SMC call should be continued</p></li>
+</ol>
+</div></blockquote>
+<p>The monitor restores normal world context with a return code indicating that an
+IRQ is about to be delivered. Normal world issues a new SMC indicating that it
+should continue last SMC.</p>
+<p>The monitor restores secure world context which locates the previously
+saved context and checks that it is a return from a foreign interrupt that
+is requested before restoring the context and lets the secure world foreign
+interrupt handler return from exception where the execution would be
+resumed.</p>
+<p>Note that the monitor itself does not know or care that it has just forwarded
+a foreign interrupt to normal world. The bookkeeping is done in the trusted
+thread handling in OP-TEE OS. Normal world is responsible to decide when
+the secure world thread should resume execution (for details, see
+<a class="reference internal" href="#thread-handling"><span class="std std-ref">Thread handling</span></a>).</p>
+<figure class="align-center" id="id12">
+<p class="plantuml">
+<img alt='participant "Normal World" as nwd
+participant "Secure Monitor" as smon
+participant "OP-TEE OS entry" as entry
+participant "OP-TEE OS" as optee
+== IRQ and FIQ unmasked ==
+optee -&gt; optee : process
+== IRQ and FIQ unmasked,\nForeign interrupt received ==
+optee -&gt; optee : suspend thread
+optee -&gt; entry : forward foreign interrupt
+entry -&gt; smon : smc: forward foreign interrupt
+smon -&gt; smon: Save secure context
+smon -&gt; smon: Restore non-secure context
+== IRQ and FIQ unmasked ==
+smon --&gt; nwd : eret: IRQ forwarded
+== FIQ unmasked, IRQ received ==
+nwd -&gt; nwd : process IRQ
+== IRQ and FIQ unmasked ==
+nwd -&gt; smon : smc: return from IRQ
+== IRQ and FIQ masked ==
+smon -&gt; smon : Save non-secure context
+smon -&gt; smon : Restore secure context
+smon --&gt; entry : eret: return from foreign interrupt
+entry -&gt; entry : find thread
+entry --&gt; optee : resume execution
+== IRQ and FIQ unmasked ==
+optee -&gt; optee : process' src="../_images/plantuml-f72c516f5205da2f7ad2483b7cbeaebf1faf462a.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">Foreign interrupt received in secure world and forwarded to
+normal world</span><a class="headerlink" href="#id12" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Deliver a foreign interrupt to normal world when ``SCR_NS`` is set</strong></p>
+<p>Since <code class="docutils literal notranslate"><span class="pre">SCR_IRQ</span></code> is cleared, an IRQ will be delivered using the exception
+vector (<code class="docutils literal notranslate"><span class="pre">VBAR</span></code>) in the normal world. The IRQ is received as any other
+exception by normal world, the monitor and the OP-TEE OS are not involved
+at all.</p>
+</section>
+<section id="deliver-secure-interrupts-to-secure-world">
+<h3>Deliver secure interrupts to Secure World<a class="headerlink" href="#deliver-secure-interrupts-to-secure-world" title="Permalink to this heading"></a></h3>
+<p>A secure (foreign) interrupt can be received during two different states,
+either in normal world (<code class="docutils literal notranslate"><span class="pre">SCR_NS</span></code> is set) or in secure world (<code class="docutils literal notranslate"><span class="pre">SCR_NS</span></code>
+is cleared). When the secure monitor is active (Armv8-A EL3 or Armv7-A
+Monitor mode) FIQ and IRQ are masked. FIQ reception in the two different
+states is described below.</p>
+<p><strong>Deliver secure interrupt to secure world when SCR_NS is set</strong></p>
+<p>When the monitor traps a secure interrupt it:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Saves normal world context and restores secure world context from last
+secure world exit (which will have IRQ and FIQ blocked)</p></li>
+<li><p>Clears <code class="docutils literal notranslate"><span class="pre">SCR_FIQ</span></code> when clearing <code class="docutils literal notranslate"><span class="pre">SCR_NS</span></code></p></li>
+<li><p>Does a return from exception into OP-TEE OS via the secure interrupt
+entry point</p></li>
+<li><p>OP-TEE OS handles the native interrupt directly in the entry point</p></li>
+<li><p>OP-TEE OS issues an SMC to return to normal world</p></li>
+<li><p>The monitor saves the secure world context and restores the normal world context</p></li>
+<li><p>Does a return from exception into the restored context</p></li>
+</ol>
+</div></blockquote>
+<figure class="align-center" id="id13">
+<p class="plantuml">
+<img alt='participant "Normal World" as nwd
+participant "Secure Monitor" as smon
+participant "OP-TEE OS entry" as entry
+participant "OP-TEE OS" as optee
+== IRQ and FIQ unmasked ==
+== Running in non-secure world (SCR_NS set) ==
+nwd -&gt; nwd : process
+== IRQ and FIQ masked,\nSecure interrupt received ==
+smon -&gt; smon : Save non-secure context
+smon -&gt; smon : Restore secure context
+smon --&gt; entry : eret: native interrupt entry point
+entry -&gt; entry: process received native interrupt
+entry -&gt; smon: smc: return
+smon -&gt; smon : Save secure context
+smon -&gt; smon : Restore non-secure context
+smon --&gt; nwd : eret: return to Normal world
+== IRQ and FIQ unmasked ==
+nwd -&gt; nwd : process' src="../_images/plantuml-c62cc6d6611a73cdfc9222e0927c4bde8a8b8f7d.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">Secure interrupt received when SCR_NS is set</span><a class="headerlink" href="#id13" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Deliver FIQ to secure world when SCR_NS is cleared</strong></p>
+<figure class="align-center" id="id14">
+<p class="plantuml">
+<img alt='participant "Normal World" as nwd
+participant "Secure Monitor" as smon
+participant "OP-TEE OS entry" as entry
+participant "OP-TEE OS" as optee
+== IRQ and FIQ unmasked ==
+optee -&gt; optee : process
+== IRQ and FIQ unmasked,\nForeign interrupt received ==
+optee -&gt; optee : suspend thread
+optee -&gt; entry : forward foreign interrupt
+entry -&gt; smon : smc: forward foreign interrupt
+smon -&gt; smon: Save secure context
+smon -&gt; smon: Restore non-secure context
+== IRQ and FIQ unmasked ==
+smon --&gt; nwd : eret: IRQ forwarded
+== FIQ unmasked, IRQ received ==
+nwd -&gt; nwd : process IRQ
+== IRQ and FIQ masked,\nSecure interrupt received ==
+smon -&gt; smon : Save non-secure context
+smon -&gt; smon : Restore secure context
+smon --&gt; entry : eret: native interrupt entry point
+entry -&gt; entry : process received native interrupt
+entry -&gt; smon: smc: return
+smon -&gt; smon : Save secure context
+smon -&gt; smon : Restore non-secure context
+smon --&gt; nwd : eret: return to Normal world
+== FIQ unmasked\nIRQ still being processed ==
+nwd -&gt; nwd : process IRQ
+== IRQ and FIQ unmasked ==
+nwd -&gt; smon : smc: return from IRQ
+== IRQ and FIQ masked ==
+smon -&gt; smon : Save non-secure context
+smon -&gt; smon : Restore secure context
+smon --&gt; entry : eret: return from foreign interrupt
+entry -&gt; entry : find thread
+entry --&gt; optee : resume execution
+== IRQ and FIQ unmasked ==
+optee -&gt; optee : process' src="../_images/plantuml-4a75ac29c93ea38b036eb83838822464d9ea571d.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">FIQ received while processing an IRQ forwarded from secure world</span><a class="headerlink" href="#id14" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="trusted-thread-scheduling">
+<h3>Trusted thread scheduling<a class="headerlink" href="#trusted-thread-scheduling" title="Permalink to this heading"></a></h3>
+<p><strong>Trusted thread for standard services</strong></p>
+<p>OP-TEE yielding services are carried through standard SMC. Execution of these
+services can be interrupted by foreign interrupts. To suspend and restore the
+service execution, optee_os assigns a trusted thread at yielding SMC entry.</p>
+<p>The trusted thread terminates when optee_os returns to the normal world with a
+service completion status.</p>
+<p>A trusted thread execution can be interrupted by a native interrupt. In this
+case the native interrupt is handled by the interrupt exception handlers and
+once served, optee_os returns to the execution trusted thread.</p>
+<p>A trusted thread execution can be interrupted by a foreign interrupt. In this
+case, optee_os suspends the trusted thread and invokes the normal world through
+the Monitor (optee_os so-called RPC services). The trusted threads will resume
+only once normal world invokes the optee_os with the RPC service status.</p>
+<p>A trusted thread execution can lead optee_os to invoke a service in normal
+world: access a file, get the REE current time, etc. The trusted thread is
+first suspended then resumed during remote service execution.</p>
+<p><strong>Scheduling considerations</strong></p>
+<p>When a trusted thread is interrupted by a foreign interrupt and when optee_os
+invokes a normal world service, the normal world gets the opportunity to
+reschedule the running applications. The trusted thread will resume only once
+the client application is scheduled back. Thus, a trusted thread execution
+follows the scheduling of the normal world caller context.</p>
+<p>Optee_os does not implement any thread scheduling. Each trusted thread is
+expected to track a service that is invoked from the normal world and should
+return to it with an execution status.</p>
+<p>The OP-TEE Linux driver (as implemented in <a class="reference external" href="https://github.com/torvalds/linux/tree/master/drivers/tee/optee">drivers/tee/optee</a> since Linux
+kernel 4.12) is designed so that the Linux thread invoking OP-TEE gets assigned
+a trusted thread on TEE side. The execution of the trusted thread is tied to the
+execution of the caller Linux thread which is under the Linux kernel scheduling
+decision. This means trusted threads are scheduled by the Linux kernel.</p>
+<p><strong>Trusted thread constraints</strong></p>
+<p>TEE core handles a static number of trusted threads, see <code class="docutils literal notranslate"><span class="pre">CFG_NUM_THREADS</span></code>.</p>
+<p>Trusted threads are expensive on memory constrained system, mainly
+because of the execution stack size.</p>
+<p>On SMP systems, optee_os can execute several trusted threads in parallel if the
+normal world supports scheduling of processes. Even on UP systems, supporting
+several trusted threads in optee_os helps normal world scheduler to be
+efficient.</p>
+</section>
+<section id="core-handlers-for-native-interrupts">
+<h3>Core handlers for native interrupts<a class="headerlink" href="#core-handlers-for-native-interrupts" title="Permalink to this heading"></a></h3>
+<p>OP-TEE core provides methods for device drivers to setup and register
+handler functions for native interrupt controller drivers
+(see:ref:<cite>native_foreign_irqs</cite>).
+Interrupt handlers can be nested as when an interrupt controller
+exposes interrupts which signaling is multiplexed on an interrupt
+controlled by a parent interrupt controller.</p>
+<p>Interrupt controllers are represented by an instance of <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">itr_chip</span></code>.
+An interrupt controller exposes a given number of interrupts, each identified
+by an index from 0 to N-1 where N is the total number of interrupts exposed
+by that controller. In the literature, an interrupt index identifier
+is called interrupt number.</p>
+<p><strong>Interrupt management API functions</strong></p>
+<p>Interrupt management resources are declared in header file <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/include/kernel/interrupt.h">interrupt.h</a>.
+Interrupt consumers main API functions are:</p>
+<p>    - <code class="docutils literal notranslate"><span class="pre">interrupt_enable()</span></code> and <code class="docutils literal notranslate"><span class="pre">interrupt_disable()</span></code> to respectively
+      enable or disable an interrupt.</p>
+<p>    - <code class="docutils literal notranslate"><span class="pre">interrupt_mask()</span></code> and <code class="docutils literal notranslate"><span class="pre">interrupt_unmask()</span></code> to respectively mask
+      or unmask an interrupt. Masking of an enabled interrupt temporarily
+      disables the interrupt while unmasking enables a previously masked
+      interrupt. <code class="docutils literal notranslate"><span class="pre">interrupt_mask()</span></code> and <code class="docutils literal notranslate"><span class="pre">interrupt_unmask()</span></code> are
+      allowed to be called from an interrupt context, but
+      <code class="docutils literal notranslate"><span class="pre">interrupt_enable()</span></code> and <code class="docutils literal notranslate"><span class="pre">interrupt_disable()</span></code> not so.</p>
+<p>    - <code class="docutils literal notranslate"><span class="pre">interrupt_configure()</span></code> to configure an interrupt detection mode
+      and priority.</p>
+<dl>
+<dt>    - <code class="docutils literal notranslate"><span class="pre">interrupt_add_handler()</span></code> to configure an interrupt and register</dt><dd><blockquote>
+<div><p>an interrupt handler function, see below.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">interrupt_remove_handler()</span></code> to unregister an interrupt handler
+function from an interrupt.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Interrupt controller drivers</strong></p>
+<p>An interrupt controller instance, named chip (<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">itr_chip</span></code>) defines
+operation function handlers for management of the interrupt(s) it controls.
+An interrupt chip driver must provide operation handler functions <code class="docutils literal notranslate"><span class="pre">.add</span></code>,
+<code class="docutils literal notranslate"><span class="pre">.mask</span></code>, <code class="docutils literal notranslate"><span class="pre">.unmask</span></code>, <code class="docutils literal notranslate"><span class="pre">.enable</span></code> and <code class="docutils literal notranslate"><span class="pre">.disable</span></code>. There are other
+operation handler functions that are optional, as for example <code class="docutils literal notranslate"><span class="pre">.rasie_pi</span></code>,
+<code class="docutils literal notranslate"><span class="pre">.raise_sgi</span></code> and <code class="docutils literal notranslate"><span class="pre">.set_priority</span></code>.</p>
+<p>An interrupt chip driver registers the controller instance with API
+function <code class="docutils literal notranslate"><span class="pre">itr_chip_init()</span></code>. The driver calls the registered interrupt
+consumer(s) handler(s) with API function <code class="docutils literal notranslate"><span class="pre">interrupt_call_handlers()</span></code>.</p>
+<p><strong>CPU main interrupt controller driver</strong></p>
+<p>The CPU interrupt controller (e.g. a GIC instance on Arm architecture CPUs)
+is called the main interrupt controller. Its driver must register as main
+controller using API function <code class="docutils literal notranslate"><span class="pre">interrupt_main_init()</span></code>. The function is
+in charge of calling <code class="docutils literal notranslate"><span class="pre">itr_chip_init()</span></code> for that chip instance.</p>
+<p>Interrupt consumer drivers can get a reference to the main interrupt
+controller with the API function <code class="docutils literal notranslate"><span class="pre">interrupt_get_main_chip()</span></code>.</p>
+<p><strong>Interrupt handlers</strong></p>
+<p>Interrupt handler functions are callback functions registered by interrupt
+consumer drivers that core shall call when the related interrupt occurs.
+Structure <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">itr_handler</span></code> references a handler. It contains the
+handler function entry point, the interrupt number, the interrupt controller
+device and a few more parameters.</p>
+<p>An interrupt handler function return value is of type <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">itr_return</span></code>.
+It shall return <code class="docutils literal notranslate"><span class="pre">ITRR_HANDLED</span></code> when the interrupt is served and
+<code class="docutils literal notranslate"><span class="pre">ITRR_NONE</span></code> when the interrupt cannot be served.</p>
+<p>The interrupt handler runs in an interrupt context rather than a thread
+context. When this occurs, all other interrupts are masked, necessitating fast
+execution of the interrupt handler to avoid delaying or missing out on other
+interrupts. When an interrupt occurs that requires the completion of
+long-running operations, the interrupt handler should request the OP-TEE
+bottom half thread (see <a class="reference internal" href="#notifications"><span class="std std-ref">Notifications</span></a>) to execute those operations.</p>
+<p>API function <code class="docutils literal notranslate"><span class="pre">interrupt_add_handler()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">interrupt_add_handler_with_chip()</span></code> and <code class="docutils literal notranslate"><span class="pre">interrupt_alloc_add_handler()</span></code>
+configure and register a handler function to a given interrupt.</p>
+<p>API function <code class="docutils literal notranslate"><span class="pre">interrupt_remove_handler()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">interrupt_remove_free_handler()</span></code> unregister a registered handler.</p>
+<p><strong>Interrupt consumer driver</strong></p>
+<p>A typical implementation of a driver consuming an interrupt includes
+retrieving of the interrupt resource (interrupt controller and interrupt
+number in that controller), configuring the interrupt, registering a handler
+for the interrupt and enabling/disabling the interrupt.</p>
+<p>For example, the dummy driver below prints a debug trace when the related
+interrupt occurs:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">itr_handler</span><span class="w"> </span><span class="o">*</span><span class="n">foo_int1_handler</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">foo_int1_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* field with some interrupt handler private data */</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">itr_return</span><span class="w"> </span><span class="nf">foo_it_handler_fn</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">itr_handler</span><span class="w"> </span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">foo_acknowledge_interrupt</span><span class="p">(</span><span class="n">h</span><span class="o">-&gt;</span><span class="n">it</span><span class="p">);.</span>
+<span class="w">        </span><span class="n">DMSG</span><span class="p">(</span><span class="s">"Interrupt FOO%u served"</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="o">-&gt;</span><span class="n">it</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ITRR_HANDLED</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">TEE_Result</span><span class="w"> </span><span class="nf">foo_initialization</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">TEE_Result</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TEE_ERROR_GENERIC</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">interrupt_alloc_add_handler</span><span class="p">(</span><span class="n">itr_core_get</span><span class="p">(),</span>
+<span class="w">                                          </span><span class="n">GIC_INT_FOO</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">foo_it_handler_fn</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">ITRF_TRIGGER_LEVEL</span><span class="p">,</span>
+<span class="w">                                          </span><span class="o">&amp;</span><span class="n">foo_int1_data</span><span class="p">,</span>
+<span class="w">                                          </span><span class="o">&amp;</span><span class="n">foo_int1_handler</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">interrupt_enable</span><span class="p">(</span><span class="n">itr_chip</span><span class="p">,</span><span class="w"> </span><span class="n">it_num</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">TEE_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">foo_release</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">foo_int1_handler</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">interrupt_disable</span><span class="p">(</span><span class="n">foo_int1_handler</span><span class="o">-&gt;</span><span class="n">chip</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">foo_int1_handler</span><span class="o">-&gt;</span><span class="n">it</span><span class="p">);</span>
+
+<span class="w">                </span><span class="n">interrupt_remove_free_handler</span><span class="p">(</span><span class="o">&amp;</span><span class="n">foo_int1_handler</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<hr class="docutils"/>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Notifications"></a><section id="notifications">
+<span id="id3"></span><h2>Notifications<a class="headerlink" href="#notifications" title="Permalink to this heading"></a></h2>
+<p>There are two kinds of notifications that secure world can use to make
+normal world aware of some event.</p>
+<ol class="arabic simple">
+<li><p>Synchronous notifications delivered with <code class="docutils literal notranslate"><span class="pre">OPTEE_RPC_CMD_NOTIFICATION</span></code>
+using the <code class="docutils literal notranslate"><span class="pre">OPTEE_RPC_NOTIFICATION_SEND</span></code> parameter.</p></li>
+<li><p>Asynchronous notifications delivered with a combination of a non-secure
+interrupt and a fast call from the non-secure interrupt handler.</p></li>
+</ol>
+<p>Secure world can wait in normal for a notification to arrive. This allows
+the calling thread to sleep instead of spinning when waiting for something.
+This happens for instance when a thread waits for a mutex to become
+available.</p>
+<p>Synchronous notifications are limited by depending on RPC for delivery, this
+is only usable from a normal thread context. Secure interrupt handler or
+other atomic context cannot use synchronous notifications due to this.</p>
+<p>Asynchrononous notifications uses a platform specific way of triggering a
+non-secure interrupt. This is done with <code class="docutils literal notranslate"><span class="pre">itr_raise_pi()</span></code> in a way
+suitable for a secure interrupt handler or another atomic context. This is
+useful when using a top half and bottom half kind of design in a device
+driver. The top half is done in the secure interrupt handler which then
+triggers normal world to make a yielding call into secure world to do the
+bottom half processing.</p>
+<figure class="align-center" id="id15">
+<p class="plantuml">
+<img alt='participant "OP-TEE OS\ninterrupt handler" as sec_itr
+participant "OP-TEE OS\nfastcall handler" as fastcall
+participant "Interrupt\ncontroller" as itc
+participant "Normal World\ninterrupt handler" as ns_itr
+participant "Normal World\nthread" as ns_thr
+participant "OP-TEE OS\nyielding do bottom half" as bottom
+
+itc --&gt; sec_itr : Secure interrupt
+activate sec_itr
+sec_itr -&gt; sec_itr : Top half processing
+sec_itr --&gt; itc : Trigger NS interrupt
+itc --&gt; ns_itr : Non-secure interrupt
+activate ns_itr
+sec_itr --&gt; itc: End of interrupt
+deactivate sec_itr
+ns_itr -&gt; fastcall ++: Get notification
+fastcall -&gt; ns_itr --: Return notification
+alt Do bottom half notifcation
+    ns_itr --&gt; ns_thr : Wake thread
+    activate ns_thr
+    ns_itr --&gt; itc: End of interrupt
+    deactivate ns_itr
+    ns_thr -&gt; bottom ++: Do bottom half
+    bottom -&gt; bottom : Process bottom half
+    bottom -&gt; ns_thr --: Done
+    deactivate ns_thr
+else Some other notification
+end' src="../_images/plantuml-bba590dbf6ac8c44d61e1ab82221b43bd447acca.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">Top half, bottom half example</span><a class="headerlink" href="#id15" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id16">
+<p class="plantuml">
+<img alt='participant "OP-TEE OS\nthread 1" as sec_thr1
+participant "Normal World\nthread 1" as ns_thr1
+participant "OP-TEE OS\nthread 2" as sec_thr2
+participant "Normal World\nthread 2" as ns_thr2
+
+activate ns_thr1
+ns_thr1 -&gt; sec_thr1 ++ : Invoke
+sec_thr1 -&gt; sec_thr1 : Lock mutex
+sec_thr1 -&gt; sec_thr1 : Process
+activate ns_thr2
+ns_thr2 -&gt; sec_thr2  ++: Invoke
+sec_thr2 -&gt; ns_thr2 -- : RPC: Wait for mutex
+ns_thr2 -&gt; ns_thr2 : Wait for notifcation
+deactivate ns_thr2
+sec_thr1 -&gt; sec_thr1 : Unlock mutex
+sec_thr1 -&gt; ns_thr1 -- : RPC: Notify mutex unlocked
+ns_thr1 --&gt; ns_thr2 : Notify mutex unlocked
+activate ns_thr2
+ns_thr1 -&gt; sec_thr1 ++ : Return from RPC
+sec_thr1 -&gt; sec_thr1 : Process
+sec_thr1 -&gt; ns_thr1 -- : Return from Invoke
+deactivate ns_thr1
+ns_thr2 -&gt; sec_thr2 ++ : Return from RPC
+sec_thr2 -&gt; sec_thr2 : Lock mutex
+sec_thr2 -&gt; sec_thr2 : Process
+sec_thr2 -&gt; sec_thr2 : Unlock mutex
+sec_thr2 -&gt; sec_thr2 : Process
+sec_thr2 -&gt; ns_thr2 -- : Return from Invoke
+deactivate ns_thr2' src="../_images/plantuml-0bf1c22f73d83d107d75a01836dff61c25ee8f50.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">Synchronous example</span><a class="headerlink" href="#id16" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Notifications are identified with a value, allocated as:</p>
+<dl class="simple">
+<dt>0 - 63</dt><dd><p>Mixed asynchronous and synchronous range</p>
+</dd>
+<dt>64 - Max</dt><dd><p>Synchronous only range</p>
+</dd>
+</dl>
+<p>If the <strong>Max</strong> value is smaller than 63, then there’s only the mixed range.</p>
+<p>If asynchronous notifications are enabled then is the value 0 reserved for
+signalling the a driver need a bottom half call, that is the yielding call
+<code class="docutils literal notranslate"><span class="pre">OPTEE_MSG_CMD_DO_BOTTOM_HALF</span></code>.</p>
+<p>The rest of the asynchronous notification values are managed with two
+functions <code class="docutils literal notranslate"><span class="pre">notif_alloc_async_value()</span></code> and <code class="docutils literal notranslate"><span class="pre">notif_free_async_value()</span></code>.</p>
+<hr class="docutils"/>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Memory objects"></a><section id="memory-objects">
+<span id="id4"></span><h2>Memory objects<a class="headerlink" href="#memory-objects" title="Permalink to this heading"></a></h2>
+<p>A memory object, <strong>MOBJ</strong>, describes a piece of memory. The interface provided
+is mostly abstract when it comes to using the MOBJ to populate translation
+tables etc. There are different kinds of MOBJs describing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>Physically contiguous memory</dt><dd><ul>
+<li><p>created with <code class="docutils literal notranslate"><span class="pre">mobj_phys_alloc(...)</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Virtual memory</dt><dd><ul>
+<li><p>one instance with the name <code class="docutils literal notranslate"><span class="pre">mobj_virt</span></code> available.</p></li>
+<li><p>spans the entire virtual address space.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Physically contiguous memory allocated from a <code class="docutils literal notranslate"><span class="pre">tee_mm_pool_t</span> <span class="pre">*</span></code></dt><dd><ul>
+<li><p>created with <code class="docutils literal notranslate"><span class="pre">mobj_mm_alloc(...)</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Paged memory</dt><dd><ul>
+<li><p>created with <code class="docutils literal notranslate"><span class="pre">mobj_paged_alloc(...)</span></code>.</p></li>
+<li><p>only contains the supplied size and makes <code class="docutils literal notranslate"><span class="pre">mobj_is_paged(...)</span></code>
+return true if supplied as argument.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Secure copy paged shared memory</dt><dd><ul>
+<li><p>created with <code class="docutils literal notranslate"><span class="pre">mobj_seccpy_shm_alloc(...)</span></code>.</p></li>
+<li><p>makes <code class="docutils literal notranslate"><span class="pre">mobj_is_paged(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">mobj_is_secure(...)</span></code> return true
+if supplied as argument.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<hr class="docutils"/>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/MMU"></a><section id="mmu">
+<span id="id5"></span><h2>MMU<a class="headerlink" href="#mmu" title="Permalink to this heading"></a></h2>
+<section id="translation-tables">
+<h3>Translation tables<a class="headerlink" href="#translation-tables" title="Permalink to this heading"></a></h3>
+<p>OP-TEE supports two translation table formats:</p>
+<ol class="arabic simple">
+<li><p>Short-descriptor translation table format, available on ARMv7-A and
+ARMv8-A AArch32</p></li>
+<li><p>Long-descriptor translation format, available on ARMv7-A with LPAE and
+ARMv8-A</p></li>
+</ol>
+<p>ARMv7-A without LPAE (Large Physical Address Extension) must use the
+short-descriptor translation table format only. ARMv8-A AArch64 must use
+the long-descriptor translation format only.</p>
+<p>Translation table format is a static build time configuration option,
+<code class="docutils literal notranslate"><span class="pre">CFG_WITH_LPAE</span></code>. The design around the translation table handling has
+been centered around these factors:</p>
+<ol class="arabic simple">
+<li><p>Share translation tables between CPUs when possible to save memory
+and simplify paging</p></li>
+<li><p>Support non-global CPU specific mappings to allow executing different
+TAs in parallel.</p></li>
+</ol>
+<section id="short-descriptor-translation-table-format">
+<h4>Short-descriptor translation table format<a class="headerlink" href="#short-descriptor-translation-table-format" title="Permalink to this heading"></a></h4>
+<p>Several L1 translation tables are used, one large spanning 4 GiB and two or
+more small tables spanning 32 MiB. The large translation table handles kernel
+mode mapping and matches all addresses not covered by the small translation
+tables. The small translation tables are assigned per thread and covers the
+mapping of the virtual memory space for one TA context.</p>
+<p>Memory space between small and large translation table is configured by TTBCR.
+TTBR1 always points to the large translation table. TTBR0 points to the a small
+translation table when user mapping is active and to the large translation table
+when no user mapping is currently active. For details about registers etc,
+please refer to a Technical Reference Manual for your architecture, for example
+<a class="reference external" href="http://infocenter.arm.com/help/topic/com.arm.doc.ddi0500j/DDI0500J_cortex_a53_trm.pdf">Cortex-A53 TRM</a>.</p>
+<p>The translation tables has certain alignment constraints, the alignment (of the
+physical address) has to be the same as the size of the translation table. The
+translation tables are statically allocated to avoid fragmentation of memory due
+to the alignment constraints.</p>
+<p>Each thread has one small L1 translation table of its own. Each TA context has a
+compact representation of its L1 translation table. The compact representation
+is used to initialize the thread specific L1 translation table when the TA
+context is activated.</p>
+<div align="center" class="align-center"><div class="graphviz"><img alt='digraph xlat_table {
+    graph [
+        rankdir = "LR"
+    ];
+    node [
+        shape = "ellipse"
+    ];
+    edge [
+    ];
+    "node_ttb" [
+        label = "&lt;f0&gt; TTBR0 | &lt;f1&gt; TTBR1"
+        shape = "record"
+    ];
+    "node_large_l1" [
+        label = "&lt;f0&gt; Large L1\nSpans 4 GiB"
+        shape = "record"
+    ];
+    "node_small_l1" [
+        label = "Small L1\nSpans 32 MiB\nper entry | &lt;f0&gt; 0 | &lt;f1&gt; 1 | ... | &lt;fn&gt; n"
+        shape = "record"
+    ];
+
+    "node_ttb":f0 -&gt; "node_small_l1":f0 [ label = "Thread 0 ctx active" ];
+    "node_ttb":f0 -&gt; "node_small_l1":f1 [ label = "Thread 1 ctx active" ];
+    "node_ttb":f0 -&gt; "node_small_l1":fn [ label = "Thread n ctx active" ];
+    "node_ttb":f0 -&gt; "node_large_l1" [ label="No active ctx" ];
+    "node_ttb":f1 -&gt; "node_large_l1";
+}' class="graphviz" src="../_images/graphviz-739f350637ba1d2bdbe873e948109e1e08b4af05.png"/></div>
+</div>
+</section>
+<section id="long-descriptor-translation-table-format">
+<h4>Long-descriptor translation table format<a class="headerlink" href="#long-descriptor-translation-table-format" title="Permalink to this heading"></a></h4>
+<p>Each CPU is assigned a L1 translation table which is programmed into
+Translation Table Base Register 0 (<code class="docutils literal notranslate"><span class="pre">TTBR0</span></code> or <code class="docutils literal notranslate"><span class="pre">TTBR0_EL1</span></code> as
+appropriate).</p>
+<p>L1 and L2 translation tables are statically allocated and initialized at
+boot. Normally there is only one shared L2 table, but with ASLR enabled the
+virtual address space used for the shared mapping may need to use two
+tables. An unused entry in the L1 table is selected to point to the per
+thread L2 table. With ASLR configured this means that different per thread
+entry may be selected each time the system boots. Note that this entry will
+only point to a table when the per thread mapping is activated.</p>
+<p>The L2 translation tables in their turn point to L3 tables which use the
+small page granularity of 4 KiB. The shared mappings has the L3 tables
+initialized too at boot, but the per thread L3 tables are dynamic and are
+only assigned when the mapping is activated.</p>
+<figure class="align-center" id="id17">
+<div class="graphviz"><img alt='digraph xlat_table {
+    graph [ rankdir = "LR" ];
+    node [ ];
+    edge [ ];
+
+    "ttbr0" [
+        label = "TTBR0"
+        shape = "record"
+    ];
+    "node_l1" [
+        label = "&lt;h&gt; Per CPU L1 table | &lt;f0&gt; 0 | &lt;f1&gt; 1 | &lt;f2&gt; 2 | &lt;f3&gt; 3"
+        shape = "record"
+    ];
+    "shared_l2_n" [
+        label = "&lt;h&gt; Shared L2 table n | 0 | ... | 512"
+        shape = "record"
+    ]
+    "shared_l2_m" [
+        label = "&lt;h&gt; Shared L2 table m | 0 | ... | 512"
+        shape = "record"
+    ]
+    "per_thread_l2" [
+        label = "&lt;h&gt; Per thread L2 table | 0 | ... | 512"
+        shape = "record"
+    ]
+    "ttbr0" -&gt; "node_l1":h;
+    "node_l1":f2 -&gt; "shared_l2_n":h;
+    "node_l1":f3 -&gt; "shared_l2_m":h;
+    "node_l1":f0 -&gt; "per_thread_l2":h;
+}' class="graphviz" src="../_images/graphviz-4ea1ca84657463217d750c51fe6d1cd1acf3d611.png"/></div>
+<figcaption>
+<p><span class="caption-text">Example translation table setup with 4GiB virtual address space
+with L3 tables excluded</span><a class="headerlink" href="#id17" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="page-table-cache">
+<h3>Page table cache<a class="headerlink" href="#page-table-cache" title="Permalink to this heading"></a></h3>
+<p>Page tables used to map TAs are managed with the page table cache. When the
+context of a TA is unmapped, all its page tables are released with a call
+to <code class="docutils literal notranslate"><span class="pre">pgt_free()</span></code>. All page tables needed when mapping a TA are allocated
+using <code class="docutils literal notranslate"><span class="pre">pgt_alloc()</span></code>.</p>
+<p>A fixed maximum number of translation tables are available in a pool. One
+thread may execute a TA which needs all or almost all tables. This can
+block TAs from being executed by other threads. To ensure that all TAs
+eventually will be permitted to execute <code class="docutils literal notranslate"><span class="pre">pgt_alloc()</span></code> temporarily frees
+eventual tables allocated before waiting for tables to become available.</p>
+<p>The page table cache behaves differently depending on configuration
+options.</p>
+<section id="without-paging-cfg-with-pager-n">
+<h4>Without paging (<code class="docutils literal notranslate"><span class="pre">CFG_WITH_PAGER=n</span></code>)<a class="headerlink" href="#without-paging-cfg-with-pager-n" title="Permalink to this heading"></a></h4>
+<p>This is the easiest configuration. All page tables are statically allocated
+in the <code class="docutils literal notranslate"><span class="pre">.nozi.pgt_cache</span></code> section. <code class="docutils literal notranslate"><span class="pre">pgt_alloc()</span></code> allocates tables from the
+free-list and <code class="docutils literal notranslate"><span class="pre">pgt_free()</span></code> returns the tables directly to the free-list.</p>
+</section>
+<section id="with-paging-enabled-cfg-with-pager-y">
+<h4>With paging enabled (<code class="docutils literal notranslate"><span class="pre">CFG_WITH_PAGER=y</span></code>)<a class="headerlink" href="#with-paging-enabled-cfg-with-pager-y" title="Permalink to this heading"></a></h4>
+<p>Page tables are allocated as zero initialized locked pages during boot
+using <code class="docutils literal notranslate"><span class="pre">tee_pager_alloc()</span></code>. Locked pages are populated with physical pages
+on demand from the pager. The physical page can be released when not needed
+any longer with <code class="docutils literal notranslate"><span class="pre">tee_pager_release_phys()</span></code>.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">CFG_WITH_LPAE=y</span></code> each translation table has the same size as a
+physical page which makes it easy to release the physical page when the
+translation table isn’t needed any longer. With the short-descriptor table
+format (<code class="docutils literal notranslate"><span class="pre">CFG_WITH_LPAE=n</span></code>) it becomes more complicated as four
+translation tables are stored in each page. Additional bookkeeping is used
+to tell when the page for used by four separate translation tables can be
+released.</p>
+</section>
+<section id="with-paging-of-user-ta-enabled-cfg-paged-user-ta-y">
+<h4>With paging of user TA enabled (<code class="docutils literal notranslate"><span class="pre">CFG_PAGED_USER_TA=y</span></code>)<a class="headerlink" href="#with-paging-of-user-ta-enabled-cfg-paged-user-ta-y" title="Permalink to this heading"></a></h4>
+<p>With paging of user TAs enabled a cache of recently used translation tables
+is used. This can save us from a storm of page faults when restoring the
+mappings of a recently unmapped TA. Which translation tables should be
+cached is indicated with reference counting by the pager on used tables.
+When a table needs to be forcefully freed
+<code class="docutils literal notranslate"><span class="pre">tee_pager_pgt_save_and_release_entries()</span></code> is called to let the pager
+know that the table can’t be used any longer.</p>
+<p>When a mapping in a TA is removed it also needs to be purged from cached
+tables with <code class="docutils literal notranslate"><span class="pre">pgt_flush_ctx_range()</span></code> to prevent old mappings from being
+accidentally reused.</p>
+</section>
+</section>
+<section id="switching-to-user-mode">
+<h3>Switching to user mode<a class="headerlink" href="#switching-to-user-mode" title="Permalink to this heading"></a></h3>
+<p>This section only applies with following configuration flags:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_WITH_LPAE=n</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_CORE_UNMAP_CORE_AT_EL0=y</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>When switching to user mode only a minimal kernel mode mapping is kept. This is
+achieved by selecting a zeroed out big L1 translation in TTBR1 when
+transitioning to user mode. When returning back to kernel mode the original L1
+translation table is restored in TTBR1.</p>
+</section>
+<section id="switching-to-normal-world">
+<h3>Switching to normal world<a class="headerlink" href="#switching-to-normal-world" title="Permalink to this heading"></a></h3>
+<p>When switching to normal world either via a foreign interrupt (see
+<a class="reference internal" href="#native-foreign-irqs"><span class="std std-ref">Native and foreign interrupts</span></a> or RPC there is a chance that secure world will
+resume execution on a different CPU. This means that the new CPU need to be
+configured with the context of the currently active TA. This is solved by always
+setting the TA context in the CPU when resuming execution.</p>
+<hr class="docutils"/>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Pager"></a><section id="pager">
+<span id="id6"></span><h2>Pager<a class="headerlink" href="#pager" title="Permalink to this heading"></a></h2>
+<p>OP-TEE currently requires &gt;256 KiB RAM for OP-TEE kernel memory. This is not a
+problem if OP-TEE uses TrustZone protected DDR, but for security reasons OP-TEE
+may need to use TrustZone protected SRAM instead. The amount of available SRAM
+varies between platforms, from just a few KiB up to over 512 KiB. Platforms with
+just a few KiB of SRAM cannot be expected to be able to run a complete TEE
+solution in SRAM. But those with 128 to 256 KiB of SRAM can be expected to have
+a capable TEE solution in SRAM. The pager provides a solution to this by demand
+paging parts of OP-TEE using virtual memory.</p>
+<section id="secure-memory">
+<h3>Secure memory<a class="headerlink" href="#secure-memory" title="Permalink to this heading"></a></h3>
+<p>TrustZone protected SRAM is generally considered more secure than TrustZone
+protected DRAM as there is usually more attack vectors on DRAM. The attack
+vectors are hardware dependent and can be different for different platforms.</p>
+</section>
+<section id="backing-store">
+<h3>Backing store<a class="headerlink" href="#backing-store" title="Permalink to this heading"></a></h3>
+<p>TrustZone protected DRAM or in some cases non-secure DRAM is used as backing
+store. The data in the backing store is integrity protected with one hash
+(SHA-256) per page (4KiB). Readonly pages are not encrypted since the OP-TEE
+binary itself is not encrypted.</p>
+</section>
+<section id="partitioning-of-memory">
+<h3>Partitioning of memory<a class="headerlink" href="#partitioning-of-memory" title="Permalink to this heading"></a></h3>
+<p>The code that handles demand paging must always be available as it would
+otherwise lead to deadlock. The virtual memory is partitioned as:</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 42%"/>
+<col style="width: 58%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Sections</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>unpaged</p></td>
+<td><div class="line-block">
+<div class="line">text</div>
+<div class="line">rodata</div>
+<div class="line">data</div>
+<div class="line">bss</div>
+<div class="line">heap1</div>
+<div class="line">nozi</div>
+<div class="line">heap2</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>init / paged</p></td>
+<td><div class="line-block">
+<div class="line">text_init</div>
+<div class="line">rodata_init</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>paged</p></td>
+<td><div class="line-block">
+<div class="line">text_pageable</div>
+<div class="line">rodata_pageable</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>demand alloc</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Where <code class="docutils literal notranslate"><span class="pre">nozi</span></code> stands for “not zero initialized”, this section contains entry
+stacks (thread stack when TEE pager is not enabled) and translation tables (TEE
+pager cached translation table when the pager is enabled and LPAE MMU is used).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">init</span></code> area is available when OP-TEE is initializing and contains
+everything that is needed to initialize the pager. After the pager has been
+initialized this area will be used for demand paged instead.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">demand</span> <span class="pre">alloc</span></code> area is a special area where the pages are allocated and
+removed from the pager on demand. Those pages are returned when OP-TEE does not
+need them any longer. The thread stacks currently belongs this area. This means
+that when a stack is not used the physical pages can be used by the pager for
+better performance.</p>
+<p>The technique to gather code in the different area is based on compiling all
+functions and data into separate sections. The unpaged text and rodata is then
+gathered by linking all object files with <code class="docutils literal notranslate"><span class="pre">--gc-sections</span></code> to eliminate
+sections that are outside the dependency graph of the entry functions for
+unpaged functions. A script analyzes this ELF file and generates the bits of the
+final link script. The process is repeated for init text and rodata. What is
+not “unpaged” or “init” becomes “paged”.</p>
+</section>
+<section id="partitioning-of-the-binary">
+<h3>Partitioning of the binary<a class="headerlink" href="#partitioning-of-the-binary" title="Permalink to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The struct definitions provided in this section are explicitly covered by
+the following dual license:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>SPDX-License-Identifier: (BSD-2-Clause OR GPL-2.0)
+</pre></div>
+</div>
+</div>
+<p>The binary is partitioned into four parts as:</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 100%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Binary</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Header</p></td>
+</tr>
+<tr class="row-odd"><td><p>Init</p></td>
+</tr>
+<tr class="row-even"><td><p>Hashes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Pageable</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>The header is defined as:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define OPTEE_MAGIC             0x4554504f</span>
+<span class="cp">#define OPTEE_VERSION           1</span>
+<span class="cp">#define OPTEE_ARCH_ARM32        0</span>
+<span class="cp">#define OPTEE_ARCH_ARM64        1</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">optee_header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">magic</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">version</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">arch</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">flags</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">init_size</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">init_load_addr_hi</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">init_load_addr_lo</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">init_mem_usage</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">paged_size</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The header is only used by the loader of OP-TEE, not OP-TEE itself. To
+initialize OP-TEE the loader loads the complete binary into memory and copies
+what follows the header and the following <code class="docutils literal notranslate"><span class="pre">init_size</span></code> bytes to
+<code class="docutils literal notranslate"><span class="pre">(init_load_addr_hi</span> <span class="pre">&lt;&lt;</span> <span class="pre">32</span> <span class="pre">|</span> <span class="pre">init_load_addr_lo)</span></code>. <code class="docutils literal notranslate"><span class="pre">init_mem_usage</span></code> is used by
+the loader to be able to check that there is enough physical memory available
+for OP-TEE to be able to initialize at all. The loader supplies in <code class="docutils literal notranslate"><span class="pre">r0/x0</span></code> the
+address of the first byte following what was not copied and jumps to the load
+address to start OP-TEE.</p>
+<p>In addition to overall binary with partitions inside described as above, three
+extra binaries are generated simultaneously during build process for loaders who
+support loading separate binaries:</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 100%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>v2 binary</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Header</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>v2 binary</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Init</p></td>
+</tr>
+<tr class="row-odd"><td><p>Hashes</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 100%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>v2 binary</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pageable</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>In this case, loaders load header binary first to get image list and information
+of each image; and then load each of them into specific load address assigned in
+structure. These binaries are named with <cite>v2</cite> suffix to distinguish from the
+existing binaries. Header format is updated to help loaders loading binaries
+efficiently:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define OPTEE_IMAGE_ID_PAGER    0</span>
+<span class="cp">#define OPTEE_IMAGE_ID_PAGED    1</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">optee_image</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">load_addr_hi</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">load_addr_lo</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">image_id</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">optee_header_v2</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">magic</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">version</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">arch</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">flags</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">nb_images</span><span class="p">;</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">optee_image</span><span class="w"> </span><span class="n">optee_image</span><span class="p">[];</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Magic number and architecture are identical as original. Version is increased to
+two. <code class="docutils literal notranslate"><span class="pre">load_addr_hi</span></code> and <code class="docutils literal notranslate"><span class="pre">load_addr_lo</span></code> may be <code class="docutils literal notranslate"><span class="pre">0xFFFFFFFF</span></code> for pageable
+binary since pageable part may get loaded by loader into dynamic available
+position. <code class="docutils literal notranslate"><span class="pre">image_id</span></code> indicates how loader handles current binary. Loaders who
+don’t support separate loading just ignore all v2 binaries.</p>
+</section>
+<section id="initializing-the-pager">
+<h3>Initializing the pager<a class="headerlink" href="#initializing-the-pager" title="Permalink to this heading"></a></h3>
+<p>The pager is initialized as early as possible during boot in order to minimize
+the “init” area. The global variable <code class="docutils literal notranslate"><span class="pre">tee_mm_vcore</span></code> describes the virtual
+memory range that is covered by the level 2 translation table supplied to
+<code class="docutils literal notranslate"><span class="pre">tee_pager_init(...)</span></code>.</p>
+<section id="assign-pageable-areas">
+<h4>Assign pageable areas<a class="headerlink" href="#assign-pageable-areas" title="Permalink to this heading"></a></h4>
+<p>A virtual memory range to be handled by the pager is registered with a call to
+<code class="docutils literal notranslate"><span class="pre">tee_pager_add_core_area()</span></code>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span><span class="w"> </span><span class="nf">tee_pager_add_area</span><span class="p">(</span><span class="n">tee_mm_entry_t</span><span class="w"> </span><span class="o">*</span><span class="n">mm</span><span class="p">,</span>
+<span class="w">                        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">flags</span><span class="p">,</span>
+<span class="w">                        </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">store</span><span class="p">,</span>
+<span class="w">                        </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">hashes</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>which takes a pointer to <code class="docutils literal notranslate"><span class="pre">tee_mm_entry_t</span></code> to tell the range, flags to tell how
+memory should be mapped (readonly, execute etc), and pointers to backing store
+and hashes of the pages.</p>
+</section>
+<section id="assign-physical-pages">
+<h4>Assign physical pages<a class="headerlink" href="#assign-physical-pages" title="Permalink to this heading"></a></h4>
+<p>Physical SRAM pages are supplied by calling <code class="docutils literal notranslate"><span class="pre">tee_pager_add_pages(...)</span></code></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">tee_pager_add_pages</span><span class="p">(</span><span class="n">tee_vaddr_t</span><span class="w"> </span><span class="n">vaddr</span><span class="p">,</span>
+<span class="w">                         </span><span class="kt">size_t</span><span class="w"> </span><span class="n">npages</span><span class="p">,</span>
+<span class="w">                         </span><span class="kt">bool</span><span class="w"> </span><span class="n">unmap</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">tee_pager_add_pages(...)</span></code> takes the physical address stored in the entry
+mapping the virtual address <code class="docutils literal notranslate"><span class="pre">vaddr</span></code> and <code class="docutils literal notranslate"><span class="pre">npages</span></code> entries after that and uses
+it to map new pages when needed. The unmap parameter tells whether the pages
+should be unmapped immediately since they does not contain initialized data or
+be kept mapped until they need to be recycled. The pages in the “init” area are
+supplied with <code class="docutils literal notranslate"><span class="pre">unmap</span> <span class="pre">==</span> <span class="pre">false</span></code> since those page have valid content and are in
+use.</p>
+</section>
+</section>
+<section id="invocation">
+<h3>Invocation<a class="headerlink" href="#invocation" title="Permalink to this heading"></a></h3>
+<p>The pager is invoked as part of the abort handler. A pool of physical pages are
+used to map different virtual addresses. When a new virtual address needs to be
+mapped a free physical page is mapped at the new address, if a free physical
+page cannot be found the oldest physical page is selected instead. When the page
+is mapped new data is copied from backing store and the hash of the page is
+verified. If it is OK the pager returns from the exception to resume the
+execution.</p>
+</section>
+<section id="data-structures">
+<h3>Data structures<a class="headerlink" href="#data-structures" title="Permalink to this heading"></a></h3>
+<figure class="align-center align-default" id="id18">
+<img alt="../_images/tee_pager_area.png" src="../_images/tee_pager_area.png"/>
+<figcaption>
+<p><span class="caption-text">How the main pager data structures relates to each other</span><a class="headerlink" href="#id18" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<section id="struct-tee-pager-area">
+<h4><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tee_pager_area</span></code><a class="headerlink" href="#struct-tee-pager-area" title="Permalink to this heading"></a></h4>
+<p>This is a central data structure when handling paged
+memory ranges. It’s defined as:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">tee_pager_area</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">fobj</span><span class="w"> </span><span class="o">*</span><span class="n">fobj</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">fobj_pgoffs</span><span class="p">;</span>
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="n">tee_pager_area_type</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">flags</span><span class="p">;</span>
+<span class="w">    </span><span class="n">vaddr_t</span><span class="w"> </span><span class="n">base</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">pgt</span><span class="w"> </span><span class="o">*</span><span class="n">pgt</span><span class="p">;</span>
+<span class="w">    </span><span class="n">TAILQ_ENTRY</span><span class="p">(</span><span class="n">tee_pager_area</span><span class="p">)</span><span class="w"> </span><span class="n">link</span><span class="p">;</span>
+<span class="w">    </span><span class="n">TAILQ_ENTRY</span><span class="p">(</span><span class="n">tee_pager_area</span><span class="p">)</span><span class="w"> </span><span class="n">fobj_link</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">base</span></code> and <code class="docutils literal notranslate"><span class="pre">size</span></code> tells the memory range and <code class="docutils literal notranslate"><span class="pre">fobj</span></code> and
+<code class="docutils literal notranslate"><span class="pre">fobj_pgoffs</span></code> holds the content. A <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tee_pager_area</span></code> can only use
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">fobj</span></code> and one <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pgt</span></code> (translation table) so memory ranges
+spanning multiple fobjs or pgts are split into multiple areas.</p>
+</section>
+<section id="struct-fobj">
+<h4><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">fobj</span></code><a class="headerlink" href="#struct-fobj" title="Permalink to this heading"></a></h4>
+<p>This is a polymorph object, using different implmentations depending on how
+it’s initialized. It’s defines as:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">fobj_ops</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">free</span><span class="p">)(</span><span class="k">struct</span><span class="w"> </span><span class="nc">fobj</span><span class="w"> </span><span class="o">*</span><span class="n">fobj</span><span class="p">);</span>
+<span class="w">    </span><span class="n">TEE_Result</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">load_page</span><span class="p">)(</span><span class="k">struct</span><span class="w"> </span><span class="nc">fobj</span><span class="w"> </span><span class="o">*</span><span class="n">fobj</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">page_idx</span><span class="p">,</span>
+<span class="w">                            </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">va</span><span class="p">);</span>
+<span class="w">    </span><span class="n">TEE_Result</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">save_page</span><span class="p">)(</span><span class="k">struct</span><span class="w"> </span><span class="nc">fobj</span><span class="w"> </span><span class="o">*</span><span class="n">fobj</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">page_idx</span><span class="p">,</span>
+<span class="w">                            </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">va</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">fobj</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">fobj_ops</span><span class="w"> </span><span class="o">*</span><span class="n">ops</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">num_pages</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">refcount</span><span class="w"> </span><span class="n">refc</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">tee_pager_area_head</span><span class="w"> </span><span class="n">areas</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">num_pages</span></code></dt>
+<dd class="field-odd"><p>Tells how many pages this <code class="docutils literal notranslate"><span class="pre">fobj</span></code> covers.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">refc</span></code></dt>
+<dd class="field-even"><p>A reference counter, everyone referring to a <code class="docutils literal notranslate"><span class="pre">fobj</span></code> need to
+increase and decrease this as needed.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">areas</span></code></dt>
+<dd class="field-odd"><p>A list of areas using this <code class="docutils literal notranslate"><span class="pre">fobj</span></code>, traversed when making
+a virtual page unavailable.</p>
+</dd>
+</dl>
+</section>
+<section id="struct-tee-pager-pmem">
+<h4><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tee_pager_pmem</span></code><a class="headerlink" href="#struct-tee-pager-pmem" title="Permalink to this heading"></a></h4>
+<p>This structure represents a physical page. It’s defined as:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">tee_pager_pmem</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">flags</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">fobj_pgidx</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">fobj</span><span class="w"> </span><span class="o">*</span><span class="n">fobj</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">va_alias</span><span class="p">;</span>
+<span class="w">    </span><span class="n">TAILQ_ENTRY</span><span class="p">(</span><span class="n">tee_pager_pmem</span><span class="p">)</span><span class="w"> </span><span class="n">link</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">PMEM_FLAG_DIRTY</span></code></dt>
+<dd class="field-odd"><p>Bit is set in <code class="docutils literal notranslate"><span class="pre">flags</span></code> when the page is mapped
+read/write at at least one location.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">PMEM_FLAG_HIDDEN</span></code></dt>
+<dd class="field-even"><p>Bit is set in <code class="docutils literal notranslate"><span class="pre">flags</span></code> when the page is hidden, that
+is, not accessible anywhere.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">fobj_pgidx</span></code></dt>
+<dd class="field-odd"><p>The page at this index in the <code class="docutils literal notranslate"><span class="pre">fobj</span></code> is used in this
+physical page.</p>
+</dd>
+<dt class="field-even"><code class="docutils literal notranslate"><span class="pre">fobj</span></code></dt>
+<dd class="field-even"><p>The <code class="docutils literal notranslate"><span class="pre">fobj</span></code> backing this page.</p>
+</dd>
+<dt class="field-odd"><code class="docutils literal notranslate"><span class="pre">va_alias</span></code></dt>
+<dd class="field-odd"><p>Virtual address where this physical page is updated
+when loading it from backing store or when writing it
+back.</p>
+</dd>
+</dl>
+<p>All <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tee_pager_pmem</span></code> are stored either in the global list
+<code class="docutils literal notranslate"><span class="pre">tee_pager_pmem_head</span></code> or in <code class="docutils literal notranslate"><span class="pre">tee_pager_lock_pmem_head</span></code>. The latter is
+used by pages which are mapped and then locked in memory on demand. The
+pages are returned back to <code class="docutils literal notranslate"><span class="pre">tee_pager_pmem_head</span></code> when the pages are
+exlicitly released with a call to <code class="docutils literal notranslate"><span class="pre">tee_pager_release_phys()</span></code>.</p>
+<p>A physical page can be used by more than one <code class="docutils literal notranslate"><span class="pre">tee_pager_area</span></code>
+simultaneously. This is also know as shared secure memory and will appear
+as such for both read-only and read-write mappings.</p>
+<p>When a page is hidden it’s unmapped from all translation tables and the
+<code class="docutils literal notranslate"><span class="pre">PMEM_FLAG_HIDDEN</span></code> bit is set, but kept in memory. When a physical page
+is released it’s also unmapped from all translation tables and it’s content
+is written back to storage, then the <code class="docutils literal notranslate"><span class="pre">fobj</span></code> field is set to <code class="docutils literal notranslate"><span class="pre">NULL</span></code> to
+note the physical page as unused.</p>
+<p>Note that when <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tee_pager_pmem</span></code> references a <code class="docutils literal notranslate"><span class="pre">fobj</span></code> it doesn’t
+update the reference counter since it’s already guaranteed to be available
+due the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tee_pager_area</span></code> which must reference the <code class="docutils literal notranslate"><span class="pre">fobj</span></code> too.</p>
+</section>
+</section>
+<section id="paging-of-user-ta">
+<h3>Paging of user TA<a class="headerlink" href="#paging-of-user-ta" title="Permalink to this heading"></a></h3>
+<p>Paging of user TAs can optionally be enabled with <code class="docutils literal notranslate"><span class="pre">CFG_PAGED_USER_TA=y</span></code>.
+Paging of user TAs is analogous to paging of OP-TEE kernel parts but with a few
+differences:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Read/write pages are paged in addition to read-only pages</p></li>
+<li><p>Page tables are managed dynamically</p></li>
+</ul>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">tee_pager_add_uta_area(...)</span></code> is used to setup initial read/write mapping
+needed when populating the TA. When the TA is fully populated and relocated
+<code class="docutils literal notranslate"><span class="pre">tee_pager_set_uta_area_attr(...)</span></code> changes the mapping of the area to strict
+permissions used when the TA is running.</p>
+<section id="paging-shared-secure-memory">
+<h4>Paging shared secure memory<a class="headerlink" href="#paging-shared-secure-memory" title="Permalink to this heading"></a></h4>
+<p>Shared secure memory is achieved by letting several <code class="docutils literal notranslate"><span class="pre">tee_pager_area</span></code>
+using the same backing <code class="docutils literal notranslate"><span class="pre">fobj</span></code>. When a <code class="docutils literal notranslate"><span class="pre">tee_pager_area</span></code> is allocated and
+assigned a <code class="docutils literal notranslate"><span class="pre">fobj</span></code> it’s also added to a list for <code class="docutils literal notranslate"><span class="pre">tee_pager_areas</span></code> using
+this <code class="docutils literal notranslate"><span class="pre">fobj</span></code>. This helps when a physical page is released.</p>
+<p>When a fault occurs first a matching <code class="docutils literal notranslate"><span class="pre">tee_pager_area</span></code> is located. Then
+<code class="docutils literal notranslate"><span class="pre">tee_pager_pmem_head</span></code> is searched to see if a physical page already holds
+the page of the <code class="docutils literal notranslate"><span class="pre">fobj</span></code> needed. If so the <code class="docutils literal notranslate"><span class="pre">pgt</span></code> is updated to map the
+physical page at the appropriate locatation. If no physical page was holding
+the page a new physical page is allocated, initialized and finally mapped.</p>
+<p>In order to make as few updates to mappings as possible changes to less
+restricted, no access -&gt; read-only or read-only to read-write, is done only
+for the virtual address was used when the page fault occurred. Changes in
+the other direction has to be done in all translation tables used to map
+the physical page.</p>
+<hr class="docutils"/>
+</section>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Stacks"></a><section id="stacks">
+<span id="id7"></span><h2>Stacks<a class="headerlink" href="#stacks" title="Permalink to this heading"></a></h2>
+<p>Different stacks are used during different stages. The stacks are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Secure monitor stack</strong> (128 bytes), bound to the CPU. Only available if
+OP-TEE is compiled with a secure monitor always the case if the target is
+Armv7-A but never for Armv8-A.</p></li>
+<li><p><strong>Temp stack</strong> (small ~1KB), bound to the CPU. Used when transitioning
+from one state to another. Interrupts are always disabled when using this
+stack, aborts are fatal when using the temp stack.</p></li>
+<li><p><strong>Abort stack</strong> (medium ~2KB), bound to the CPU. Used when trapping a data
+or pre-fetch abort. Aborts from user space are never fatal the TA is only
+killed. Aborts from kernel mode are used by the pager to do the demand
+paging, if pager is disabled all kernel mode aborts are fatal.</p></li>
+<li><p><strong>Thread stack</strong> (large ~8KB), not bound to the CPU instead used by the
+current thread/task. Interrupts are usually enabled when using this stack.</p></li>
+</ul>
+</div></blockquote>
+<dl>
+<dt>Notes for Armv7-A/AArch32</dt><dd><table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 17%"/>
+<col style="width: 83%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Stack</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Temp</p></td>
+<td><p>Assigned to <code class="docutils literal notranslate"><span class="pre">SP_SVC</span></code> during entry/exit, always assigned to
+<code class="docutils literal notranslate"><span class="pre">SP_IRQ</span></code> and <code class="docutils literal notranslate"><span class="pre">SP_FIQ</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Abort</p></td>
+<td><p>Always assigned to <code class="docutils literal notranslate"><span class="pre">SP_ABT</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Thread</p></td>
+<td><p>Assigned to <code class="docutils literal notranslate"><span class="pre">SP_SVC</span></code> while a thread is active</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>Notes for AArch64</dt><dd><p>There are only two stack pointers, <code class="docutils literal notranslate"><span class="pre">SP_EL1</span></code> and <code class="docutils literal notranslate"><span class="pre">SP_EL0</span></code>, available for
+OP-TEE in AArch64. When an exception is received stack pointer is always
+<code class="docutils literal notranslate"><span class="pre">SP_EL1</span></code> which is used temporarily while assigning an appropriate stack
+pointer for <code class="docutils literal notranslate"><span class="pre">SP_EL0</span></code>. <code class="docutils literal notranslate"><span class="pre">SP_EL1</span></code> is always assigned the value of
+<code class="docutils literal notranslate"><span class="pre">thread_core_local[cpu_id]</span></code>. This structure has some spare space for
+temporary storage of registers and also keeps the relevant stack pointers.
+In general when we talk about assigning a stack pointer to the CPU below we
+mean <code class="docutils literal notranslate"><span class="pre">SP_EL0</span></code>.</p>
+</dd>
+</dl>
+<section id="boot">
+<h3>Boot<a class="headerlink" href="#boot" title="Permalink to this heading"></a></h3>
+<p>During early boot the CPU is configured with the temp stack which is used until
+OP-TEE exits to normal world the first time.</p>
+<dl class="simple">
+<dt>Notes for AArch64</dt><dd><p><code class="docutils literal notranslate"><span class="pre">SPSEL</span></code> is always <code class="docutils literal notranslate"><span class="pre">0</span></code> on entry/exit to have <code class="docutils literal notranslate"><span class="pre">SP_EL0</span></code> acting as stack
+pointer.</p>
+</dd>
+</dl>
+</section>
+<section id="normal-entry">
+<h3>Normal entry<a class="headerlink" href="#normal-entry" title="Permalink to this heading"></a></h3>
+<p>Each time OP-TEE is entered from normal world the temp stack is used as the
+initial stack. For fast calls, this is the only stack used. For normal calls an
+empty thread slot is selected and the CPU switches to that stack.</p>
+</section>
+<section id="normal-exit">
+<h3>Normal exit<a class="headerlink" href="#normal-exit" title="Permalink to this heading"></a></h3>
+<p>Normal exit occurs when a thread has finished its task and the thread is freed.
+When the main thread function, <code class="docutils literal notranslate"><span class="pre">tee_entry_std(...)</span></code>, returns interrupts are
+disabled and the CPU switches to the temp stack instead. The thread is freed and
+OP-TEE exits to normal world.</p>
+</section>
+<section id="rpc-exit">
+<h3>RPC exit<a class="headerlink" href="#rpc-exit" title="Permalink to this heading"></a></h3>
+<p>RPC exit occurs when OP-TEE need some service from normal world. RPC can
+currently only be performed with a thread is in running state. RPC is initiated
+with a call to <code class="docutils literal notranslate"><span class="pre">thread_rpc(...)</span></code> which saves the state in a way that when the
+thread is restored it will continue at the next instruction as if this function
+did a normal return. CPU switches to use the temp stack before returning to
+normal world.</p>
+</section>
+<section id="foreign-interrupt-exit">
+<h3>Foreign interrupt exit<a class="headerlink" href="#foreign-interrupt-exit" title="Permalink to this heading"></a></h3>
+<p>Foreign interrupt exit occurs when OP-TEE receives a foreign interrupt. For Arm
+GICv2 mode, foreign interrupt is sent as IRQ which is always handled in normal
+world. Foreign interrupt exit is similar to RPC exit but it is
+<code class="docutils literal notranslate"><span class="pre">thread_irq_handler(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">elx_irq(...)</span></code> (respectively for
+Armv7-A/Aarch32 and for Aarch64) that saves the thread state instead. The thread
+is resumed in the same way though. For Arm GICv3 mode, foreign interrupt is sent
+as FIQ which could be handled by either secure world (EL3 in AArch64) or normal
+world. This mode is not supported yet.</p>
+<dl class="simple">
+<dt>Notes for Armv7-A/AArch32</dt><dd><p>SP_IRQ is initialized to temp stack instead of a separate stack. Prior to
+exiting to normal world CPU state is changed to SVC and temp stack is
+selected.</p>
+</dd>
+<dt>Notes for AArch64</dt><dd><p><code class="docutils literal notranslate"><span class="pre">SP_EL0</span></code> is assigned temp stack and is selected during IRQ processing. The
+original <code class="docutils literal notranslate"><span class="pre">SP_EL0</span></code> is saved in the thread context to be restored when
+resuming.</p>
+</dd>
+</dl>
+</section>
+<section id="resume-entry">
+<h3>Resume entry<a class="headerlink" href="#resume-entry" title="Permalink to this heading"></a></h3>
+<p>OP-TEE is entered using the temp stack in the same way as for normal entry. The
+thread to resume is looked up and the state is restored to resume execution. The
+procedure to resume from an RPC exit or an foreign interrupt exit is exactly the
+same.</p>
+</section>
+<section id="syscall">
+<h3>Syscall<a class="headerlink" href="#syscall" title="Permalink to this heading"></a></h3>
+<p>Syscall’s are executed using the thread stack.</p>
+<dl class="simple">
+<dt>Notes for Armv7-A/AArch32</dt><dd><p>Nothing special <code class="docutils literal notranslate"><span class="pre">SP_SVC</span></code> is already set with thread stack.</p>
+</dd>
+<dt>Notes for syscall AArch64</dt><dd><p>Early in the exception processing the original <code class="docutils literal notranslate"><span class="pre">SP_EL0</span></code> is saved in
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">thread_svc_regs</span></code> in case the TA is executed in AArch64. Current
+thread stack is assigned to <code class="docutils literal notranslate"><span class="pre">SP_EL0</span></code> which is then selected. When
+returning <code class="docutils literal notranslate"><span class="pre">SP_EL0</span></code> is assigned what is in <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">thread_svc_regs</span></code>. This
+allows <code class="docutils literal notranslate"><span class="pre">tee_svc_sys_return_helper(...)</span></code> having the syscall exception
+handler return directly to <code class="docutils literal notranslate"><span class="pre">thread_unwind_user_mode(...)</span></code>.</p>
+</dd>
+</dl>
+<hr class="docutils"/>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Shared Memory"></a><section id="shared-memory">
+<span id="id8"></span><h2>Shared Memory<a class="headerlink" href="#shared-memory" title="Permalink to this heading"></a></h2>
+<p>Shared Memory is a block of memory that is shared between the non-secure and the
+secure world. It is used to transfer data between both worlds.</p>
+<p>The shared memory is allocated and managed by the non-secure world, i.e. the
+Linux OP-TEE driver. Secure world only considers the individual shared buffers,
+not their pool. Each shared memory is referenced with associated attributes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Buffer start address and byte size,</p></li>
+<li><p>Cache attributes of the shared memory buffer,</p></li>
+<li><p>List of chunks if mapped from noncontiguous pages.</p></li>
+</ul>
+</div></blockquote>
+<p>Shared memory buffer references manipulated must fit inside one of the
+shared memory areas known from the OP-TEE core. OP-TEE supports two kinds
+of shared memory areas: an area for contiguous buffers and an area for
+noncontiguous buffers. At least one has to be enabled.</p>
+<section id="contiguous-shared-buffers">
+<h3>Contiguous shared buffers<a class="headerlink" href="#contiguous-shared-buffers" title="Permalink to this heading"></a></h3>
+<p>Configuration directives <code class="docutils literal notranslate"><span class="pre">CFG_SHMEM_START</span></code> and <code class="docutils literal notranslate"><span class="pre">CFG_SHMEM_SIZE</span></code>
+define a share memory area where shared memory buffers are contiguous.
+Generic memory layout registers it as the <code class="docutils literal notranslate"><span class="pre">MEM_AREA_NSEC_SHM</span></code> memory area.</p>
+<p>The non-secure world issues <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_GET_SHM_CONFIG</span></code> to retrieve contiguous
+shared memory area configuration:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Physical address of the start of the pool</p></li>
+<li><p>Size of the pool</p></li>
+<li><p>Whether or not the memory is cached</p></li>
+</ul>
+</div></blockquote>
+<p>Contiguous shared memory (also known as static or reserved shared memory)
+is enabled with the configuration flag <code class="docutils literal notranslate"><span class="pre">CFG_CORE_RESERVED_SHM=y</span></code>.</p>
+</section>
+<section id="noncontiguous-shared-buffers">
+<h3>Noncontiguous shared buffers<a class="headerlink" href="#noncontiguous-shared-buffers" title="Permalink to this heading"></a></h3>
+<p>To benefit from noncontiguous shared memory buffers, secure world register
+dynamic shared memory areas and non-secure world must register noncontiguous
+buffers prior to referring to them using the OP-TEE API.</p>
+<p>The OP-TEE core generic boot sequence discovers dynamic shared areas from the
+device tree and/or areas explicitly registered by the platform.</p>
+<p>Non-secure side needs to register buffers as 4kByte chunks lists into OP-TEE
+core using the <code class="docutils literal notranslate"><span class="pre">OPTEE_MSG_CMD_REGISTER_SHM</span></code> API prior referencing to them
+using the OP-TEE invocation API.</p>
+<p>Noncontiguous shared memory (also known as dynamic shared memory) is
+enabled with the configuration flag <code class="docutils literal notranslate"><span class="pre">CFG_CORE_DYN_SHM=y</span></code>.</p>
+<p>For performance reasons, the TEE Client Library (<code class="docutils literal notranslate"><span class="pre">libteec</span></code>) uses
+noncontiguous shared memory when available since it avoids copies in some
+situations.</p>
+</section>
+<section id="shared-memory-chunk-allocation">
+<h3>Shared Memory Chunk Allocation<a class="headerlink" href="#shared-memory-chunk-allocation" title="Permalink to this heading"></a></h3>
+<p>It is the Linux kernel driver for OP-TEE that is responsible for allocating
+chunks of shared memory. OP-TEE linux kernel driver relies on linux kernel
+generic allocation support (<code class="docutils literal notranslate"><span class="pre">CONFIG_GENERIC_ALLOCATION</span></code>) to allocation/release
+of shared memory physical chunks. OP-TEE linux kernel driver relies on linux
+kernel dma-buf support (<code class="docutils literal notranslate"><span class="pre">CONFIG_DMA_SHARED_BUFFER</span></code>) to track shared memory
+buffers references.</p>
+</section>
+<section id="registering-shared-memory">
+<h3>Registering shared memory<a class="headerlink" href="#registering-shared-memory" title="Permalink to this heading"></a></h3>
+<p>Only dynamic or physically non-contiguous shared memory needs to be
+registered. Static or physically contiguous shared memory is already known
+to OP-TEE OS.</p>
+<section id="smc-based-op-tee-msg-abi">
+<h4>SMC based OP-TEE MSG ABI<a class="headerlink" href="#smc-based-op-tee-msg-abi" title="Permalink to this heading"></a></h4>
+<p>With the SMC based OP-TEE MSG ABI there are a few exceptions where memory
+doesn’t need to be shared before it can be accessed from OP-TEE OS. These
+are:</p>
+<ol class="arabic simple">
+<li><p>When issuing the SMC <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_CALL_WITH_ARG</span></code> where the physical
+address of the supplied <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">optee_msg_arg</span></code> is passed in one of the
+registers.</p></li>
+<li><p>When issuing the SMC <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_CALL_RETURN_FROM_RPC</span></code> as a return from
+the request <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_RETURN_RPC_ALLOC</span></code> to allocate memory. This RPC
+return is combined with an implicit registration of shared memory. The
+registration is ended with a <code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_RETURN_RPC_FREE</span></code> request.</p></li>
+</ol>
+<figure class="align-center" id="id19">
+<p class="plantuml">
+<img alt='participant "Normal World\nOS Kernel" as ns
+participant "Secure World\nOP-TEE OS" as sec
+
+ns -&gt; sec : OPTEE_MSG_CMD_REGISTER_SHM(Cookie, memory)
+sec -&gt; sec : Register shared memory passed
+sec -&gt; ns : Return' src="../_images/plantuml-cb840da5573e4e2a18c0535ee0bd81f7f37a03f7.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">Register shared memory example</span><a class="headerlink" href="#id19" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id20">
+<p class="plantuml">
+<img alt='participant "Normal World\nOS Kernel" as ns
+participant "Secure World\nOP-TEE OS" as sec
+
+ns -&gt; sec : OPTEE_MSG_CMD_UNREGISTER_SHM(Cookie)
+sec -&gt; sec : Unregister shared memory
+sec -&gt; ns : Return' src="../_images/plantuml-3d5ab28bcc2c37de7f7c4781b9c0317080ba37aa.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">Unregister shared memory example</span><a class="headerlink" href="#id20" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="ff-a-based-op-tee-msg-abi">
+<h4>FF-A based OP-TEE MSG ABI<a class="headerlink" href="#ff-a-based-op-tee-msg-abi" title="Permalink to this heading"></a></h4>
+<p>With the FF-A based OP-TEE MSG ABI memory must always be registered before
+it can be used by OP-TEE OS. This case can potentially also involve another
+component in secure world, SPMC at <code class="docutils literal notranslate"><span class="pre">S-EL2</span></code> a secure hypervisor which
+controls which memory OP-TEE OS can see or use.</p>
+<p>In the case where there are no SPMC at <code class="docutils literal notranslate"><span class="pre">S-EL2</span></code> OP-TEE OS will take care
+of that part of the communication with normal world. This means that for
+normal world communication with OP-TEE OS is the same regardless of the
+presence of a secure hypervisor.</p>
+<p>Registration of shared memory is a two step procedure. It’s first
+registered with a call to the SPMC which returns a cookie or global memory
+handle. This cookie is later used when calling OP-TEE OS, if the cookie
+isn’t already known to OP-TEE OS it will ask the SPMC to make the memory
+available. This lazy second step is a way of saving an extra round trip to
+secure world.</p>
+<figure class="align-center" id="id21">
+<p class="plantuml">
+<img alt='participant "Normal World\nOS Kernel" as ns
+participant "Secure World\nSPMC" as spmc
+participant "Secure World\nOP-TEE OS" as sec
+
+ns -&gt; spmc : FFA_MEM_SHARE(memory)
+spmc -&gt; spmc : Register shared memory passed
+spmc -&gt; ns : Return cookie' src="../_images/plantuml-9dda79198e9c725a203d0fd7850f0d84015191aa.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">Register shared memory example</span><a class="headerlink" href="#id21" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id22">
+<p class="plantuml">
+<img alt='participant "Normal World\nOS Kernel" as ns
+participant "Secure World\nSPMC" as spmc
+participant "Secure World\nOP-TEE OS" as sec
+
+ns -&gt; sec: OPTEE_FFA_YIELDING_CALL_WITH_ARG(cookie)
+alt cookie not known
+    sec -&gt; spmc : FFA_MEM_RETRIEVE_REQ(cookie)
+    spmc -&gt; sec : Return memory description
+    sec -&gt; sec : Register shared memory
+end
+sec -&gt; sec : Process the yielding call
+sec -&gt; ns : Return' src="../_images/plantuml-8b54edd290a0aa561d819fd37b437e9ab8b46916.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">Calling OP-TEE OS with shared memory</span><a class="headerlink" href="#id22" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Unregistration of shared memory is also done in two steps. First with a
+call to OP-TEE and then with a call to the SPMC. If the lazy second
+step of shared memory has not been done, then OP-TEE OS doesn’t need
+to interact with the SPMC.</p>
+<figure class="align-center" id="id23">
+<p class="plantuml">
+<img alt='participant "Normal World\nOS Kernel" as ns
+participant "Secure World\nSPMC" as spmc
+participant "Secure World\nOP-TEE OS" as sec
+
+ns -&gt; sec: OPTEE_FFA_UNREGISTER_SHM(cookie)
+alt cookie known
+    sec -&gt; sec  : Unregister shared memory
+    sec -&gt; spmc : FFA_MEM_RELINQUISH(cookie)
+    spmc -&gt; sec : Return
+end
+sec -&gt; ns : Return
+
+ns -&gt; spmc : FFA_MEM_RECLAIM(cookie)
+spmc -&gt; spmc : Unregister shared memory
+spmc -&gt; ns : Return' src="../_images/plantuml-64ed29c5f7c5e3365f7943f0605a2ad131054f6e.png"/>
+</p>
+<figcaption>
+<p><span class="caption-text">Unregister shared memroy</span><a class="headerlink" href="#id23" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="using-shared-memory">
+<h3>Using shared memory<a class="headerlink" href="#using-shared-memory" title="Permalink to this heading"></a></h3>
+<dl>
+<dt>From the Client Application</dt><dd><p>The client application can ask for shared memory allocation using the
+GlobalPlatform Client API function <code class="docutils literal notranslate"><span class="pre">TEEC_AllocateSharedMemory(...)</span></code>. The
+client application can also register a memory through the GlobalPlatform
+Client API function <code class="docutils literal notranslate"><span class="pre">TEEC_RegisterSharedMemory(...)</span></code>. The shared memory
+reference can then be used as parameter when invoking a trusted application.</p>
+</dd>
+<dt>From the Linux Driver</dt><dd><p>Occasionally the Linux kernel driver needs to allocate shared memory for the
+communication with secure world, for example when using buffers of type
+<code class="docutils literal notranslate"><span class="pre">TEEC_TempMemoryReference</span></code>.</p>
+</dd>
+<dt>From OP-TEE core</dt><dd><p>In case OP-TEE core needs information from TEE supplicant (dynamic TA
+loading, REE time request,…), shared memory must be allocated. Allocation
+depends on the use case. OP-TEE core asks for the following shared memory
+allocation:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">optee_msg_arg</span></code> structure, used to pass the arguments to the
+non-secure world, where the allocation will be done by sending a
+<code class="docutils literal notranslate"><span class="pre">OPTEE_SMC_RPC_FUNC_ALLOC</span></code> message.</p></li>
+<li><p>In some cases, a payload might be needed for storing the result from
+TEE supplicant, for example when loading a Trusted Application. This
+type of allocation will be done by sending the message
+<code class="docutils literal notranslate"><span class="pre">OPTEE_MSG_RPC_CMD_SHM_ALLOC(OPTEE_MSG_RPC_SHM_TYPE_APPL,...)</span></code>,
+which then will return:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the physical address of the shared memory</p></li>
+<li><p>a handle to the memory, that later on will be used later on when
+freeing this memory.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>From TEE Supplicant</dt><dd><p>TEE supplicant is also working with shared memory, used to exchange data
+between normal and secure worlds. TEE supplicant receives a memory address
+from the OP-TEE core, used to store the data. This is for example the case
+when a Trusted Application is loaded. In this case, TEE supplicant must
+register the provided shared memory in the same way a client application
+would do, involving the Linux driver.</p>
+</dd>
+</dl>
+<hr class="docutils"/>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/SMC"></a><section id="smc">
+<span id="id9"></span><h2>SMC<a class="headerlink" href="#smc" title="Permalink to this heading"></a></h2>
+<section id="smc-interface">
+<h3>SMC Interface<a class="headerlink" href="#smc-interface" title="Permalink to this heading"></a></h3>
+<p>OP-TEE’s SMC interface is defined in two levels using <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/include/sm/optee_smc.h">optee_smc.h</a> and
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/include/optee_msg.h">optee_msg.h</a>. The former file defines SMC identifiers and what is passed in the
+registers for each SMC. The latter file defines the OP-TEE Message protocol
+which is not restricted to only SMC even if that currently is the only option
+available.</p>
+</section>
+<section id="smc-communication">
+<h3>SMC communication<a class="headerlink" href="#smc-communication" title="Permalink to this heading"></a></h3>
+<p>The main structure used for the SMC communication is defined in <code class="docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">optee_msg_arg</span></code> (in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/include/optee_msg.h">optee_msg.h</a>). If we are looking into the source code, we
+could see that communication mainly is achieved using <code class="docutils literal notranslate"><span class="pre">optee_msg_arg</span></code> and
+<code class="docutils literal notranslate"><span class="pre">thread_smc_args</span></code> (in <a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/include/kernel/thread.h">thread.h</a>), where <code class="docutils literal notranslate"><span class="pre">optee_msg_arg</span></code> could be seen as the
+main structure. What will happen is that the <a class="reference internal" href="../building/linux/tee_framework.html#linux-kernel"><span class="std std-ref">Linux kernel TEE framework</span></a> driver will get
+the parameters either from <a class="reference internal" href="../building/gits/optee_client.html#optee-client"><span class="std std-ref">optee_client</span></a> or directly from an internal
+service in Linux kernel. The TEE driver will populate the struct
+<code class="docutils literal notranslate"><span class="pre">optee_msg_arg</span></code> with the parameters plus some additional bookkeeping
+information.  Parameters for the SMC are passed in registers 1 to 7, register 0
+holds the SMC id which among other things tells whether it is a standard or a
+fast call.</p>
+<hr class="docutils"/>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Thread handling"></a><section id="thread-handling">
+<span id="id10"></span><h2>Thread handling<a class="headerlink" href="#thread-handling" title="Permalink to this heading"></a></h2>
+<p>OP-TEE core uses a couple of threads to be able to support running jobs in
+parallel (not fully enabled!). There are handlers for different purposes. In
+<a class="reference external" href="https://github.com/OP-TEE/optee_os/blob/master/core/arch/arm/kernel/thread.c">thread.c</a> you will find a function called <code class="docutils literal notranslate"><span class="pre">thread_init_primary(...)</span></code> which
+assigns <code class="docutils literal notranslate"><span class="pre">init_handlers</span></code> (functions) that should be called when OP-TEE core
+receives standard or fast calls, FIQ and PSCI calls. There are default handlers
+for these services, but the platform can decide if they want to implement their
+own platform specific handlers instead.</p>
+<section id="synchronization-primitives">
+<h3>Synchronization primitives<a class="headerlink" href="#synchronization-primitives" title="Permalink to this heading"></a></h3>
+<p>OP-TEE has three primitives for synchronization of threads and CPUs:
+<em>spin-lock</em>, <em>mutex</em>, and <em>condvar</em>.</p>
+<dl>
+<dt>Spin-lock</dt><dd><p>A spin-lock is represented as an <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span></code>. This is the most
+primitive lock. Interrupts should be disabled before attempting to take a
+spin-lock and should remain disabled until the lock is released. A spin-lock
+is initialized with <code class="docutils literal notranslate"><span class="pre">SPINLOCK_UNLOCK</span></code>.</p>
+<table class="colwidths-given docutils align-default" id="id24">
+<caption><span class="caption-text">Spin lock functions</span><a class="headerlink" href="#id24" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 17%"/>
+<col style="width: 83%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cpu_spin_lock(...)</span></code></p></td>
+<td><p>Locks a spin-lock</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cpu_spin_trylock(...)</span></code></p></td>
+<td><p>Locks a spin-lock if unlocked and returns <code class="docutils literal notranslate"><span class="pre">0</span></code> else the spin-lock
+is unchanged and the function returns <code class="docutils literal notranslate"><span class="pre">!0</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cpu_spin_unlock(...)</span></code></p></td>
+<td><p>Unlocks a spin-lock</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>Mutex</dt><dd><p>A mutex is represented by <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mutex</span></code>. A mutex can be locked and
+unlocked with interrupts enabled or disabled, but only from a normal thread.
+A mutex cannot be used in an interrupt handler, abort handler or before a
+thread has been selected for the CPU. A mutex is initialized with either
+<code class="docutils literal notranslate"><span class="pre">MUTEX_INITIALIZER</span></code> or <code class="docutils literal notranslate"><span class="pre">mutex_init(...)</span></code>.</p>
+<table class="colwidths-given docutils align-default" id="id25">
+<caption><span class="caption-text">Mutex functions</span><a class="headerlink" href="#id25" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 17%"/>
+<col style="width: 83%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mutex_lock(...)</span></code></p></td>
+<td><p>Locks a mutex. If the mutex is unlocked this is a fast operation,
+else the function issues an RPC to wait in normal world.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mutex_unlock(...)</span></code></p></td>
+<td><p>Unlocks a mutex. If there is no waiters this is a fast operation,
+else the function issues an RPC to wake up a waiter in normal world.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mutex_trylock(...)</span></code></p></td>
+<td><p>Locks a mutex if unlocked and returns <code class="docutils literal notranslate"><span class="pre">true</span></code> else the mutex is
+unchanged and the function returns <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mutex_destroy(...)</span></code></p></td>
+<td><p>Asserts that the mutex is unlocked and there is no waiters, after
+this the memory used by the mutex can be freed.</p></td>
+</tr>
+</tbody>
+</table>
+<p>When a mutex is locked it is owned by the thread calling <code class="docutils literal notranslate"><span class="pre">mutex_lock(...)</span></code>
+or <code class="docutils literal notranslate"><span class="pre">mutex_trylock(...)</span></code>, the mutex may only be unlocked by the thread
+owning the mutex. A thread should not exit to TA user space when holding a
+mutex.</p>
+</dd>
+<dt>Condvar</dt><dd><p>A condvar is represented by <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">condvar</span></code>. A condvar is similar to a
+<code class="docutils literal notranslate"><span class="pre">pthread_condvar_t</span></code> in the pthreads standard, only less advanced.
+Condition variables are used to wait for some condition to be fulfilled and
+are always used together a mutex. Once a condition variable has been used
+together with a certain mutex, it must only be used with that mutex until
+destroyed. A condvar is initialized with <code class="docutils literal notranslate"><span class="pre">CONDVAR_INITIALIZER</span></code> or
+<code class="docutils literal notranslate"><span class="pre">condvar_init(...)</span></code>.</p>
+<table class="colwidths-given docutils align-default" id="id26">
+<caption><span class="caption-text">Condvar functions</span><a class="headerlink" href="#id26" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 17%"/>
+<col style="width: 83%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">condvar_wait(...)</span></code></p></td>
+<td><p>Atomically unlocks the supplied mutex and waits in normal world via
+an RPC for the condition variable to be signaled, when the function
+returns the mutex is locked again.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">condvar_signal(...)</span></code></p></td>
+<td><p>Wakes up one waiter of the condition variable (waiting in
+<code class="docutils literal notranslate"><span class="pre">condvar_wait(...)</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">condvar_broadcast(...)</span></code></p></td>
+<td><p>Wake up all waiters of the condition variable.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The caller of <code class="docutils literal notranslate"><span class="pre">condvar_signal(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">condvar_broadcast(...)</span></code> should
+hold the mutex associated with the condition variable to guarantee that a
+waiter does not miss the signal.</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="index.html" rel="prev" title="Architecture"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="crypto.html" rel="next" title="Cryptographic implementation">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

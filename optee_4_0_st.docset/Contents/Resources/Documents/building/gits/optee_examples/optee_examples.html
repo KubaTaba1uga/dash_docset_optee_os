@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>optee_examples — OP-TEE documentation  documentation</title>
+<link href="../../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+<script src="../../../_static/jquery.js"></script>
+<script src="../../../_static/underscore.js"></script>
+<script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../../_static/doctools.js"></script>
+<script src="../../../_static/js/theme.js"></script>
+<link href="../../../genindex.html" rel="index" title="Index"/>
+<link href="../../../search.html" rel="search" title="Search"/>
+<link href="../optee_os.html" rel="next" title="optee_os"/>
+<link href="../optee_docs.html" rel="prev" title="optee_docs"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../devices/index.html">Device specific information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">OP-TEE gits</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../build.html">build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../build_legacy.html">Build stable releases v1.0.0 to v3.0.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../build_legacy_3_1_0-3_8_0.html">Build stable releases 3.1.0 to 3.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../manifest.html">manifest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../optee_benchmark.html">optee_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../optee_client.html">optee_client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../optee_docs.html">optee_docs</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">optee_examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#git-location">git location</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-instructions">Build instructions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coding-standards">Coding standards</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-applications">Example applications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#further-reading">Further reading</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../optee_os.html">optee_os</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../optee_test.html">optee_test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="../index.html">OP-TEE gits</a></li>
+<li class="breadcrumb-item active">optee_examples</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../../_sources/building/gits/optee_examples/optee_examples.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/optee_examples"></a><section id="optee-examples">
+<span id="id1"></span><h1>optee_examples<a class="headerlink" href="#optee-examples" title="Permalink to this heading"></a></h1>
+<p>This document describes the sample applications that are included in the OP-TEE,
+that aim to showcase specific functionality and use cases.</p>
+<p>For sake of simplicity, all OP-TEE example test application are prefixed with
+<code class="docutils literal notranslate"><span class="pre">optee_example_</span></code>. All of them works as standalone host and Trusted Application
+and can be found in separate directories.</p>
+<section id="git-location">
+<h2>git location<a class="headerlink" href="#git-location" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/linaro-swg/optee_examples">https://github.com/linaro-swg/optee_examples</a></p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading"></a></h2>
+<p>The software is provided under the <a class="reference external" href="http://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause</a> license.</p>
+</section>
+<section id="build-instructions">
+<h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this heading"></a></h2>
+<p>You can build the code in this git only or build it as part of the entire
+system, i.e. as a part of a full OP-TEE developer setup. For the latter, please
+refer to instructions at the <a class="reference internal" href="../build.html#build"><span class="std std-ref">build</span></a> page. For standalone builds we
+currently support building with both CMake as well as with regular GNU
+Makefiles. However, since the both the host and the Trusted Applications have
+dependencies to files in <a class="reference internal" href="../optee_client.html#optee-client"><span class="std std-ref">optee_client</span></a> (libteec.so and headers) as well as
+<a class="reference internal" href="../optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> (TA-devkit), one <strong>must first</strong> build those and then refer to
+various files. Below we will show to to build the <strong>hello_world</strong> example for
+Armv7-A using regular GNU Make.</p>
+<section id="configure-the-toolchain">
+<h3>Configure the toolchain<a class="headerlink" href="#configure-the-toolchain" title="Permalink to this heading"></a></h3>
+<p>First step is to download and configure a toolchain, see the <a class="reference internal" href="../../toolchains.html#toolchains"><span class="std std-ref">Toolchains</span></a>
+page for instructions.</p>
+</section>
+<section id="build-the-dependencies">
+<h3>Build the dependencies<a class="headerlink" href="#build-the-dependencies" title="Permalink to this heading"></a></h3>
+<p>Then you must build <a class="reference internal" href="../optee_os.html#optee-os"><span class="std std-ref">optee_os</span></a> as well as <a class="reference internal" href="../optee_client.html#optee-client"><span class="std std-ref">optee_client</span></a> first. Build
+instructions for them can be found on their respective pages.</p>
+</section>
+<section id="clone-optee-examples">
+<h3>Clone optee_examples<a class="headerlink" href="#clone-optee-examples" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/linaro-swg/optee_examples.git
+</pre></div>
+</div>
+</section>
+<section id="build-using-gnu-make">
+<h3>Build using GNU Make<a class="headerlink" href="#build-using-gnu-make" title="Permalink to this heading"></a></h3>
+<section id="host-application">
+<h4>Host application<a class="headerlink" href="#host-application" title="Permalink to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>optee_examples/hello_world/host
+$<span class="w"> </span>make<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-linux-gnueabihf-<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">TEEC_EXPORT</span><span class="o">=</span>&lt;optee_client&gt;/out/export/usr<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--no-builtin-variables
+</pre></div>
+</div>
+<p>With this you end up with a binary <code class="docutils literal notranslate"><span class="pre">optee_example_hello_world</span></code> in the host
+folder where you did the build.</p>
+</section>
+<section id="trusted-application">
+<h4>Trusted Application<a class="headerlink" href="#trusted-application" title="Permalink to this heading"></a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>optee_examples/hello_world/ta
+$<span class="w"> </span>make<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-linux-gnueabihf-<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">PLATFORM</span><span class="o">=</span>vexpress-qemu_virt<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">TA_DEV_KIT_DIR</span><span class="o">=</span>&lt;optee_os&gt;/out/arm/export-ta_arm32
+</pre></div>
+</div>
+<p>With this you end up with a files named <code class="docutils literal notranslate"><span class="pre">uuid.{ta,elf,dmp,map}</span></code> etc in the ta
+folder where you did the build.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For a 64-bit builds (or any other toolchain) you will need to change
+<code class="docutils literal notranslate"><span class="pre">CROSS_COMPILE</span></code> (and also use a <code class="docutils literal notranslate"><span class="pre">PLATFORM</span></code> corresponding to an Armv8-A
+configuration).</p>
+</div>
+</section>
+</section>
+</section>
+<section id="coding-standards">
+<h2>Coding standards<a class="headerlink" href="#coding-standards" title="Permalink to this heading"></a></h2>
+<p>See <a class="reference internal" href="../../../general/coding_standards.html#coding-standards"><span class="std std-ref">Coding standards</span></a>.</p>
+</section>
+<section id="example-applications">
+<h2>Example applications<a class="headerlink" href="#example-applications" title="Permalink to this heading"></a></h2>
+<section id="acipher">
+<h3>acipher<a class="headerlink" href="#acipher" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 44%"/>
+<col style="width: 56%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Application name</p></th>
+<th class="head"><p>UUID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">optee_example_acipher</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a734eed9-d6a1-4244-aa50-7c99719e7b7b</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Generates an RSA key pair of specified size and encrypts a supplied string with
+it using the GlobalPlatform TEE Internal Core API.</p>
+</section>
+<section id="aes">
+<h3>aes<a class="headerlink" href="#aes" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 44%"/>
+<col style="width: 56%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Application name</p></th>
+<th class="head"><p>UUID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">optee_example_aes</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">5dbac793-f574-4871-8ad3-04331ec17f24</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Runs an AES encryption and decryption from a TA using the GlobalPlatform TEE
+Internal Core API. Non secure test application provides the key, initial vector
+and ciphered data.</p>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/hello_world"></a><section id="hello-world">
+<span id="id4"></span><h3>hello_world<a class="headerlink" href="#hello-world" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 44%"/>
+<col style="width: 56%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Application name</p></th>
+<th class="head"><p>UUID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">optee_example_hello_world</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8aaaf200-2450-11e4-abe2-0002a5d5c51b</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>This is a very simple Trusted Application to answer a hello command and
+incrementing an integer value.</p>
+</section>
+<section id="hotp">
+<h3>hotp<a class="headerlink" href="#hotp" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 44%"/>
+<col style="width: 56%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Application name</p></th>
+<th class="head"><p>UUID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">optee_example_hotp</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">484d4143-2d53-4841-3120-4a6f636b6542</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p><strong>HMAC based One Time Password in OP-TEE</strong></p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Hash-based_message_authentication_code">HMAC</a> based One Time Passwords or shortly just ‘HOTP’ has been around for many
+years and was initially defined in <a class="reference external" href="https://www.ietf.org/rfc/rfc4226.txt">RFC4226</a> back in 2005. Since then it has been
+a popular choice for doing <a class="reference external" href="https://en.wikipedia.org/wiki/Multi-factor_authentication">two factor authentication</a>. With the implementation
+here we are showing how one could leverage OP-TEE for generating such HMAC based
+One Time Passwords in a secure manner.</p>
+<section id="client-op-tee-server-solution">
+<h4>Client (OP-TEE) / Server solution<a class="headerlink" href="#client-op-tee-server-solution" title="Permalink to this heading"></a></h4>
+<p>The most common way of using HOTP is in a client/server setup, where the client
+needs to authenticate itself to be able to get access to some resources on the
+server. In those cases the server will ask for an One Time Password, the client
+will generate that and send it over to the server and if the server is OK with
+the password it will grant access to the client.</p>
+<p>Technically how it is working is that the server and the client needs to agree
+on shared key (’<code class="docutils literal notranslate"><span class="pre">K</span></code>’) and also start from the same counter (’<code class="docutils literal notranslate"><span class="pre">C</span></code>’). How that
+is done in practice is another topic, but <a class="reference external" href="https://www.ietf.org/rfc/rfc4226.txt">RFC4226</a> has some discussion about it.
+You should at least have a secure channel between the client and the server when
+sharing the key, but even better would be if you could establish a secure
+channel all the way down to the TEE (currently we have TCP/UDP support in
+OP-TEE, but not TLS).</p>
+<p>When both the server and the client knows about and use the same key and counter
+they can start doing client authentication using HOTP. In short what happens is
+that both the client and the server computes the same HOTP and the server
+compares the result of both computations (which should be the same to grant
+access). How that could work can be seen in the sequence diagram below.</p>
+<p>In the current implementation we have OP-TEE acting as a client and the server
+is a remote service running somewhere else. There is no server implemented, but
+that should be pretty easy to add in a real scenario. The important thing here
+is to be able to register the shared key in the TEE and to get HOTP values from
+the TEE on request.</p>
+<p>Since the current implementation works as a client we do not need to think about
+implementing the look-ahead synchronization window (’<code class="docutils literal notranslate"><span class="pre">s</span></code>’) nor do we have to
+think about adding throttling (which prevents/slows down brute force attacks).</p>
+</section>
+<section id="sequence-diagram-client-server">
+<h4>Sequence diagram - Client / Server<a class="headerlink" href="#sequence-diagram-client-server" title="Permalink to this heading"></a></h4>
+<figure class="align-default">
+<img alt="../../../_images/sequence_diagram_01.png" src="../../../_images/sequence_diagram_01.png"/>
+</figure>
+</section>
+<section id="client-server-op-tee">
+<h4>Client / Server (OP-TEE)?<a class="headerlink" href="#client-server-op-tee" title="Permalink to this heading"></a></h4>
+<p>Even though the current implementation works as a HOTP client, there is nothing
+saying that the implementation cannot be updated to also work as the validating
+server. One could for example have a simple device (a [security token] only
+generating one time passwords) and use the TEE as a validating service to open
+up other secure services.</p>
+</section>
+</section>
+<section id="random">
+<h3>random<a class="headerlink" href="#random" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 44%"/>
+<col style="width: 56%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Application name</p></th>
+<th class="head"><p>UUID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">optee_example_random</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">b6c53aba-9669-4668-a7f2-205629d00f86</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Generates a random UUID using capabilities of TEE API
+(<code class="docutils literal notranslate"><span class="pre">TEE_GenerateRandom()</span></code>).</p>
+</section>
+<section id="secure-storage">
+<h3>secure_storage<a class="headerlink" href="#secure-storage" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 44%"/>
+<col style="width: 56%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Application name</p></th>
+<th class="head"><p>UUID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">optee_example_secure_storage</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">f4e750bb-1437-4fbf-8785-8d3580c34994</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>A Trusted Application to read/write raw data into the OP-TEE secure storage
+using the GlobalPlatform TEE Internal Core API.</p>
+</section>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Permalink to this heading"></a></h2>
+<p>Some additional information about how to write and compile Trusted Applications
+can be found at the <a class="reference internal" href="../../trusted_applications.html#build-trusted-applications"><span class="std std-ref">Trusted Applications</span></a> page.</p>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="../optee_docs.html" rel="prev" title="optee_docs"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="../optee_os.html" rel="next" title="optee_os">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

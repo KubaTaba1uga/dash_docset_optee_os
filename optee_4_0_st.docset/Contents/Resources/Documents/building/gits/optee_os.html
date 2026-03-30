@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>optee_os — OP-TEE documentation  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="optee_test.html" rel="next" title="optee_test"/>
+<link href="optee_examples/optee_examples.html" rel="prev" title="optee_examples"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../general/index.html">Getting started</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and run</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices/index.html">Device specific information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../aosp/aosp.html">AOSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linux/tee_framework.html">Linux kernel TEE framework</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">OP-TEE gits</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="build.html">build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build_legacy.html">Build stable releases v1.0.0 to v3.0.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build_legacy_3_1_0-3_8_0.html">Build stable releases 3.1.0 to 3.8.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest.html">manifest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_benchmark.html">optee_benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_client.html">optee_client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_docs.html">optee_docs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optee_examples/optee_examples.html">optee_examples</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">optee_os</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#git-location">git location</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-instructions">Build instructions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coding-standards">Coding standards</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-system">Build system</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#import-branches">Import branches</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="optee_test.html">optee_test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trusted_applications.html">Trusted Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi_vars/stmm.html">StandAloneMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optee_with_rust.html">OP-TEE with Rust</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userland_integration.html">Linux userland integration</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../../index.html"></a></li>
+<li class="breadcrumb-item"><a href="../index.html">Build and run</a></li>
+<li class="breadcrumb-item"><a href="index.html">OP-TEE gits</a></li>
+<li class="breadcrumb-item active">optee_os</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../../_sources/building/gits/optee_os.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/optee_os"></a><section id="optee-os">
+<span id="id1"></span><h1>optee_os<a class="headerlink" href="#optee-os" title="Permalink to this heading"></a></h1>
+<section id="git-location">
+<h2>git location<a class="headerlink" href="#git-location" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/OP-TEE/optee_os">https://github.com/OP-TEE/optee_os</a></p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading"></a></h2>
+<p>The TEE core of optee_os is provided under the <a class="reference external" href="http://opensource.org/licenses/BSD-2-Clause">BSD 2-Clause</a> license. But
+there are also other software such as libraries included in optee_os. This
+“other” software will have different licenses that are compatible with BSD
+2-Clause (i.e., non-contaminating licenses unlike GPL-v2 for example).</p>
+</section>
+<section id="build-instructions">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Build instructions"></a><span id="optee-os-build-system"></span><h2>Build instructions<a class="headerlink" href="#build-instructions" title="Permalink to this heading"></a></h2>
+<p>You can build the code in this git only or build it as part of the entire
+system, i.e. as a part of a full OP-TEE developer setup. For the latter, please
+refer to instructions at the <a class="reference internal" href="build.html#build"><span class="std std-ref">build</span></a> page. For standalone builds optee_os
+uses only regular GNU Makefiles (i.e. <strong>no</strong> CMake support here unlike the other
+OP-TEE gits).</p>
+<section id="configure-the-toolchain">
+<h3>Configure the toolchain<a class="headerlink" href="#configure-the-toolchain" title="Permalink to this heading"></a></h3>
+<p>First step is to download and configure a toolchain, see the <a class="reference internal" href="../toolchains.html#toolchains"><span class="std std-ref">Toolchains</span></a>
+page for instructions.</p>
+</section>
+<section id="clone-optee-os">
+<h3>Clone optee_os<a class="headerlink" href="#clone-optee-os" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OP-TEE/optee_os
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>optee_os
+</pre></div>
+</div>
+</section>
+<section id="build-using-gnu-make">
+<h3>Build using GNU Make<a class="headerlink" href="#build-using-gnu-make" title="Permalink to this heading"></a></h3>
+<p>Since optee_os supports many devices and configurations it’s impossible to give
+a examples to all variants. But below is how you for example would build for
+QEMU running Armv7-A (AArch32), with debugging enabled and the benchmark
+framework disabled and will put all built files in a folder name <cite>out/arm</cite> in
+the root of the git.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>$<span class="w"> </span>make<span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 2</span><span class="w">    </span><span class="nv">CFG_TEE_BENCHMARK</span><span class="o">=</span>n<span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 3</span><span class="w">    </span><span class="nv">CFG_TEE_CORE_LOG_LEVEL</span><span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-linux-gnueabihf-<span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="nv">CROSS_COMPILE_core</span><span class="o">=</span>arm-linux-gnueabihf-<span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 6</span><span class="w">    </span><span class="nv">CROSS_COMPILE_ta_arm32</span><span class="o">=</span>arm-linux-gnueabihf-<span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="nv">CROSS_COMPILE_ta_arm64</span><span class="o">=</span>aarch64-linux-gnu-<span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="nv">DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="nv">O</span><span class="o">=</span>out/arm<span class="w"> </span><span class="se">\</span>
+<span class="linenos">10</span><span class="w">    </span><span class="nv">PLATFORM</span><span class="o">=</span>vexpress-qemu_virt
+</pre></div>
+</div>
+<p>The same for an QEMU Armv8-A (AArch64) would look like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="linenos"> 1</span>$<span class="w"> </span>make<span class="w"> </span><span class="se">\</span>
+</span><span class="linenos"> 2</span><span class="w">    </span><span class="nv">CFG_ARM64_core</span><span class="o">=</span>y<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos"> 3</span><span class="w">    </span><span class="nv">CFG_TEE_BENCHMARK</span><span class="o">=</span>n<span class="w"> </span><span class="se">\</span>
+</span><span class="hll"><span class="linenos"> 4</span><span class="w">    </span><span class="nv">CFG_TEE_CORE_LOG_LEVEL</span><span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+</span><span class="linenos"> 5</span><span class="w">    </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>aarch64-linux-gnu-<span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 6</span><span class="w">    </span><span class="nv">CROSS_COMPILE_core</span><span class="o">=</span>aarch64-linux-gnu-<span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="nv">CROSS_COMPILE_ta_arm32</span><span class="o">=</span>arm-linux-gnueabihf-<span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="nv">CROSS_COMPILE_ta_arm64</span><span class="o">=</span>aarch64-linux-gnu-<span class="w"> </span><span class="se">\</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="nv">DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="linenos">10</span><span class="w">    </span><span class="nv">O</span><span class="o">=</span>out/arm<span class="w"> </span><span class="se">\</span>
+<span class="hll"><span class="linenos">11</span><span class="w">    </span><span class="nv">PLATFORM</span><span class="o">=</span>vexpress-qemu_armv8a
+</span></pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>To be able to see all commands when building you could build with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nv">V</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="build-using-llvm-clang">
+<h3>Build using LLVM/clang<a class="headerlink" href="#build-using-llvm-clang" title="Permalink to this heading"></a></h3>
+<p>optee_os can be compiled using llvm/clang. Start by downloading the toolchain
+(see <a class="reference internal" href="../toolchains.html#llvm"><span class="std std-ref">LLVM / Clang</span></a>). After that you can compile by running.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>On line one you need to adjust the path so it matches the version of clang
+you are using.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="linenos">1</span>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>&lt;optee-project&gt;/toolchains/clang-v9.0.1/bin:<span class="nv">$PATH</span>
+</span><span class="linenos">2</span>$<span class="w"> </span>make<span class="w"> </span><span class="nv">COMPILER</span><span class="o">=</span>clang
+</pre></div>
+</div>
+</section>
+</section>
+<section id="coding-standards">
+<h2>Coding standards<a class="headerlink" href="#coding-standards" title="Permalink to this heading"></a></h2>
+<p>See <a class="reference internal" href="../../general/coding_standards.html#coding-standards"><span class="std std-ref">Coding standards</span></a>.</p>
+</section>
+<section id="build-system">
+<h2>Build system<a class="headerlink" href="#build-system" title="Permalink to this heading"></a></h2>
+<p>The build system in optee_os consists of a main <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> in the root of the
+project together with <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code> files in all source directories. In addition,
+some supporting files are used to recursively process all <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code> files and
+generate the build rules.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 61%"/>
+<col style="width: 39%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">core/core.mk</span></code></p></td>
+<td><p>Included from <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> to
+build the TEE Core</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ta/ta.mk</span></code></p></td>
+<td><p>Included from <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> to
+create the TA devkit</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mk/compile.mk</span></code></p></td>
+<td><p>Create rules to make objects
+from source files</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mk/lib.mk</span></code></p></td>
+<td><p>Create rules to make a
+libraries (.a)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mk/subdir.mk</span></code></p></td>
+<td><p>Process <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code> files
+recursively</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mk/config.mk</span></code></p></td>
+<td><p>Global configuration variable</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">core/arch/$(ARCH)/$(ARCH).mk</span></code></p></td>
+<td><p>Arch-specific compiler flags</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">core/arch/$(ARCH)/plat-$(PLATFORM)/conf.mk</span></code></p></td>
+<td><p>Platform-specific compiler
+flags and configuration
+variables</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">core/arch/$(ARCH)/plat-$(PLATFORM)/link.mk</span></code></p></td>
+<td><p>Make recipes to link the TEE
+Core</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ta/arch/arm/link.mk</span></code></p></td>
+<td><p>Make recipes to link Trusted
+Applications</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ta/mk/ta_dev_kit.mk</span></code></p></td>
+<td><p>Main Makefile to be included
+when building Trusted
+Applications</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mk/checkconf.mk</span></code></p></td>
+<td><p>Utility functions to
+manipulate configuration
+variables and generate
+a C header file</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sub.mk</span></code></p></td>
+<td><p>List source files and define
+compiler flags</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">make</span></code> is always invoked from the top-level directory; there is no recursive
+invocation of make itself.</p>
+<section id="choosing-the-build-target">
+<h3>Choosing the build target<a class="headerlink" href="#choosing-the-build-target" title="Permalink to this heading"></a></h3>
+<p>The target architecture, platform and build directory may be selected by setting
+environment or make variables (<code class="docutils literal notranslate"><span class="pre">VAR=value</span> <span class="pre">make</span></code> or <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">VAR=value</span></code>).</p>
+<section id="arch-cpu-architecture">
+<h4>ARCH - CPU architecture<a class="headerlink" href="#arch-cpu-architecture" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">$(ARCH)</span></code> is the CPU architecture to be built. Currently, the only supported
+value is <code class="docutils literal notranslate"><span class="pre">arm</span></code> for 32-bit or 64-bit Armv7-A or Armv8-A. Please note that
+contrary to the Linux kernel, <code class="docutils literal notranslate"><span class="pre">$(ARCH)</span></code> should <strong>not</strong> be set to <code class="docutils literal notranslate"><span class="pre">arm64</span></code> for
+64-bit builds. The <code class="docutils literal notranslate"><span class="pre">ARCH</span></code> variable does not need to be set explicitly before
+building either, because the proper instruction set is selected from the
+<code class="docutils literal notranslate"><span class="pre">$(PLATFORM)</span></code> value. For platforms that support both 32-bit and 64-bit builds,
+<code class="docutils literal notranslate"><span class="pre">CFG_ARM64_core=y</span></code> should be set to select 64-bit and not set (or set to
+<code class="docutils literal notranslate"><span class="pre">n</span></code>) to select 32-bit.</p>
+<p>Architecture-specific source code belongs to sub-directories that follow the
+<code class="docutils literal notranslate"><span class="pre">arch/$(ARCH)</span></code> pattern, such as: <code class="docutils literal notranslate"><span class="pre">core/arch/arm</span></code>, <code class="docutils literal notranslate"><span class="pre">lib/libutee/arch/arm</span></code>
+and so on.</p>
+</section>
+<section id="cross-compile">
+<h4>CROSS_COMPILE<a class="headerlink" href="#cross-compile" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">$(CROSS_COMPILE)</span></code> is the prefix used to invoke the (32-bit) cross-compiler
+toolchain. The default value is <code class="docutils literal notranslate"><span class="pre">arm-linux-gnueabihf-</span></code>. This is the variable
+you want to change in case you want to use <a class="reference external" href="https://ccache.samba.org/">ccache</a> to speed you recompilations:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span><span class="s2">"ccache arm-linux-gnueabihf-"</span>
+</pre></div>
+</div>
+<p>If the build includes a mix of 32-bit and 64-bit code, for instance if you set
+<code class="docutils literal notranslate"><span class="pre">CFG_ARM64_core=y</span></code> to build a 64-bit secure kernel, then two different
+toolchains are used, that are controlled by <code class="docutils literal notranslate"><span class="pre">$(CROSS_COMPILE32)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">$(CROSS_COMPILE64)</span></code>. The default value of <code class="docutils literal notranslate"><span class="pre">$(CROSS_COMPILE32)</span></code> is the value
+of <code class="docutils literal notranslate"><span class="pre">CROSS_COMPILE</span></code>, which defaults to <code class="docutils literal notranslate"><span class="pre">arm-linux-gnueabihf-</span></code> as mentioned
+above. The default value of <code class="docutils literal notranslate"><span class="pre">$(CROSS_COMPILE64)</span></code> is <code class="docutils literal notranslate"><span class="pre">aarch64-linux-gnu-</span></code>.
+Examples:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># For this example, select HiKey which supports both 32- and 64-bit builds</span>
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PLATFORM</span><span class="o">=</span>hikey
+
+<span class="c1"># 1. Build everything 32-bit</span>
+$<span class="w"> </span>make
+
+<span class="c1"># 2. Same as (1.) but override the toolchain</span>
+$<span class="w"> </span>make<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span><span class="s2">"ccache arm-linux-gnueabihf-"</span>
+
+<span class="c1"># 3. Same as (2.)</span>
+$<span class="w"> </span>make<span class="w"> </span><span class="nv">CROSS_COMPILE32</span><span class="o">=</span><span class="s2">"ccache arm-linux-gnueabihf-"</span>
+
+<span class="c1"># 4. Select 64-bit secure 'core' (and therefore both 32- and 64-bit</span>
+<span class="c1"># Trusted Application libraries)</span>
+$<span class="w"> </span>make<span class="w"> </span><span class="nv">CFG_ARM64_core</span><span class="o">=</span>y
+
+<span class="c1"># 5. Same as (4.) but override the toolchains</span>
+$<span class="w"> </span>make<span class="w"> </span><span class="nv">CFG_ARM64_core</span><span class="o">=</span>y<span class="w"> </span><span class="se">\</span>
+<span class="w">       </span><span class="nv">CROSS_COMPILE32</span><span class="o">=</span><span class="s2">"ccache arm-linux-gnueabihf-"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">       </span><span class="nv">CROSS_COMPILE64</span><span class="o">=</span><span class="s2">"ccache aarch64-linux-gnu-"</span>
+</pre></div>
+</div>
+</section>
+<section id="platform-platform-flavor">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/PLATFORM / PLATFORM_FLAVOR"></a><span id="platform-flavor"></span><h4>PLATFORM / PLATFORM_FLAVOR<a class="headerlink" href="#platform-platform-flavor" title="Permalink to this heading"></a></h4>
+<p>A <cite>platform</cite> is a family of closely related hardware configurations. A platform
+<cite>flavor</cite> is a variant of such configurations. When used together they define the
+target hardware on which OP-TEE will be run.</p>
+<p>For instance <code class="docutils literal notranslate"><span class="pre">PLATFORM=stm</span> <span class="pre">PLATFORM_FLAVOR=b2260</span></code> will build for the ST
+Microelectronics 96boards/cannes2 board, while <code class="docutils literal notranslate"><span class="pre">PLATFORM=vexpress</span>
+<span class="pre">PLATFORM_FLAVOR=qemu_virt</span></code> will generate code for a para-virtualized Arm
+Versatile Express board running on QEMU.</p>
+<p>For convenience, the flavor may be appended to the platform name with a dash, so
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">PLATFORM=stm-b2260</span></code> is a shortcut for <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">PLATFORM=stm</span>
+<span class="pre">PLATFORM_FLAVOR=b2260</span></code>. Note that in both cases the value of <code class="docutils literal notranslate"><span class="pre">$(PLATFORM)</span></code> is
+<code class="docutils literal notranslate"><span class="pre">stm</span></code> in the makefiles.</p>
+<p>Platform-specific source code belongs to <code class="docutils literal notranslate"><span class="pre">core/arch/$(ARCH)/plat-$(PLATFORM)</span></code>,
+for instance: <code class="docutils literal notranslate"><span class="pre">core/arch/arm/plat-vexpress</span></code> or <code class="docutils literal notranslate"><span class="pre">core/arch/arm/plat-stm</span></code>.</p>
+</section>
+<section id="o-output-directory">
+<h4>O - output directory<a class="headerlink" href="#o-output-directory" title="Permalink to this heading"></a></h4>
+<p>All output files go into a platform-specific build directory, which is by
+default <code class="docutils literal notranslate"><span class="pre">out/$(ARCH)-plat-$(PLATFORM)</span></code>.</p>
+<p>The output directory has basically the same structure as the source tree. For
+instance, assuming <code class="docutils literal notranslate"><span class="pre">ARCH=arm</span> <span class="pre">PLATFORM=stm</span></code>, <code class="docutils literal notranslate"><span class="pre">core/kernel/panic.c</span></code> will
+compile into <code class="docutils literal notranslate"><span class="pre">out/arm-plat-stm/core/kernel/panic.o</span></code>.</p>
+<p>However, some libraries are compiled several times: once or twice for user mode,
+and once for kernel mode. This is because they may be used by the TEE Core as
+well as by the Trusted Applications. As a result, the <code class="docutils literal notranslate"><span class="pre">lib</span></code> source directory
+gives two or three build directories: <code class="docutils literal notranslate"><span class="pre">ta_arm{32,64}-lib</span></code> and <code class="docutils literal notranslate"><span class="pre">core-lib</span></code>.</p>
+<p>The output directory also has an <code class="docutils literal notranslate"><span class="pre">export-ta_arm{32,64}</span></code> directory, which
+contains:</p>
+<blockquote>
+<div><ul>
+<li><p>All the files needed to build Trusted Applications.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>In <code class="docutils literal notranslate"><span class="pre">lib/</span></code>: <code class="docutils literal notranslate"><span class="pre">libutee.a</span></code> (the GlobalPlatform Internal API),
+<code class="docutils literal notranslate"><span class="pre">libutils.a</span></code> (which implements a part of the standard C library),
+and other libraries which provide additional APIs.</p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">include/</span></code>: header files for the above libraries</p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">mk/</span></code>: <code class="docutils literal notranslate"><span class="pre">ta_dev_kit.mk</span></code>, which is a Make include file with
+suitable rules to build a TA, and its dependencies</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/sign.py</span></code>: a Python script used by <code class="docutils literal notranslate"><span class="pre">ta_dev_kit.mk</span></code> to sign
+TAs.</p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">src</span></code>: <code class="docutils literal notranslate"><span class="pre">user_ta_header.c</span></code>: source file to add a suitable header
+to the Trusted Application (as expected by the loader code in the TEE
+Core).</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Some files needed to build host applications (using the Client API), under
+<code class="docutils literal notranslate"><span class="pre">export-ta_arm{32,64}/host_include</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<p>Finally, the build directory contains the auto-generated configuration file for
+the TEE Core: <code class="docutils literal notranslate"><span class="pre">$(O)/include/generated/conf.h</span></code> (see below).</p>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Configuration and flags"></a><section id="configuration-and-flags">
+<span id="id3"></span><h3>Configuration and flags<a class="headerlink" href="#configuration-and-flags" title="Permalink to this heading"></a></h3>
+<p>The following variables are defined in <code class="docutils literal notranslate"><span class="pre">core/arch/$(ARCH)/$(ARCH).mk</span></code>:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">$(core-platform-aflags)</span></code>, <code class="docutils literal notranslate"><span class="pre">$(core-platform-cflags)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">$(core-platform-cppflags)</span></code> are added to the assembler / C compiler /
+preprocessor flags for all source files compiled for TEE Core including
+the kernel versions of libraries such as <code class="docutils literal notranslate"><span class="pre">libutils.a</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$(ta_arm{32,64}-platform-aflags)</span></code>, <code class="docutils literal notranslate"><span class="pre">$(ta_arm{32,64}-platform-cflags</span></code>)
+and <code class="docutils literal notranslate"><span class="pre">$(ta_arm{32,64}-platform-cppflags)</span></code> are added to the assembler / C
+compiler / preprocessor flags when building the user-mode libraries
+(<code class="docutils literal notranslate"><span class="pre">libutee.a</span></code>, <code class="docutils literal notranslate"><span class="pre">libutils.a</span></code>) or Trusted Applications.</p>
+<p>The following variables are defined in
+<code class="docutils literal notranslate"><span class="pre">core/arch/$(ARCH)/plat-$(PLATFORM)/conf.mk</span></code>:</p>
+</li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">$(arm{32,64}-platform-cflags)</span></code>, <code class="docutils literal notranslate"><span class="pre">$(arm{32,64}-platform-aflags)</span></code>
+and <code class="docutils literal notranslate"><span class="pre">$(arm{32,64}-platform-cppflags)</span></code> are defined their content will be
+added to <code class="docutils literal notranslate"><span class="pre">$(\*-platform-\*flags)</span></code> when they are are initialized in
+<code class="docutils literal notranslate"><span class="pre">core/arch/$(ARCH)/$(ARCH).mk</span></code> as described above.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">$(core-platform-subdirs)</span></code> is the list of the subdirectories that are
+added to the TEE Core.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="linker-scripts">
+<h3>Linker scripts<a class="headerlink" href="#linker-scripts" title="Permalink to this heading"></a></h3>
+<p>The file <code class="docutils literal notranslate"><span class="pre">core/arch/$(ARCH)/plat-$(PLATFORM)/link.mk</span></code> contains the rules to
+link the TEE Core and perform any related tasks, such as running <code class="docutils literal notranslate"><span class="pre">objdump</span></code> to
+produce a dump file. <code class="docutils literal notranslate"><span class="pre">link.mk</span></code> adds files to the <code class="docutils literal notranslate"><span class="pre">all:</span></code> target.</p>
+</section>
+<section id="source-files">
+<h3>Source files<a class="headerlink" href="#source-files" title="Permalink to this heading"></a></h3>
+<p>Each directory that contains source files has a file called <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code>. This
+makefile defines the source files that should be included in the build, as well
+as any subdirectories that should be processed, too. For example:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="c"># core/arch/arm/sm/sub.mk</span>
+<span class="nv">srcs-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>sm_asm.S
+<span class="nv">srcs-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>sm.c
+</pre></div>
+</div>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="c"># core/sub.mk</span>
+<span class="nv">subdirs-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>kernel
+<span class="nv">subdirs-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>mm
+<span class="nv">subdirs-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>tee
+<span class="nv">subdirs-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>drivers
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-y</span></code> suffix is meant to facilitate conditional compilation. See
+section <a class="reference internal" href="#configuration-variables"><span class="std std-ref">Configuration variables</span></a> below.</p>
+<p><code class="docutils literal notranslate"><span class="pre">srcs-y</span></code> and <code class="docutils literal notranslate"><span class="pre">subdirs-y</span></code> are often not used together in the same <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code>,
+because source files are usually alone in leaf directories. But this is not a
+hard rule.</p>
+<p>In addition to source files, <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code> may define compiler flags, include
+directories and/or configuration variables as explained below.</p>
+</section>
+<section id="compiler-flags">
+<h3>Compiler flags<a class="headerlink" href="#compiler-flags" title="Permalink to this heading"></a></h3>
+<p>Default compiler flags are defined in <code class="docutils literal notranslate"><span class="pre">mk/compile.mk</span></code>. Note that
+platform-specific flags must not appear in this file which is common to all
+platforms.</p>
+<p>To add flags for a given source file, you may use the following variables in
+<code class="docutils literal notranslate"><span class="pre">sub.mk</span></code>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cflags-&lt;filename&gt;-y</span></code> for C files (*.c)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aflags-&lt;filename&gt;-y</span></code> for assembler files (*.S)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cppflags-&lt;filename&gt;-y</span></code> for both C and assembler</p></li>
+</ul>
+</div></blockquote>
+<p>For instance:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="c"># core/lib/libtomcrypt/src/pk/dh/sub.mk</span>
+<span class="nv">srcs-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>dh.c
+<span class="nv">cflags-dh.c-y</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>-Wno-unused-variable
+</pre></div>
+</div>
+<p>Compiler flags may also be removed, as follows:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="c"># lib/libutils/isoc/newlib/sub.mk</span>
+<span class="nv">srcs-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>memmove.c
+<span class="nv">cflags-remove-memmove.c-y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>-Wcast-align
+</pre></div>
+</div>
+<p>Some variables apply to libraries only (that is, when using <code class="docutils literal notranslate"><span class="pre">mk/lib.mk</span></code>) and
+affect all the source files that belong to the library: <code class="docutils literal notranslate"><span class="pre">cppflags-lib-y</span></code> and
+<code class="docutils literal notranslate"><span class="pre">cflags-lib-y</span></code>.</p>
+</section>
+<section id="include-directories">
+<h3>Include directories<a class="headerlink" href="#include-directories" title="Permalink to this heading"></a></h3>
+<p>Include directories may be added to <code class="docutils literal notranslate"><span class="pre">global-incdirs-y</span></code>, in which case they
+will be accessible from all the source files and will be copied to
+<code class="docutils literal notranslate"><span class="pre">export-ta_arm{32,64}/include</span></code> and <code class="docutils literal notranslate"><span class="pre">export-ta_arm{32,64}/host_include</span></code>.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code> is used to build a library, <code class="docutils literal notranslate"><span class="pre">incdirs-lib-y</span></code> may receive
+additional directories that will be used for that library only.</p>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Configuration variables"></a><section id="configuration-variables">
+<span id="id4"></span><h3>Configuration variables<a class="headerlink" href="#configuration-variables" title="Permalink to this heading"></a></h3>
+<p>Some features may be enabled, disabled or otherwise controlled at compile time
+through makefile variables. Default values are normally provided in makefiles
+with the <code class="docutils literal notranslate"><span class="pre">?=</span></code> operator so that their value may be easily overridden by
+environment variables. For instance:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nv">PLATFORM</span><span class="w"> </span><span class="o">?=</span><span class="w"> </span>stm
+<span class="nv">PLATFORM_FLAVOR</span><span class="w"> </span><span class="o">?=</span><span class="w"> </span>default
+</pre></div>
+</div>
+<p>Some global configuration variables are defined in <code class="docutils literal notranslate"><span class="pre">mk/config.mk</span></code>, but others
+may be defined in <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code> when then pertain to a specific library for
+instance.</p>
+<p>Variables with the <code class="docutils literal notranslate"><span class="pre">CFG_</span></code> prefix are treated in a special way: their value is
+automatically reflected in the generated header file
+<code class="docutils literal notranslate"><span class="pre">$(out-dir)/include/generated/conf.h</span></code>, after all the included makefiles have
+been processed. <code class="docutils literal notranslate"><span class="pre">conf.h</span></code> is automatically included by the preprocessor when a
+source file is built.</p>
+<p>Depending on their value, variables may be considered either boolean or
+non-boolean, which affects how they are translated into <code class="docutils literal notranslate"><span class="pre">conf.h</span></code>.</p>
+<section id="boolean-configuration-variables">
+<h4>Boolean configuration variables<a class="headerlink" href="#boolean-configuration-variables" title="Permalink to this heading"></a></h4>
+<p>When a configuration variable controls the presence or absence of a feature,
+<code class="docutils literal notranslate"><span class="pre">y</span></code> means <strong>enabled</strong>, while anything else means <strong>disabled</strong>. In particular,
+a variable that is undefined or is defined but has an empty value is also
+disabled. For example, the following commands are equivalent and would
+disable feature <code class="docutils literal notranslate"><span class="pre">CFG_CRYPTO_GCM</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nv">CFG_CRYPTO_GCM</span><span class="o">=</span>n
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nv">CFG_CRYPTO_GCM</span><span class="o">=</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nv">CFG_CRYPTO_GCM</span><span class="o">=</span>n<span class="w"> </span>make
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">CFG_CRYPTO_GCM</span><span class="o">=</span>n
+$<span class="w"> </span>make
+</pre></div>
+</div>
+<p>When a configuration variable is introduced, the proper way to enable it by
+default is to write <code class="docutils literal notranslate"><span class="pre">CFG_XXX</span> <span class="pre">?=</span> <span class="pre">y</span></code>. If it should be default disabled
+instead, use <code class="docutils literal notranslate"><span class="pre">CFG_XXX</span> <span class="pre">?=</span> <span class="pre">n</span></code> rather than leaving the variable undefined,
+and add a description in a comment.</p>
+<p>In general, common settings belong in <code class="docutils literal notranslate"><span class="pre">mk/config.mk</span></code> while platform-specific
+ones should go in <code class="docutils literal notranslate"><span class="pre">core/arch/$(arch)/plat-$(platform)/conf.mk</span></code> (there are
+exceptions, for instance crypto settings have their own <code class="docutils literal notranslate"><span class="pre">crypto.mk</span></code> files).
+Both places may be used in case a platform needs to set a default value that
+is different from the one that is set in the global configuration file. For
+example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># CFG_FOO is enabled by default except for PLATFORM=xyz
+# Override with "make CFG_FOO=y" is allowed
+
+# In core/arch/$(arch)/plat-xyz/conf.mk
+CFG_FOO ?= n
+
+# In mk/config.mk
+CFG_FOO ?= y
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># CFG_FOO is enabled by default except for PLATFORM=xyz that requires
+# CFG_FOO disabled
+# Override with "make CFG_FOO=y" is NOT allowed
+
+# In core/arch/$(arch)/plat-xyz/conf.mk
+$(call force,CFG_FOO,n)
+
+# In mk/config.mk
+CFG_FOO ?= y
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">n</span></code> can be swapped to achieve the opposite scenario.</p>
+<p>Configuration variables can easily be used in <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code> to trigger conditional
+compilation:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="c"># core/lib/libtomcrypt/src/encauth/sub.mk</span>
+<span class="nv">subdirs-$(CFG_CRYPTO_CCM)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>ccm
+<span class="nv">subdirs-$(CFG_CRYPTO_GCM)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>gcm
+</pre></div>
+</div>
+<p>It is not recommended to set <code class="docutils literal notranslate"><span class="pre">CFG_</span></code> values in <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code>.</p>
+<p>When a configuration variable is <strong>enabled</strong> (<code class="docutils literal notranslate"><span class="pre">y</span></code>), <code class="docutils literal notranslate"><span class="pre">&lt;generated/conf.h&gt;</span></code>
+contains a macro with the same name as the variable and the value <code class="docutils literal notranslate"><span class="pre">1</span></code>. If it
+is  <strong>disabled</strong>, however, no macro definition is output. This allows the C code
+to use constructs like:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* core/lib/libtomcrypt/src/tee_ltc_provider.c */</span>
+
+<span class="cm">/* ... */</span>
+
+<span class="cp">#if defined(CFG_CRYPTO_GCM)</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">tee_gcm_state</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">gcm_state</span><span class="w"> </span><span class="n">ctx</span><span class="p">;</span><span class="w">      </span><span class="cm">/* the gcm state as defined by LTC */</span>
+<span class="w">        </span><span class="kt">size_t</span><span class="w"> </span><span class="n">tag_len</span><span class="p">;</span><span class="w">     </span><span class="cm">/* tag length */</span>
+<span class="p">};</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</section>
+<section id="non-boolean-configuration-variables">
+<h4>Non-boolean configuration variables<a class="headerlink" href="#non-boolean-configuration-variables" title="Permalink to this heading"></a></h4>
+<p>Configuration variables that are not recognized as booleans are simply output
+unchanged into <cite>&lt;generated/conf.h&gt;</cite>. For instance:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span><span class="nv">CFG_TEE_CORE_LOG_LEVEL</span><span class="o">=</span><span class="m">4</span>
+</pre></div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* out/arm-plat-vexpress/include/generated/conf.h */</span>
+
+<span class="cp">#define CFG_TEE_CORE_LOG_LEVEL 4 </span><span class="cm">/* '4' */</span>
+</pre></div>
+</div>
+</section>
+<section id="the-force-macro">
+<h4>The ‘force’ macro<a class="headerlink" href="#the-force-macro" title="Permalink to this heading"></a></h4>
+<p>Some platforms may require specific values for some of their configuration
+variables. For instance, the number of CPU cores in a system is fixed so the
+value of <code class="docutils literal notranslate"><span class="pre">CFG_TEE_CORE_NB_CORE</span></code> should generally not be changed. Or some
+feature may not be supported by the hardware, in which case the corresponding
+configuration variable should always be disabled.</p>
+<p>In such cases, the <code class="docutils literal notranslate"><span class="pre">force</span></code> macro should be used. It sets the variable to the
+specified value while reporting about any conflicting value that may have been
+set previously, either via a previous assignment in the makefiles or via the
+command line or environment variables. For example:</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="k">$(</span><span class="nv">call</span> <span class="nv">force</span>,<span class="nv">CFG_TEE_CORE_NB_CORE</span>,<span class="nv">8</span><span class="k">)</span>
+<span class="k">$(</span><span class="nv">call</span> <span class="nv">force</span>,<span class="nv">CFG_ARM64_core</span>,<span class="nv">n</span><span class="k">)</span>
+<span class="k">$(</span><span class="nv">call</span> <span class="nv">force</span>,<span class="nv">CFG_ARM_GICV3</span>,<span class="nv">y</span><span class="k">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>-j10<span class="w"> </span><span class="nv">PLATFORM</span><span class="o">=</span>hikey<span class="w"> </span><span class="nv">CFG_TEE_CORE_NB_CORE</span><span class="o">=</span><span class="m">4</span>
+core/arch/arm/plat-hikey/conf.mk:5:<span class="w"> </span>***<span class="w"> </span>CFG_TEE_CORE_NB_CORE<span class="w"> </span>is<span class="w"> </span><span class="nb">set</span><span class="w"> </span>to<span class="w"> </span><span class="s1">'4'</span><span class="w"> </span><span class="o">(</span>from<span class="w"> </span><span class="nb">command</span><span class="w"> </span>line<span class="o">)</span><span class="w"> </span>but<span class="w"> </span>its<span class="w"> </span>value<span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span><span class="s1">'8'</span>.<span class="w">  </span>Stop.
+</pre></div>
+</div>
+</section>
+<section id="there-are-only-two-ways">
+<h4>There are only two ways…<a class="headerlink" href="#there-are-only-two-ways" title="Permalink to this heading"></a></h4>
+<p>Given what has been explained above, there are only two valid ways to set a <code class="docutils literal notranslate"><span class="pre">CFG_</span></code>
+variable in a <code class="docutils literal notranslate"><span class="pre">.mk</span></code> file:  either with <code class="docutils literal notranslate"><span class="pre">?=</span></code> if the value is a default that
+may be changed at build time, or with <code class="docutils literal notranslate"><span class="pre">$(call</span> <span class="pre">force,...)</span></code> if there is only
+one acceptable value. Using <code class="docutils literal notranslate"><span class="pre">=</span></code> or <code class="docutils literal notranslate"><span class="pre">:=</span></code> in particular is <strong>not</strong> correct
+because they allow overrides on the command line (<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">CFG_FOO=foo</span></code>) but
+not from the environment (<code class="docutils literal notranslate"><span class="pre">CFG_FOO=foo</span> <span class="pre">make</span></code>).</p>
+</section>
+<section id="configuration-dependencies">
+<h4>Configuration dependencies<a class="headerlink" href="#configuration-dependencies" title="Permalink to this heading"></a></h4>
+<p>Some combinations of configuration variables may not be valid. This should be
+dealt with by custom checks in makefiles. <code class="docutils literal notranslate"><span class="pre">mk/checkconf.h</span></code> provides functions
+to help detect and deal with such situations.</p>
+</section>
+</section>
+</section>
+<section id="import-branches">
+<h2>Import branches<a class="headerlink" href="#import-branches" title="Permalink to this heading"></a></h2>
+<p>This section is more specifically intended for maintainers.</p>
+<p>The optee_os repository contains branches with the <code class="docutils literal notranslate"><span class="pre">import/</span></code> prefix,
+which we call <em>import branches</em> below. This section describes their purpose and
+how they are used.</p>
+<p>Import branches are meant to help import external libraries into the
+optee_os repository and maintain them:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><em>Import</em> means copy source files from a given upstream version of the
+library and commit them locally (typically under <code class="docutils literal notranslate"><span class="pre">optee_os/lib</span></code> or
+<code class="docutils literal notranslate"><span class="pre">optee_os/core/lib</span></code>), along with OP-TEE specific changes (build and
+configuration files for instance)</p></li>
+<li><p><em>Maintain</em> means carry local bug fixes or improvements that did not make
+their way upstream, and periodically upgrade the library by importing
+changes from upstream.</p></li>
+</ul>
+</div></blockquote>
+<p>Import branches have the version of the imported library in their names. For
+example: <code class="docutils literal notranslate"><span class="pre">import/mbedtls-2.6.1</span></code>. They are forked from <code class="docutils literal notranslate"><span class="pre">master</span></code>. They record
+the history of all changes made for OP-TEE to a library for a given library
+version. For example, the import branch for Mbed TLS 2.6.1 illustrates how the
+Mbed TLS library was initially imported and later modified:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ BRANCH=github/import/mbedtls-2.6.1
+$ BASE=`git merge-base master $BRANCH`
+$ git log --oneline --no-merges $BASE..$BRANCH
+8ff963a6 (github/import/mbedtls-2.6.1) mbedtls: fix memory leak in mpi_miller_rabin()
+213cce52 libmedtls: mpi_miller_rabin: increase count limit
+f934e291 mbedtls: add mbedtls_mpi_init_static()
+782fddd1 libmbedtls: add mbedtls_mpi_init_mempool()
+33873834 libmbedtls: make mbedtls_mpi_mont*() available
+e0186224 libmbedtls: refine mbedtls license header
+215609ae mbedtls: configure mbedtls to reach for config
+6916dcd9 mbedtls: remove default include/mbedtls/config.h
+b60fc42a Import mbedtls-2.6.1
+</pre></div>
+</div>
+<p>Commit b60fc42a imports the library under <code class="docutils literal notranslate"><span class="pre">lib/libmbedtls/mbedtls</span></code> with no
+modification to the code (not the whole library is imported however, since some
+files are not needed they are deleted as mentioned in the commit description).
+Then a couple of adjustments are made in commits 6916dcd9 and 215609ae in order
+to be able to build with optee_os. At this point the initial import is done and
+subsequent commits are local improvements or bug fixes made later on.</p>
+<p>The initial import (commits b60fc42a, 6916dcd9 and 215609ae) is merged into
+master as a “squashed” commit to preserve bisectability – in other words, so
+that no commit in master breaks the build:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git show --quiet 817466cb
+commit 817466cb476de705a8e3dabe1ef165fe27a18c2f
+Author: Jens Wiklander &lt;jens.wiklander@linaro.org&gt;
+Date:   Tue May 22 13:49:31 2018 +0200
+
+    Squashed commit importing mbedtls-2.6.1 source
+
+    Squash merging branch import/mbedtls-2.6.1
+
+    215609ae4d8c ("mbedtls: configure mbedtls to reach for config")
+    6916dcd9b9cd ("mbedtls: remove default include/mbedtls/config.h")
+    b60fc42a5cd5 ("Import mbedtls-2.6.1")
+
+    Acked-by: Joakim Bech &lt;joakim.bech@linaro.org&gt;
+    Signed-off-by: Jens Wiklander &lt;jens.wiklander@linaro.org&gt;
+</pre></div>
+</div>
+<p>Later changes are reviewed and merged into master normally, and are also
+recorded on top of the import branch via pull requests against the import
+branch. Consider for example the two following commits, one is in the master
+branch and the other is applied on top of the import branch.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>18c5148d357e ("mbedtls: add mbedtls_mpi_init_static()")  # In master
+f934e2913b7b ("mbedtls: add mbedtls_mpi_init_static()")  # In import/mbedtls-2.6.1
+</pre></div>
+</div>
+<p>The master branch is occasionally merged into the import branches. Otherwise,
+some patches cherry-picked from master would not apply. Note that it is a
+“normal” merge (not a rebase), so the commits that are on master can easily
+be filtered out (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">log</span> <span class="pre">--oneline</span> <span class="pre">--first-parent</span> <span class="pre">import/...</span></code>).</p>
+<p>When it is time to upgrade a library, a new import branch is created from
+master, for example: <code class="docutils literal notranslate"><span class="pre">import/mbedtls-2.16.0</span></code>. A pull request is created against
+this branch with the following commits:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The first commit deletes the “old” version of the library and imports the
+new upstream version.</p></li>
+<li><p>The subsequent commits are cherry-picked from the previous import branch and
+adjusted as needed. These commits are effectively “rebased” onto the new
+library.</p></li>
+<li><p>Build files are updated if needed.</p></li>
+</ul>
+</div></blockquote>
+<p>Here is the history of the <code class="docutils literal notranslate"><span class="pre">import/mbedtls-2.16.0</span></code> branch, for comparison with
+the initial import:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ BRANCH=github/import/mbedtls-2.16.0
+$ BASE=`git merge-base master $BRANCH`
+$ git log --oneline --no-merges $BASE..$BRANCH
+68df6eb0 libmbedtls: mbedtls_mpi_exp_mod(): reduce stack usage
+f58facc6 libutee: increase MPI mempool size
+be040a3e libmbedtls: preserve mempool usage on reinit
+ae499f6a libmbedtls: mbedtls_mpi_exp_mod() initialize W
+b95a6c5d libmbedtls: fix no CRT issue
+ac34734a libmbedtls: add interfaces in mbedtls for context memory operation
+9ee2a92d libmbedtls: compile new files added with 2.16.0
+9b0818d4 mbedtls: fix memory leak in mpi_miller_rabin()
+2d6644ee libmedtls: mpi_miller_rabin: increase count limit
+d831db4c libmbedtls: add mbedtls_mpi_init_mempool()
+df0f4886 libmbedtls: make mbedtls_mpi_mont*() available
+7b079206 libmbedtls: refine mbedtls license header
+2616e2d9 mbedtls: configure mbedtls to reach for config
+d686ab1c mbedtls: remove default include/mbedtls/config.h
+50a57cfa Import mbedtls-2.16.0
+8bfc3de4 libutee: lessen dependency on mbedtls internals
+</pre></div>
+</div>
+<p>Note that the first commit 8bfc3de4 (“libutee: lessen dependency on mbedtls
+internals”) can be ignored, it was applied to master in anticipation of the
+2.16.0 upgrade but the <code class="docutils literal notranslate"><span class="pre">import/mbedtls-2.16.0</span></code> was forked before.</p>
+<p>The upgrade from 2.6.1 to 2.16.0 is made of all the commits up to and
+including commit 9ee2a92d (“libmbedtls: compile new files added with 2.16.0”):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Commit 50a57cfa (“Import mbedtls-2.16.0”) deletes the “old” files and
+library imports the new ones.</p></li>
+<li><p>Commits d686ab1c..9b0818d4 are cherry-picked from the previous import
+branch.</p></li>
+<li><p>Commit 9ee2a92d (“libmbedtls: compile new files added with 2.16.0”) adapts
+the build files to the new version.</p></li>
+</ul>
+</div></blockquote>
+<p>The master branch contains a squashed equivalent of the above:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git show --quiet 3d3b0591
+commit 3d3b05918ec9052ba13de82fbcaba204766eb636
+Author: Jens Wiklander &lt;jens.wiklander@linaro.org&gt;
+Date:   Wed Mar 20 15:30:29 2019 +0100
+
+    Squashed commit upgrading to mbedtls-2.16.0
+
+    Squash merging branch import/mbedtls-2.16.0
+
+    9ee2a92de51f ("libmbedtls: compile new files added with 2.16.0")
+    9b0818d48d29 ("mbedtls: fix memory leak in mpi_miller_rabin()")
+    2d6644ee0bbe ("libmedtls: mpi_miller_rabin: increase count limit")
+    d831db4c238a ("libmbedtls: add mbedtls_mpi_init_mempool()")
+    df0f4886b663 ("libmbedtls: make mbedtls_mpi_mont*() available")
+    7b0792062b65 ("libmbedtls: refine mbedtls license header")
+    2616e2d9709f ("mbedtls: configure mbedtls to reach for config")
+    d686ab1c51b7 ("mbedtls: remove default include/mbedtls/config.h")
+    50a57cfac892 ("Import mbedtls-2.16.0")
+
+    Acked-by: Jerome Forissier &lt;jerome.forissier@linaro.org&gt;
+    Signed-off-by: Jens Wiklander &lt;jens.wiklander@linaro.org&gt;
+</pre></div>
+</div>
+<p>Subsequent commits in the <code class="docutils literal notranslate"><span class="pre">import/mbedtls-2.16.0</span></code> branch are modifications
+that happened later in master as a result of OP-TEE development.</p>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="optee_examples/optee_examples.html" rel="prev" title="optee_examples"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="optee_test.html" rel="next" title="optee_test">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>

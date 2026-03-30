@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trusted Applications — OP-TEE documentation  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/mystyle.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" rel="stylesheet" type="text/css"/>
+<!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="virtualization.html" rel="next" title="Virtualization"/>
+<link href="subkeys.html" rel="prev" title="Subkeys"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html">
+            OP-TEE documentation
+          </a>
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input aria-label="Search docs" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../general/index.html">Getting started</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crypto.html">Crypto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="globalplatform_api.html">GlobalPlatform API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries.html">Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="porting_guidelines.html">Porting guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_boot.html">Secure boot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_storage.html">Secure storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="subkeys.html">Subkeys</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Trusted Applications</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pseudo-trusted-applications">Pseudo Trusted Applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#user-mode-trusted-applications">User Mode Trusted Applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ta-locations">TA locations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#early-ta">Early TA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ree-filesystem-ta">REE filesystem TA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#secure-storage-ta">Secure Storage TA</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#loading-and-preparing-ta-for-execution">Loading and preparing TA for execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ta-properties">TA Properties</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#globalplatform-properties">GlobalPlatform Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#property-extensions">Property Extensions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="virtualization.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spmc.html">SPMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arm_security_extensions.html">Arm Security Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="platforms/index.html">Platform documentation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../building/index.html">Build and run</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../debug/index.html">Debugging techniques</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">OP-TEE documentation</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a aria-label="Home" class="icon icon-home" href="../index.html"></a></li>
+<li class="breadcrumb-item"><a href="index.html">Architecture</a></li>
+<li class="breadcrumb-item active">Trusted Applications</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/architecture/trusted_applications.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Trusted Applications"></a><section id="trusted-applications">
+<span id="id1"></span><h1>Trusted Applications<a class="headerlink" href="#trusted-applications" title="Permalink to this heading"></a></h1>
+<p>There are two ways to implement Trusted Applications (TAs), Pseudo TAs and user
+mode TAs. User mode TAs are full featured Trusted Applications as specified by
+the <a class="reference internal" href="globalplatform_api.html#globalplatform-api"><span class="std std-ref">GlobalPlatform API</span></a> TEE specifications, these are simply the ones
+people are referring to when they are saying “Trusted Applications” and in most
+cases this is the preferred type of TA to write and use.</p>
+<section id="pseudo-trusted-applications">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Pseudo Trusted Applications"></a><span id="pta"></span><h2>Pseudo Trusted Applications<a class="headerlink" href="#pseudo-trusted-applications" title="Permalink to this heading"></a></h2>
+<p>A Pseudo Trusted Application is not a Trusted Application. A Pseudo TA is not a
+specific entity. A Pseudo TA is an interface. It is an interface exposed by the
+OP-TEE Core to its outer world: to secure client Trusted Applications and to
+non-secure client entities.</p>
+<p>These are implemented directly to the OP-TEE core tree in, e.g.,
+<code class="docutils literal notranslate"><span class="pre">core/pta</span></code> and are built along with and statically built into the
+OP-TEE core blob.</p>
+<p>The Pseudo Trusted Applications included in OP-TEE already are OP-TEE secure
+privileged level services hidden behind a “GlobalPlatform TA Client” API. These
+Pseudo TAs are used for various purposes such as specific secure services or
+embedded tests services.</p>
+<p>Pseudo TAs <strong>do not</strong> benefit from the GlobalPlatform Core Internal API support
+specified by the GlobalPlatform TEE specs. These APIs are provided to TAs as a
+static library each TA shall link against (the “<a class="reference internal" href="libraries.html#libutee"><span class="std std-ref">libutee</span></a>”) and that calls
+OP-TEE core service through system calls. As OP-TEE core does not link with
+<a class="reference internal" href="libraries.html#libutee"><span class="std std-ref">libutee</span></a>, Pseudo TAs can <strong>only</strong> use the OP-TEE core internal APIs and
+routines.</p>
+<p>As Pseudo TAs runs at the same privileged execution level as the OP-TEE core
+code itself and that might or might not be desirable depending on the use case.</p>
+<p>In most cases an unprivileged (user mode) TA is the best choice instead of
+adding your code directly to the OP-TEE core. However if you decide your
+application is best handled directly in OP-TEE core like this, you can look at
+<code class="docutils literal notranslate"><span class="pre">core/pta/stats.c</span></code> as a template and just add your Pseudo TA based on
+that to the <code class="docutils literal notranslate"><span class="pre">sub.mk</span></code> in the same directory.</p>
+</section>
+<section id="user-mode-trusted-applications">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/User Mode Trusted Applications"></a><span id="user-mode-ta"></span><h2>User Mode Trusted Applications<a class="headerlink" href="#user-mode-trusted-applications" title="Permalink to this heading"></a></h2>
+<p>User Mode Trusted Applications are loaded (mapped into memory) by OP-TEE core in
+the Secure World when something in Rich Execution Environment (REE) wants to
+talk to that particular application UUID. They run at a lower CPU privilege
+level than OP-TEE core code. In that respect, they are quite similar to regular
+applications running in the REE, except that they execute in Secure World.</p>
+<p>Trusted Application benefit from the GlobalPlatform <a class="reference internal" href="globalplatform_api.html#tee-internal-core-api"><span class="std std-ref">TEE Internal Core API</span></a>
+as specified by the GlobalPlatform TEE specifications. There are several types
+of user mode TAs, which differ by the way they are stored.</p>
+</section>
+<section id="ta-locations">
+<h2>TA locations<a class="headerlink" href="#ta-locations" title="Permalink to this heading"></a></h2>
+<p>Plain TAs (user mode) can reside and be loaded from various places. There are
+three ways currently supported in OP-TEE.</p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Early TA"></a><section id="early-ta">
+<span id="id2"></span><h3>Early TA<a class="headerlink" href="#early-ta" title="Permalink to this heading"></a></h3>
+<p>The so-called early TAs are virtually identical to the REE FS TAs, but instead
+of being loaded from the Normal World file system, they are linked into a
+special data section in the TEE core blob. Therefore, they are available even
+before <code class="docutils literal notranslate"><span class="pre">tee-supplicant</span></code> and the REE’s filesystems have come up. Please find
+more details in the <a class="reference external" href="https://github.com/OP-TEE/optee_os/commit/d0c636148b3a">early TA commit</a>.</p>
+</section>
+<section id="ree-filesystem-ta">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/REE filesystem TA"></a><span id="ree-fs-ta"></span><h3>REE filesystem TA<a class="headerlink" href="#ree-filesystem-ta" title="Permalink to this heading"></a></h3>
+<p>They consist of a <a class="reference external" href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELF</a> file, signed and optionally encrypted, named from the
+UUID of the TA and the suffix <code class="docutils literal notranslate"><span class="pre">.ta</span></code>. They are built separately from the
+OP-TEE core boot-time blob, although when they are built they use the same
+build system, and are signed with the key from the build of the original OP-TEE
+core blob.</p>
+<p>Because the TAs are signed and optionally encrypted with
+<code class="docutils literal notranslate"><span class="pre">scripts/sign_encrypt.py</span></code>, they are able to be stored in the untrusted REE
+filesystem, and <code class="docutils literal notranslate"><span class="pre">tee-supplicant</span></code> will take care of passing them to be checked
+and loaded by the Secure World OP-TEE core.</p>
+<section id="ree-fs-ta-rollback-protection">
+<h4>REE-FS TA rollback protection<a class="headerlink" href="#ree-fs-ta-rollback-protection" title="Permalink to this heading"></a></h4>
+<p>OP-TEE core maintains a <code class="docutils literal notranslate"><span class="pre">ta_ver.db</span></code> file in secure storage to check for
+version of REE TAs as they are loaded from REE-FS in order to prevent against
+any TA version downgrades. TA version can be configured via TA build option:
+<code class="docutils literal notranslate"><span class="pre">CFG_TA_VERSION=&lt;unsigned</span> <span class="pre">integer&gt;</span></code>.</p>
+<p>Note: Here rollback protection is effective only when <code class="docutils literal notranslate"><span class="pre">CFG_RPMB_FS=y</span></code>.</p>
+</section>
+<section id="ree-fs-ta-formats">
+<h4>REE-FS TA formats<a class="headerlink" href="#ree-fs-ta-formats" title="Permalink to this heading"></a></h4>
+<p>REE filesystem TAs come in three formats:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Legacy TAs signed, not encrypted, cannot be created anymore by the build
+scripts since version 3.7.0.</p></li>
+<li><p>Bootstrap TAs, signed with the key from the build of the original OP-TEE
+core blob, not encrypted.</p></li>
+<li><p>Encrypted TAs, sign-then-encrypt-then-MAC, encrypted with <code class="docutils literal notranslate"><span class="pre">TA_ENC_KEY</span></code>
+when <code class="docutils literal notranslate"><span class="pre">CFG_ENCRYPT_TA=y</span></code>. During OP-TEE runtime, the symmetric key used
+to decrypt TA has to be provided in a platform specific manner via
+overriding API:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">TEE_Result</span><span class="w"> </span><span class="nf">tee_otp_get_ta_enc_key</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">key_type</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">buffer</span><span class="p">,</span>
+<span class="w">                                  </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="ree-fs-ta-header-structure">
+<h4>REE-FS TA header structure<a class="headerlink" href="#ree-fs-ta-header-structure" title="Permalink to this heading"></a></h4>
+<p>All REE filesystems TAs has common header, <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">shdr</span></code>, defined as:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">enum</span><span class="w"> </span><span class="n">shdr_img_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SHDR_TA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">SHDR_BOOTSTRAP_TA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="n">SHDR_ENCRYPTED_TA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="cp">#define SHDR_MAGIC      0x4f545348</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * struct shdr - signed header</span>
+<span class="cm"> * @magic:      magic number must match SHDR_MAGIC</span>
+<span class="cm"> * @img_type:   image type, values defined by enum shdr_img_type</span>
+<span class="cm"> * @img_size:   image size in bytes</span>
+<span class="cm"> * @algo:       algorithm, defined by public key algorithms TEE_ALG_*</span>
+<span class="cm"> *              from TEE Internal API specification</span>
+<span class="cm"> * @hash_size:  size of the signed hash</span>
+<span class="cm"> * @sig_size:   size of the signature</span>
+<span class="cm"> * @hash:       hash of an image</span>
+<span class="cm"> * @sig:        signature of @hash</span>
+<span class="cm"> */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">shdr</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">magic</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">img_type</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">img_size</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">algo</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">hash_size</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">sig_size</span><span class="p">;</span>
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * Commented out element used to visualize the layout dynamic part</span>
+<span class="cm">         * of the struct.</span>
+<span class="cm">         *</span>
+<span class="cm">         * hash is accessed through the macro SHDR_GET_HASH and</span>
+<span class="cm">         * signature is accessed through the macro SHDR_GET_SIG</span>
+<span class="cm">         *</span>
+<span class="cm">         * uint8_t hash[hash_size];</span>
+<span class="cm">         * uint8_t sig[sig_size];</span>
+<span class="cm">         */</span>
+<span class="p">};</span>
+
+<span class="cp">#define SHDR_GET_SIZE(x)        (sizeof(struct shdr) + (x)-&gt;hash_size + \</span>
+<span class="cp">                                 (x)-&gt;sig_size)</span>
+<span class="cp">#define SHDR_GET_HASH(x)        (uint8_t *)(((struct shdr *)(x)) + 1)</span>
+<span class="cp">#define SHDR_GET_SIG(x)         (SHDR_GET_HASH(x) + (x)-&gt;hash_size)</span>
+</pre></div>
+</div>
+<p>The field <code class="docutils literal notranslate"><span class="pre">img_type</span></code> tells the type of TA, if it’s <code class="docutils literal notranslate"><span class="pre">SHDR_TA</span></code> (0),
+it’s a legacy TA. If it’s <code class="docutils literal notranslate"><span class="pre">SHDR_BOOTSTRAP_TA</span></code> (1) it’s a bootstrap TA.</p>
+<p>The field <code class="docutils literal notranslate"><span class="pre">algo</span></code> tells the algorithm used. The script used to sign TAs
+currently uses <code class="docutils literal notranslate"><span class="pre">TEE_ALG_RSASSA_PKCS1_V1_5_SHA256</span></code> (0x70004830). This
+means RSA with PKCS#1v1.5 padding and SHA-256 hash function. OP-TEE accepts
+any of the <code class="docutils literal notranslate"><span class="pre">TEE_ALG_RSASSA_PKCS1_*</span></code> algorithms.</p>
+<p>For bootstrap TAs <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">shdr</span></code> is followed by a subheader, <code class="docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">shdr_bootstrap_ta</span></code> which is defined as:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * struct shdr_bootstrap_ta - bootstrap TA subheader</span>
+<span class="cm"> * @uuid:       UUID of the TA</span>
+<span class="cm"> * @ta_version: Version of the TA</span>
+<span class="cm"> */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">shdr_bootstrap_ta</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">uuid</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="n">TEE_UUID</span><span class="p">)];</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ta_version</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The fields <code class="docutils literal notranslate"><span class="pre">uuid</span></code> and <code class="docutils literal notranslate"><span class="pre">ta_version</span></code> allows extra checks to be performed
+when loading the TA. Currently only the <code class="docutils literal notranslate"><span class="pre">uuid</span></code> field is checked.</p>
+<p>For encrypted TAs <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">shdr</span></code> is followed by a subheader, <code class="docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">shdr_bootstrap_ta</span></code> which is followed by another subheader, <code class="docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">shdr_encrypted_ta</span></code> defined as:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * struct shdr_encrypted_ta - encrypted TA header</span>
+<span class="cm"> * @enc_algo:   authenticated encyption algorithm, defined by symmetric key</span>
+<span class="cm"> *              algorithms TEE_ALG_* from TEE Internal API</span>
+<span class="cm"> *              specification</span>
+<span class="cm"> * @flags:      authenticated encyption flags</span>
+<span class="cm"> * @iv_size:    size of the initialization vector</span>
+<span class="cm"> * @tag_size:   size of the authentication tag</span>
+<span class="cm"> * @iv:         initialization vector</span>
+<span class="cm"> * @tag:        authentication tag</span>
+<span class="cm"> */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">shdr_encrypted_ta</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">enc_algo</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">flags</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">iv_size</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">tag_size</span><span class="p">;</span>
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * Commented out element used to visualize the layout dynamic part</span>
+<span class="cm">         * of the struct.</span>
+<span class="cm">         *</span>
+<span class="cm">         * iv is accessed through the macro SHDR_ENC_GET_IV and</span>
+<span class="cm">         * tag is accessed through the macro SHDR_ENC_GET_TAG</span>
+<span class="cm">         *</span>
+<span class="cm">         * uint8_t iv[iv_size];</span>
+<span class="cm">         * uint8_t tag[tag_size];</span>
+<span class="cm">         */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The field <code class="docutils literal notranslate"><span class="pre">enc_algo</span></code> tells the algorithm used. The script used to encrypt
+TAs currently uses <code class="docutils literal notranslate"><span class="pre">TEE_ALG_AES_GCM</span></code> (0x40000810). OP-TEE core also accepts
+<code class="docutils literal notranslate"><span class="pre">TEE_ALG_AES_CCM</span></code> algorithm.</p>
+<p>The field <code class="docutils literal notranslate"><span class="pre">flags</span></code> supports a single flag to tell encryption key type which
+is defined as:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define SHDR_ENC_KEY_TYPE_MASK  0x1</span>
+
+<span class="k">enum</span><span class="w"> </span><span class="n">shdr_enc_key_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SHDR_ENC_KEY_DEV_SPECIFIC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">SHDR_ENC_KEY_CLASS_WIDE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="ree-fs-ta-binary-formats">
+<h4>REE-FS TA binary formats<a class="headerlink" href="#ree-fs-ta-binary-formats" title="Permalink to this heading"></a></h4>
+<p>TA binary follows the ELF file which normally is stripped as additional
+symbols etc will be ignored when loading the TA.</p>
+<p>Legacy TA binary is formatted as:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>hash = H(&lt;struct shdr&gt; || &lt;stripped ELF&gt;)
+signature = RSA-Sign(hash)
+legacy_binary = &lt;struct shdr&gt; || &lt;hash&gt; || &lt;signature&gt; || &lt;stripped ELF&gt;
+</pre></div>
+</div>
+<p>Bootstrap TA binary is formatted as:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>hash = H(&lt;struct shdr&gt; || &lt;struct shdr_bootstrap_ta&gt; || &lt;stripped ELF&gt;)
+signature = RSA-Sign(&lt;hash&gt;)
+bootstrap_binary = &lt;struct shdr&gt; || &lt;hash&gt; || &lt;signature&gt; ||
+                   &lt;struct shdr_bootstrap_ta&gt; || &lt;stripped ELF&gt;
+</pre></div>
+</div>
+<p>Encrypted TA binary is formatted as:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>nonce = &lt;unique random value&gt;
+ciphertext, tag = AES_GCM(&lt;stripped ELF&gt;)
+hash = H(&lt;struct shdr&gt; || &lt;struct shdr_bootstrap_ta&gt; ||
+         &lt;struct shdr_encrypted_ta&gt; || &lt;nonce&gt; || &lt;tag&gt; || &lt;stripped ELF&gt;)
+signature = RSA-Sign(&lt;hash&gt;)
+encrypted_binary = &lt;struct shdr&gt; || &lt;hash&gt; || &lt;signature&gt; ||
+                   &lt;struct shdr_bootstrap_ta&gt; ||
+                   &lt;struct shdr_encrypted_ta&gt; || &lt;nonce&gt; || &lt;tag&gt; ||
+                   &lt;ciphertext&gt;
+</pre></div>
+</div>
+</section>
+<section id="verifying-with-subkeys">
+<h4>Verifying with Subkeys<a class="headerlink" href="#verifying-with-subkeys" title="Permalink to this heading"></a></h4>
+<p>A TA can be verified using a subkey or a chain of subkeys. This allows
+delegation of TA signing without distributing the root key. TAs signed with
+a subkey are confined to the UUID-V5 namespace of the subkey to avoid TA
+UUID clashes with different subkeys.</p>
+<p>SHDR_SUBKEY is a type of header which enables chains of public keys.  The
+public root key is used to verify the first public subkey, which then is
+used to verify the next public subkey and so on.</p>
+<p>The TA is finally verified using the last subkey. All these headers are
+added in front of the TA binary so everything needed to verify the TA is
+available when it’s loaded into memory.</p>
+<p>For details on subkeys see also <a class="reference internal" href="subkeys.html#subkeys"><span class="std std-ref">Subkeys</span></a></p>
+</section>
+<section id="loading-ree-fs-ta">
+<h4>Loading REE-FS TA<a class="headerlink" href="#loading-ree-fs-ta" title="Permalink to this heading"></a></h4>
+<p>A REE TA is loaded into shared memory using a series or RPC in
+<a class="reference internal" href="#load-ree-ta"><span class="std std-ref">Loading a REE TA into nonsecure shared memory</span></a>. The payload memory is allocated via TEE-supplicant and
+later freed when the TA has been loaded into secure memory in
+<a class="reference internal" href="#free-appl-shm"><span class="std std-ref">Freeing previously allocated nonsecure shared memory</span></a>.</p>
+<figure class="align-center align-default" id="id5">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Loading a REE TA into nonsecure shared memory"></a><span id="load-ree-ta"></span><img alt="../_images/load_ree_ta.png" src="../_images/load_ree_ta.png"/>
+<figcaption>
+<p><span class="caption-text">Loading a REE TA into nonsecure shared memory</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center align-default" id="id6">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Freeing previously allocated nonsecure shared memory"></a><span id="free-appl-shm"></span><img alt="../_images/free_appl_shm.png" src="../_images/free_appl_shm.png"/>
+<figcaption>
+<p><span class="caption-text">Freeing previously allocated nonsecure shared memory</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Secure Storage TA"></a><section id="secure-storage-ta">
+<span id="id3"></span><h3>Secure Storage TA<a class="headerlink" href="#secure-storage-ta" title="Permalink to this heading"></a></h3>
+<p>These are stored in secure storage. The meta data is stored in a database of all
+installed TAs and the actual binary is stored encrypted and integrity protected
+as a separate file in the untrusted REE filesystem (flash). Before these TAs can
+be loaded they have to be installed first, this is something that can be done
+during initial deployment or at a later stage.</p>
+<p>For test purposes the test program xtest can install a TA into secure storage
+with the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>xtest<span class="w"> </span>--install-ta
+</pre></div>
+</div>
+<p>TAs stored in secure storage are kept in a TA database. The TA database
+consists of a single file with the name <code class="docutils literal notranslate"><span class="pre">dirf.db</span></code> which is stored either
+in the REE filesystem based secure storage or in RPMB. The file is
+encrypted and integrity protected as any other object in secure storage.
+The TAs themselves are not stored in <code class="docutils literal notranslate"><span class="pre">dirf.db</span></code>, they are instead stored
+in the REE filesystem encrypted and integrity protected. One reason for
+this is that TAs can potentially be quite large, several megabytes, while
+secure storage is designed to hold only small objects counted in kilobytes.</p>
+<p><code class="docutils literal notranslate"><span class="pre">dirf.db</span></code> constsist of an array of <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tadb_entry</span></code>, defined as:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * struct tee_tadb_property</span>
+<span class="cm"> * @uuid:       UUID of Trusted Application (TA) or Security Domain (SD)</span>
+<span class="cm"> * @version:    Version of TA or SD</span>
+<span class="cm"> * @custom_size:Size of customized properties, prepended to the encrypted</span>
+<span class="cm"> *              TA binary</span>
+<span class="cm"> * @bin_size:   Size of the binary TA</span>
+<span class="cm"> */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">tee_tadb_property</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">TEE_UUID</span><span class="w"> </span><span class="n">uuid</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">version</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">custom_size</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">bin_size</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cp">#define TADB_IV_SIZE            TEE_AES_BLOCK_SIZE</span>
+<span class="cp">#define TADB_TAG_SIZE           TEE_AES_BLOCK_SIZE</span>
+<span class="cp">#define TADB_KEY_SIZE           TEE_AES_MAX_KEY_SIZE</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * struct tadb_entry - TA database entry</span>
+<span class="cm"> * @prop:        properties of TA</span>
+<span class="cm"> * @file_number: encrypted TA is stored in &lt;file_number&gt;.ta</span>
+<span class="cm"> * @iv:          Initialization vector of the authentication crypto</span>
+<span class="cm"> * @tag:         Tag used to validate the authentication encrypted TA</span>
+<span class="cm"> * @key:         Key used to decrypt the TA</span>
+<span class="cm"> */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">tadb_entry</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">tee_tadb_property</span><span class="w"> </span><span class="n">prop</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">file_number</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">iv</span><span class="p">[</span><span class="n">TADB_IV_SIZE</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">tag</span><span class="p">[</span><span class="n">TADB_TAG_SIZE</span><span class="p">];</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">key</span><span class="p">[</span><span class="n">TADB_KEY_SIZE</span><span class="p">];</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Entries where the <code class="docutils literal notranslate"><span class="pre">UUID</span></code> consists of zeros only are not valid and are
+ignored. The <code class="docutils literal notranslate"><span class="pre">file_number</span></code> field represents that name of the file stored
+in the REE filesystem. The filename is made from the decimal string
+representation of <code class="docutils literal notranslate"><span class="pre">file_number</span></code> with <code class="docutils literal notranslate"><span class="pre">.ta</span></code> appended, or if it was to be
+printed: <code class="docutils literal notranslate"><span class="pre">printf("%u.ta",</span> <span class="pre">file_number)</span></code>.</p>
+<p>The TA is decrypted using the authentication encryption algorithm AES-GCM
+initialized with the <code class="docutils literal notranslate"><span class="pre">iv</span></code> and <code class="docutils literal notranslate"><span class="pre">key</span></code> fields, the <code class="docutils literal notranslate"><span class="pre">tag</span></code> field is used
+when finalizing the decryption</p>
+<p>A TA is looked up in the TA database by opening <code class="docutils literal notranslate"><span class="pre">dirf.db</span></code> and scanning
+through the elements which are of type <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">tadb_entry</span></code> until a
+matching UUID is found.</p>
+</section>
+</section>
+<section id="loading-and-preparing-ta-for-execution">
+<h2>Loading and preparing TA for execution<a class="headerlink" href="#loading-and-preparing-ta-for-execution" title="Permalink to this heading"></a></h2>
+<p>User mode TAs are loaded into final memory in the same way using the user
+mode ELF loader <code class="docutils literal notranslate"><span class="pre">ldelf</span></code>. The different TA locations has a common
+interface towards <code class="docutils literal notranslate"><span class="pre">ldelf</span></code> which makes the user mode operations identical
+regarless of how the TA is stored.</p>
+<p>The TA is loaded into secure memory in <a class="reference internal" href="#prepare-ta"><span class="std std-ref">Preparing TA for execution</span></a>.</p>
+<figure class="align-center align-default" id="id7">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Preparing TA for execution"></a><span id="prepare-ta"></span><img alt="../_images/prepare_ta.png" src="../_images/prepare_ta.png"/>
+<figcaption>
+<p><span class="caption-text">Preparing TA for execution</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>After <code class="docutils literal notranslate"><span class="pre">ldelf</span></code> has returned with a TA prepared for execution it still
+remains in memory to serve the TA if dlopen() and friends are used.
+<code class="docutils literal notranslate"><span class="pre">ldelf</span></code> is also used to dump stack trace and detailed memory mappings if
+a TA is terminated via an abort.</p>
+<p>A high level view of the entire flow from the client application in Linux
+user space where a session is opened to a TA is given in
+<a class="reference internal" href="#open-session"><span class="std std-ref">Open session to a TA</span></a>.</p>
+<figure class="align-center align-default" id="id8">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Open session to a TA"></a><span id="open-session"></span><img alt="../_images/open_session.png" src="../_images/open_session.png"/>
+<figcaption>
+<p><span class="caption-text">Open session to a TA</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/TA Properties"></a><section id="ta-properties">
+<span id="id4"></span><h2>TA Properties<a class="headerlink" href="#ta-properties" title="Permalink to this heading"></a></h2>
+<p>This section give a more in depth description of the TA properties (see
+<a class="reference internal" href="../building/trusted_applications.html#build-trusted-applications"><span class="std std-ref">Trusted Applications</span></a> also).</p>
+<section id="globalplatform-properties">
+<h3>GlobalPlatform Properties<a class="headerlink" href="#globalplatform-properties" title="Permalink to this heading"></a></h3>
+<p>Standard TA properties must be defined through property flag in macro
+<code class="docutils literal notranslate"><span class="pre">TA_FLAGS</span></code> in <code class="docutils literal notranslate"><span class="pre">user_ta_header_defines.h</span></code></p>
+<section id="single-instance">
+<h4>Single Instance<a class="headerlink" href="#single-instance" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">"gpd.ta.singleInstance"</span></code> is a boolean property of the TA. This property
+defines if one instance of the TA must be created and will receive all open
+session request, or if a new specific TA instance must be created for each
+incoming open session request. OP-TEE TA flag <code class="docutils literal notranslate"><span class="pre">TA_FLAG_SINGLE_INSTANCE</span></code> sets
+to configuration of this property. The boolean property is set to <code class="docutils literal notranslate"><span class="pre">true</span></code> if
+<code class="docutils literal notranslate"><span class="pre">TA_FLAGS</span></code> sets bit <code class="docutils literal notranslate"><span class="pre">TA_FLAG_SINGLE_INSTANCE</span></code>, otherwise the boolean
+property is set to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</section>
+<section id="multi-session">
+<h4>Multi-session<a class="headerlink" href="#multi-session" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">"gpd.ta.multiSession"</span></code> is a boolean property of the TA. This property defines
+if the TA instance can handle several sessions. If disabled, TA instance support
+only one session. In such case, if the TA already has a opened session, any open
+session request will return with a busy error status.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This property is <strong>meaningless</strong> if TA is <strong>NOT</strong> SingleInstance TA.</p>
+</div>
+<p>OP-TEE TA flag <code class="docutils literal notranslate"><span class="pre">TA_FLAG_MULTI_SESSION</span></code> sets to configuration of this property.
+The boolean property is set to <code class="docutils literal notranslate"><span class="pre">true</span></code> if <code class="docutils literal notranslate"><span class="pre">TA_FLAGS</span></code> sets bit
+<code class="docutils literal notranslate"><span class="pre">TA_FLAG_MULTI_SESSION</span></code>, otherwise the boolean property is set to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</section>
+<section id="keep-alive">
+<h4>Keep Alive<a class="headerlink" href="#keep-alive" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">"gpd.ta.instanceKeepAlive"</span></code> is a boolean property of the TA. This property
+defines if the TA instance created must be destroyed or not when all sessions
+opened towards the TA are closed. If the property is enabled, TA instance, once
+created (at 1st open session request), is never removed unless the TEE itself is
+restarted (boot/reboot).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This property is <strong>meaningless</strong> if TA is <strong>NOT</strong> SingleInstance TA.</p>
+</div>
+<p>OP-TEE TA flag <code class="docutils literal notranslate"><span class="pre">TA_FLAG_INSTANCE_KEEP_ALIVE</span></code> sets to configuration of this
+property. The boolean property is set to <code class="docutils literal notranslate"><span class="pre">true</span></code> if <code class="docutils literal notranslate"><span class="pre">TA_FLAGS</span></code> sets bit
+<code class="docutils literal notranslate"><span class="pre">TA_FLAG_INSTANCE_KEEP_ALIVE</span></code>, otherwise the boolean property is set to
+<code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</section>
+<section id="heap-size">
+<h4>Heap Size<a class="headerlink" href="#heap-size" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">"gpd.ta.dataSize"</span></code> is a 32bit integer property of the TA. This property
+defines the size in bytes of the TA allocation pool, in which <code class="docutils literal notranslate"><span class="pre">TEE_Malloc()</span></code>
+and friends allocate memory. The value of the property must be defined by the
+macro <code class="docutils literal notranslate"><span class="pre">TA_DATA_SIZE</span></code> in <code class="docutils literal notranslate"><span class="pre">user_ta_header_defines.h</span></code> (see
+<a class="reference internal" href="../building/trusted_applications.html#build-ta-properties"><span class="std std-ref">TA Properties</span></a>).</p>
+</section>
+<section id="stack-size">
+<h4>Stack Size<a class="headerlink" href="#stack-size" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">"gpd.ta.stackSize"</span></code> is a 32bit integer property of the TA. This property
+defines the size in bytes of the stack used for TA execution. The value of the
+property must be defined by the macro <code class="docutils literal notranslate"><span class="pre">TA_STACK_SIZE</span></code> in
+<code class="docutils literal notranslate"><span class="pre">user_ta_header_defines.h</span></code> (see <a class="reference internal" href="../building/trusted_applications.html#build-ta-properties"><span class="std std-ref">TA Properties</span></a>).</p>
+</section>
+</section>
+<section id="property-extensions">
+<h3>Property Extensions<a class="headerlink" href="#property-extensions" title="Permalink to this heading"></a></h3>
+<section id="secure-data-path-flag">
+<h4>Secure Data Path Flag<a class="headerlink" href="#secure-data-path-flag" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">TA_FLAG_SECURE_DATA_PATH</span></code> is a bit flag supported by <code class="docutils literal notranslate"><span class="pre">TA_FLAGS</span></code>. This
+property flag claims the secure data support from the OP-TEE OS for the TA.
+Refer to the OP-TEE OS for secure data path support. TAs that do not set
+<code class="docutils literal notranslate"><span class="pre">TA_FLAG_SECURE_DATA_PATH</span></code> in the value of <code class="docutils literal notranslate"><span class="pre">TA_FLAGS</span></code> will <strong>not</strong> be able
+to handle memory reference invocation parameters that relate to secure data path
+buffers.</p>
+</section>
+<section id="cache-maintenance-flag">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Cache maintenance Flag"></a><span id="ta-property-cache-maintenance"></span><h4>Cache maintenance Flag<a class="headerlink" href="#cache-maintenance-flag" title="Permalink to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">TA_FLAG_CACHE_MAINTENANCE</span></code> is a bit flag supported by <code class="docutils literal notranslate"><span class="pre">TA_FLAGS</span></code>. This
+property flag, when enabled, allows Trusted Applciation to use the cache
+maintenance API extension of the Internal Core API described in
+<a class="reference internal" href="globalplatform_api.html#extensions-cache-maintenance"><span class="std std-ref">Cache Maintenance Support</span></a>. TAs that do not set
+<code class="docutils literal notranslate"><span class="pre">TA_FLAG_CACHE_MAINTENANCE</span></code> in the value of their <code class="docutils literal notranslate"><span class="pre">TA_FLAGS</span></code> will not be
+able to call the cache maintenance API.</p>
+</section>
+<section id="deprecated-property-flags">
+<h4>Deprecated Property Flags<a class="headerlink" href="#deprecated-property-flags" title="Permalink to this heading"></a></h4>
+<p>Older versions of OP-TEE used to define extended property flags that are
+deprecated and meaningless to current OP-TEE. These are <code class="docutils literal notranslate"><span class="pre">TA_FLAG_USER_MODE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TA_FLAG_EXEC_DDR</span></code> and <code class="docutils literal notranslate"><span class="pre">TA_FLAG_REMAP_SUPPORT</span></code>.</p>
+</section>
+</section>
+</section>
+</section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="subkeys.html" rel="prev" title="Subkeys"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="virtualization.html" rel="next" title="Virtualization">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright 2019 - 2023 TrustedFirmware.org.
+      <span class="lastupdated">Last updated on 2026-03-30 19:30.
+      </span></p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>
